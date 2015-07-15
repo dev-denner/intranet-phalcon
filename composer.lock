@@ -1,0 +1,74 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "a679c84e34ebfbfe7c8ddd67484689d3",
+    "packages": [
+        {
+            "name": "stanislav-web/phalcon-uploader",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stanislav-web/phalcon-uploader.git",
+                "reference": "bae33286cce4105bb99b386456045e4069bc3111"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stanislav-web/phalcon-uploader/zipball/bae33286cce4105bb99b386456045e4069bc3111",
+                "reference": "bae33286cce4105bb99b386456045e4069bc3111",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.*-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Uploader\\": "src/Uploader"
+                },
+                "classmap": [
+                    "phpunit/src/Uploader"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stanislav WEB",
+                    "email": "stanisov@gmail.com",
+                    "homepage": "http://reds.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Phalcon files uploader. Handling and downloading files for Phalcon projects. Allowed multiple files download, filters etc...",
+            "homepage": "https://github.com/stanislav-web/phalcon-uploader",
+            "keywords": [
+                "phalcon",
+                "phalcon upload",
+                "phalcon upload files",
+                "phalcon uploader",
+                "uploader"
+            ],
+            "time": "2015-07-11 12:15:22"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "stanislav-web/phalcon-uploader": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

@@ -49,7 +49,7 @@ class AccessMigration_1000 extends Migration {
                 'after' => 'action'
                     )
             ),
-            new Column('delete', array(
+            new Column('softdelete', array(
                 'type' => Column::TYPE_VARCHAR,
                 'size' => 1,
                 'after' => 'permission'
@@ -59,7 +59,7 @@ class AccessMigration_1000 extends Migration {
                 'type' => Column::TYPE_INTEGER,
                 'unsigned' => true,
                 'size' => 11,
-                'after' => 'delete'
+                'after' => 'softdelete'
                     )
             ),
             new Column('datecreate', array(

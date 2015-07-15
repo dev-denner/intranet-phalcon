@@ -66,7 +66,7 @@ class UsersMigration_1000 extends Migration {
                 'after' => 'status'
                     )
             ),
-            new Column('delete', array(
+            new Column('softdelete', array(
                 'type' => Column::TYPE_VARCHAR,
                 'size' => 1,
                 'after' => 'token'
@@ -76,7 +76,7 @@ class UsersMigration_1000 extends Migration {
                 'type' => Column::TYPE_INTEGER,
                 'unsigned' => true,
                 'size' => 10,
-                'after' => 'delete'
+                'after' => 'softdelete'
                     )
             ),
             new Column('datecreate', array(
