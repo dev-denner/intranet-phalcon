@@ -2,27 +2,18 @@
 
 error_reporting(E_ALL);
 
-/**
- * Read the configuration
- */
-$config = include __DIR__ . "/../app/config/config.php";
+define('APP_PATH', realpath('..'));
 
-/**
- * Read auto-loader
- */
-include __DIR__ . "/../app/config/loader.php";
+try {
 
-/**
- * Read services
- */
-include __DIR__ . "/../app/config/services.php";
+  require_once APP_PATH . '/app/config/Bootstrap.php';
+  require_once APP_PATH . '/app/plugins/ErrorPlugin.php';
 
-/**
- * Handle the request
- */
-$application = new \Phalcon\Mvc\Application($di);
+  $di = new \Phalcon\DI\FactoryDefault();
+  $app = new Bootstrap($di);
 
-require __DIR__ . '/../app/config/modules.php';
-
-
-echo $application->handle()->getContent();
+  echo $app->run(array());
+} catch (\Phalcon\Exception $e) {
+  echo $e->getMessage();
+  Error::exception($e);
+}
