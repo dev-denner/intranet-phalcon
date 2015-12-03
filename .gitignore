@@ -12,11 +12,11 @@ nb-configuration.xml
 
 
 ### Phalcon ###
-cache/*
+cache/*.php
 !cache/index.html
 !cache/volt/index.html
 !cache/metadata/index.html
-logs/*
+logs/*.php
 !logs/index.html
 /config/development/
 
