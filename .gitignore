@@ -1,4 +1,30 @@
-/app/cache/
-/.idea
-/phalcon-webtools.iml
-/nbproject/private/
+# Created by https://www.gitignore.io/api/netbeans,phalcon,composer
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
+
+
+### Phalcon ###
+cache/*
+!cache/index.html
+!cache/volt/index.html
+!cache/metadata/index.html
+logs/*
+!logs/index.html
+/config/development/
+
+
+### Composer ###
+composer.phar
+vendor/
+
+# Commit your application's lock file http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock

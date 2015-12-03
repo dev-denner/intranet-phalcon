@@ -6,14 +6,21 @@ define('APP_PATH', realpath('..'));
 
 try {
 
-  require_once APP_PATH . '/app/config/Bootstrap.php';
-  require_once APP_PATH . '/app/plugins/ErrorPlugin.php';
+  if (is_file(APP_PATH . '/vendor/autoload.php')) {
+    require_once APP_PATH . '/vendor/autoload.php';
+  }
 
-  $di = new \Phalcon\DI\FactoryDefault();
+  require_once APP_PATH . '/config/Bootstrap.php';
+
+  $di = new Phalcon\Di\FactoryDefault();
   $app = new Bootstrap($di);
 
   echo $app->run(array());
-} catch (\Phalcon\Exception $e) {
-  echo $e->getMessage();
-  Error::exception($e);
+} catch (Phalcon\Exception $e) {
+  echo $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode();
+  echo nl2br(htmlentities($e->getTraceAsString()));
+  echo ErrorPlugin::exception($e);
+} catch (PDOException $e) {
+  echo $e->getMessage() . PHP_EOL . $e->getFile() . PHP_EOL . $e->getLine() . PHP_EOL . $e->getCode();
 }
+

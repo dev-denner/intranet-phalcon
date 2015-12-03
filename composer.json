@@ -1,5 +1,28 @@
 {
-    "require": {
-        "stanislav-web/phalcon-uploader": "dev-master"
-    }
+  "name": "denners/api-mpe",
+  "description": "API de projetos PHP da empresa MPE",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=5.5.12",
+    "ext-phalcon": ">=2.0",
+    "swiftmailer/swiftmailer": "@stable",
+    "phpoffice/phpword": "0.*",
+    "phpoffice/phpexcel": "*",
+    "dompdf/dompdf": "0.6.*",
+    "aymanrb/php-unstructured-text-parser": "dev-master",
+    "noherczeg/breadcrumb": "2.*",
+    "ghunti/highcharts-php": "~3.0",
+    "samayo/bulletproof": "2.0.*",
+    "sidroberts/phalcon-seeder": "dev-master"
+  },
+  "authors": [{
+      "name": "Denner Fernandes",
+      "email": "denner.fernandes@grupompe.com.br",
+      "homepage": "http://devdenner.esy.es/",
+      "role": "Developer"
+    }],
+  "keywords": ["phalcon", "framework", "api", "app"],
+  "type": "app",
+  "license": "MIT",
+  "homepage": "http://www.grupompe.com.br"
 }

@@ -6,5 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Uploader\\' => array($vendorDir . '/stanislav-web/phalcon-uploader/src/Uploader'),
+    'Sid\\Phalcon\\Seeder\\' => array($vendorDir . '/sidroberts/phalcon-seeder/src'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'PhpOffice\\PhpWord\\' => array($vendorDir . '/phpoffice/phpword/src/PhpWord'),
+    'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
+    'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
+    'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
+    'Ghunti\\HighchartsPHP\\' => array($vendorDir . '/ghunti/highcharts-php/src'),
 );
