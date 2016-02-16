@@ -28,7 +28,7 @@
             "homepage": "http://devdenner.esy.es/",
             "role": "Developer"
         }],
-    "keywords": ["phalcon", "framework", "api", "app"],
+    "keywords": ["Phalcon", "Modules", "API", "Oracle", "Whoops", "Forms"],
     "type": "app",
     "license": "MIT",
     "homepage": "http://www.grupompe.com.br"
