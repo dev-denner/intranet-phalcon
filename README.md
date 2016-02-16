@@ -1,1 +1,3 @@
-# API-Phalcon 1.0
+# API Phalcon Modules #
+
+APP for application management in Phalcon PHP.

@@ -1,0 +1,1106 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "1da2b6c5a572c4910b3e133edbd60293",
+    "content-hash": "1231fcdfd48b2dd6627b798dede09618",
+    "packages": [
+        {
+            "name": "aymanrb/php-unstructured-text-parser",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aymanrb/php-unstructured-text-parser.git",
+                "reference": "a1393fd12aa9a1264343f2ac217cb207afb502f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aymanrb/php-unstructured-text-parser/zipball/a1393fd12aa9a1264343f2ac217cb207afb502f2",
+                "reference": "a1393fd12aa9a1264343f2ac217cb207afb502f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.2.*"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ayman R. Bedair",
+                    "email": "aymanrb@gmail.com",
+                    "homepage": "http://www.aymanrb.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP Class to help extract text out of documents that are not structured in a processing friendly manner",
+            "homepage": "https://github.com/aymanrb/php-unstructured-text-parser",
+            "keywords": [
+                "extract data",
+                "php parser",
+                "text parser"
+            ],
+            "time": "2015-06-28 09:23:19"
+        },
+        {
+            "name": "dompdf/dompdf",
+            "version": "v0.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "cc06008f75262510ee135b8cbb14e333a309f651"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/cc06008f75262510ee135b8cbb14e333a309f651",
+                "reference": "cc06008f75262510ee135b8cbb14e333a309f651",
+                "shasum": ""
+            },
+            "require": {
+                "phenx/php-font-lib": "0.2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "include/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                },
+                {
+                    "name": "Brian Sweeney",
+                    "email": "eclecticgeek@gmail.com"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "time": "2015-12-07 04:07:13"
+        },
+        {
+            "name": "filp/whoops",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filp/whoops.git",
+                "reference": "a327942c50cbd62b25c6fbe08f173031ce25fbff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/a327942c50cbd62b25c6fbe08f173031ce25fbff",
+                "reference": "a327942c50cbd62b25c6fbe08f173031ce25fbff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^4.8 || ^5.0"
+            },
+            "suggest": {
+                "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
+                "whoops/soap": "Formats errors as SOAP responses"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Whoops\\": "src/Whoops/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Filipe Dobreira",
+                    "homepage": "https://github.com/filp",
+                    "role": "Developer"
+                }
+            ],
+            "description": "php error handling for cool kids",
+            "homepage": "https://github.com/filp/whoops",
+            "keywords": [
+                "error",
+                "exception",
+                "handling",
+                "library",
+                "whoops",
+                "zf2"
+            ],
+            "time": "2016-01-06 17:51:21"
+        },
+        {
+            "name": "ghunti/highcharts-php",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ghunti/HighchartsPHP.git",
+                "reference": "60efed11be137740f8e8671258808ed07a7458db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ghunti/HighchartsPHP/zipball/60efed11be137740f8e8671258808ed07a7458db",
+                "reference": "60efed11be137740f8e8671258808ed07a7458db",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ghunti\\HighchartsPHP\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Gonçalo Queirós",
+                    "email": "mail@goncaloqueiros.net",
+                    "homepage": "http://goncaloqueiros.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A php wrapper for highcharts and highstock javascript libraries",
+            "homepage": "http://goncaloqueiros.net/highcharts.php",
+            "keywords": [
+                "charts",
+                "highcharts",
+                "highstock",
+                "javascript",
+                "php"
+            ],
+            "time": "2015-08-12 00:05:14"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "6.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
+                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/psr7": "~1.1",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2015-11-23 00:47:50"
+        },
+        {
+            "name": "guzzlehttp/promises",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2015-10-15 22:28:00"
+        },
+        {
+            "name": "guzzlehttp/psr7",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5d04bdd2881ac89abde1fb78cc234bce24327bb",
+                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "PSR-7 message implementation",
+            "keywords": [
+                "http",
+                "message",
+                "stream",
+                "uri"
+            ],
+            "time": "2016-01-23 01:23:02"
+        },
+        {
+            "name": "m1ome/phalcon-datatables",
+            "version": "1.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/m1ome/phalcon-datatables.git",
+                "reference": "dfa67667557cb8464b4917bfe2856adb3a0380e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/m1ome/phalcon-datatables/zipball/dfa67667557cb8464b4917bfe2856adb3a0380e4",
+                "reference": "dfa67667557cb8464b4917bfe2856adb3a0380e4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "crysalead/kahlan": "~1.1",
+                "fzaninotto/faker": "1.5.*@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev_master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DataTables\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Makarenko",
+                    "email": "cryfall@gmail.com"
+                }
+            ],
+            "description": "DataTables adapter for Phalcon Framework",
+            "keywords": [
+                "datatables",
+                "phalcon",
+                "plugin"
+            ],
+            "time": "2015-11-27 10:13:36"
+        },
+        {
+            "name": "noherczeg/breadcrumb",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noherczeg/breadcrumb.git",
+                "reference": "dcdc109c3b8087f8323ff16292fc5df54dda82be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noherczeg/breadcrumb/zipball/dcdc109c3b8087f8323ff16292fc5df54dda82be",
+                "reference": "dcdc109c3b8087f8323ff16292fc5df54dda82be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Noherczeg\\Breadcrumb": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Norbert Csaba Herczeg",
+                    "email": "noherczeg@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple breadcrumb generator library.",
+            "homepage": "https://github.com/noherczeg/breadcrumb",
+            "keywords": [
+                "breadcrumb"
+            ],
+            "time": "2013-11-20 03:44:23"
+        },
+        {
+            "name": "ovr/phalcony",
+            "version": "0.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ovr/phalcony.git",
+                "reference": "bef48a91f17321201362c2616330f6496400fe5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ovr/phalcony/zipball/bef48a91f17321201362c2616330f6496400fe5b",
+                "reference": "bef48a91f17321201362c2616330f6496400fe5b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*@dev",
+                "satooshi/php-coveralls": "0.6.1",
+                "squizlabs/php_codesniffer": "1.5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Phalcony\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patsura Dmitry",
+                    "email": "zaets28rus@gmail.com"
+                }
+            ],
+            "description": "Library for expansion the base functional of Phalcon framework.",
+            "keywords": [
+                "framework",
+                "phalcon"
+            ],
+            "time": "2015-06-24 10:26:29"
+        },
+        {
+            "name": "phalcon/incubator",
+            "version": "v2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phalcon/incubator.git",
+                "reference": "3ca816904d2439847c48b74f0af2f25f9d158a9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phalcon/incubator/zipball/3ca816904d2439847c48b74f0af2f25f9d158a9a",
+                "reference": "3ca816904d2439847c48b74f0af2f25f9d158a9a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-phalcon": ">=2.0.4",
+                "php": ">=5.3.21",
+                "swiftmailer/swiftmailer": "~5.2"
+            },
+            "require-dev": {
+                "codeception/codeception": "2.0.14",
+                "mockery/mockery": "*",
+                "php-mock/php-mock": "<0.6",
+                "phpunit/phpunit": "4.6.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Phalcon": "Library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Phalcon Team",
+                    "email": "team@phalconphp.com"
+                }
+            ],
+            "description": "Adapters, prototypes or functionality that can be potentially incorporated to the C-framework.",
+            "homepage": "http://phalconphp.com",
+            "keywords": [
+                "framework",
+                "incubator",
+                "phalcon"
+            ],
+            "time": "2015-08-18 07:35:12"
+        },
+        {
+            "name": "phenx/php-font-lib",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhenX/php-font-lib.git",
+                "reference": "c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhenX/php-font-lib/zipball/c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82",
+                "reference": "c30c7fc00a6b0d863e9bb4c5d5dd015298b2dc82",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "classes/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/PhenX/php-font-lib",
+            "time": "2014-02-01 15:22:28"
+        },
+        {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01 07:00:55"
+        },
+        {
+            "name": "phpoffice/phpword",
+            "version": "v0.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPWord.git",
+                "reference": "38cb04d322007dd522cbdd8ba3cd50ab67ced0db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPWord/zipball/38cb04d322007dd522cbdd8ba3cd50ab67ced0db",
+                "reference": "38cb04d322007dd522cbdd8ba3cd50ab67ced0db",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "dompdf/dompdf": "0.6.*",
+                "mpdf/mpdf": "5.*",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phploc/phploc": "2.*",
+                "phpmd/phpmd": "2.*",
+                "phpunit/phpunit": "3.7.*",
+                "sebastian/phpcpd": "2.*",
+                "squizlabs/php_codesniffer": "1.*",
+                "tecnick.com/tcpdf": "6.*"
+            },
+            "suggest": {
+                "dompdf/dompdf": "Used to write PDF",
+                "ext-gd2": "Used to add images",
+                "ext-xmlwriter": "Used to write DOCX and ODT",
+                "ext-xsl": "Used to apply XSL style sheet to main document part of OOXML template",
+                "ext-zip": "Used to write DOCX and ODT"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpOffice\\PhpWord\\": "src/PhpWord"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com",
+                    "homepage": "http://gabrielbull.com/"
+                },
+                {
+                    "name": "Ivan Lanin",
+                    "homepage": "http://ivan.lanin.org"
+                },
+                {
+                    "name": "Roman Syroeshko",
+                    "homepage": "http://ru.linkedin.com/pub/roman-syroeshko/34/a53/994/"
+                }
+            ],
+            "description": "PHPWord - A pure PHP library for reading and writing word processing documents (DOCX, ODT, RTF, HTML, PDF)",
+            "homepage": "http://phpoffice.github.io",
+            "keywords": [
+                "ISO IEC 29500",
+                "OOXML",
+                "Office Open XML",
+                "OpenDocument",
+                "OpenXML",
+                "PhpOffice",
+                "PhpWord",
+                "Rich Text Format",
+                "WordprocessingML",
+                "doc",
+                "docx",
+                "html",
+                "odt",
+                "office",
+                "pdf",
+                "php",
+                "reader",
+                "rtf",
+                "template",
+                "template processor",
+                "word",
+                "writer"
+            ],
+            "time": "2015-08-30 14:30:44"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2015-05-04 20:22:00"
+        },
+        {
+            "name": "samayo/bulletproof",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/samayo/bulletproof.git",
+                "reference": "533c16a6794131efdee1d8f1e6b811c06a3e7194"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/samayo/bulletproof/zipball/533c16a6794131efdee1d8f1e6b811c06a3e7194",
+                "reference": "533c16a6794131efdee1d8f1e6b811c06a3e7194",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/bulletproof.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "samayo"
+                }
+            ],
+            "description": "A simple and secure PHP image uploader",
+            "homepage": "http://github.com/samayo/bulletproof",
+            "keywords": [
+                "image",
+                "security",
+                "upload"
+            ],
+            "time": "2015-08-04 13:32:10"
+        },
+        {
+            "name": "sidroberts/phalcon-seeder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SidRoberts/phalcon-seeder.git",
+                "reference": "4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SidRoberts/phalcon-seeder/zipball/4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6",
+                "reference": "4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-phalcon": ">= 2.0.0",
+                "guzzlehttp/guzzle": "~6.0",
+                "php": ">= 5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sid\\Phalcon\\Seeder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sid Roberts",
+                    "email": "Sid@SidRoberts.co.uk",
+                    "homepage": "http://www.SidRoberts.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Database seeder component for Phalcon.",
+            "time": "2016-02-01 09:35:44"
+        },
+        {
+            "name": "swiftmailer/swiftmailer",
+            "version": "v5.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/swiftmailer/swiftmailer.git",
+                "reference": "0697e6aa65c83edf97bb0f23d8763f94e3f11421"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/0697e6aa65c83edf97bb0f23d8763f94e3f11421",
+                "reference": "0697e6aa65c83edf97bb0f23d8763f94e3f11421",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.1,<0.9.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.4-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "lib/swift_required.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Corbyn"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Swiftmailer, free feature-rich PHP mailer",
+            "homepage": "http://swiftmailer.org",
+            "keywords": [
+                "email",
+                "mail",
+                "mailer"
+            ],
+            "time": "2015-06-06 14:19:39"
+        },
+        {
+            "name": "symfony/polyfill-mbstring",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-mbstring.git",
+                "reference": "1289d16209491b584839022f29257ad859b8532d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+                "reference": "1289d16209491b584839022f29257ad859b8532d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-mbstring": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for the Mbstring extension",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "mbstring",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2016-01-20 09:13:37"
+        },
+        {
+            "name": "symfony/var-dumper",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/24bb94807eff00db49374c37ebf56a0304e8aef3",
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2016-01-07 13:38:51"
+        },
+        {
+            "name": "whoops/soap",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whoops-php/soap.git",
+                "reference": "3a20e2b037bc49ff7f909db2694740ceb1b1be50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whoops-php/soap/zipball/3a20e2b037bc49ff7f909db2694740ceb1b1be50",
+                "reference": "3a20e2b037bc49ff7f909db2694740ceb1b1be50",
+                "shasum": ""
+            },
+            "require-dev": {
+                "filp/whoops": "^2.0-dev",
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Whoops\\Handler\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Markus Staab",
+                    "email": "maggus.staab@googlemail.com"
+                }
+            ],
+            "description": "Soap handler for Whoops",
+            "time": "2015-11-23 20:11:17"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "swiftmailer/swiftmailer": 0,
+        "aymanrb/php-unstructured-text-parser": 20,
+        "sidroberts/phalcon-seeder": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.5.12",
+        "ext-phalcon": ">=2.0"
+    },
+    "platform-dev": []
+}

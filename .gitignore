@@ -12,12 +12,8 @@ nb-configuration.xml
 
 
 ### Phalcon ###
-cache/
-!cache/index.html
-!cache/volt/index.html
-!cache/metadata/index.html
-logs/
-!logs/index.html
+cache/*
+logs/*
 /config/development/
 
 
