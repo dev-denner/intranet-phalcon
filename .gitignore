@@ -12,8 +12,8 @@ nb-configuration.xml
 
 
 ### Phalcon ###
-cache/*
-logs/*
+cache/
+logs/
 /config/development/
 
 

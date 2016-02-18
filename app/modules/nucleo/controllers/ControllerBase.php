@@ -18,15 +18,15 @@ class ControllerBase extends Controller {
 
     public function initialize() {
 
-        $di = Di::getDefault();
+        //$di = Di::getDefault();
         
-        $uri = $di->get('config');
-        $this->uri = $uri->application->baseUri;
+        $di = $this->di->get('config');
+        $this->uri = $di->application->baseUri;
 
-        $this->tag->prependTitle('Intranet | ');
-        $this->tag->appendTitle(' | Grupo MPE');
+        $this->tag->prependTitle('API PHALCON | ');
+        $this->tag->appendTitle(' | Main');
         $this->view->setTemplateAfter('main');
-        $this->view->titleLogo = 'Grupo MPE';
+        $this->view->titleLogo = 'API PHALCON';
     }
 
 }

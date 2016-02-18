@@ -61,7 +61,6 @@ class Bootstrap {
         'security',
         'router',
         'assets',
-        'tab_system',
     );
 
     try {
@@ -83,7 +82,6 @@ class Bootstrap {
     } catch (\Phalcon\Exception $e) {
       echo $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode();
       echo nl2br(htmlentities($e->getTraceAsString()));
-      echo ErrorPlugin::exception($e);
     } catch (\PDOException $e) {
       echo $e->getMessage() . PHP_EOL . $e->getFile() . PHP_EOL . $e->getLine() . PHP_EOL . $e->getCode();
     }
@@ -109,7 +107,12 @@ class Bootstrap {
     $loader = new Loader();
 
     $loader->registerNamespaces(
-            array()
+            array(
+                'System\Library' => __DIR__ . '/../library',
+                'System\Forms' => __DIR__ . '/../forms',
+                'System\Plugins' => __DIR__ . '/../plugins',
+                'System\Helpers' => __DIR__ . '/../helpers',
+            )
     );
 
     $loader->registerDirs(
@@ -140,9 +143,9 @@ class Bootstrap {
       error_reporting(-1);
     }
 
-    set_error_handler(array('ErrorPlugin', 'normal'));
-    set_exception_handler(array('ErrorPlugin', 'exception'));
-    register_shutdown_function(array('ErrorPlugin', 'shutdown'));
+    set_error_handler(array('\System\Plugins\Error', 'normal'));
+    set_exception_handler(array('System\Plugins\Error', 'exception'));
+    register_shutdown_function(array('System\Plugins\Error', 'shutdown'));
   }
 
   protected function initTimezone($options = array()) {
@@ -192,7 +195,7 @@ class Bootstrap {
 
       //$eventsManager->attach('dispatch:beforeDispatch', new SecurityPlugin());
 
-      $eventsManager->attach('dispatch', new NotFoundPlugin());
+      $eventsManager->attach('dispatch', new System\Plugins\NotFound());
       $dispatcher = new Dispatcher();
       $dispatcher->setEventsManager($eventsManager);
       $dispatcher->setDefaultNamespace('Nucleo');
@@ -402,20 +405,8 @@ class Bootstrap {
       $assets->collection('footer')
               ->addJs('assets/js/libs/jquery-2.1.4.min.js', true)
               ->addJs('assets/js/libs/bootstrap.min.js', true)
-              ->addJs('assets/libs/datatable/datatables.min.js', true)
               ->addJs('assets/js/main.js', true);
       return $assets;
-    });
-  }
-
-  protected function initTab_system($options = array()) {
-
-    $config = $this->_di->get('config');
-
-    $tab_system = include $config->application->helpersDir . '/tab_system.php';
-
-    $this->_di->setShared('tab_system', function() use ($tab_system) {
-      return $tab_system;
     });
   }
 

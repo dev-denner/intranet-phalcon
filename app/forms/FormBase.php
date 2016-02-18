@@ -11,7 +11,10 @@
  *
  * @author denner.fernandes
  */
-class FormBase extends FormBootstrap {
+
+namespace System\Forms;
+
+class FormBase extends \FormBootstrap {
 
   private $_name;
   private $_attributes;

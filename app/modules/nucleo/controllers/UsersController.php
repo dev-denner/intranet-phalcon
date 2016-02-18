@@ -26,24 +26,14 @@ class UsersController extends ControllerBase {
    * Index action
    */
   public function indexAction() {
-    $this->persistent->parameters = null;
 
-    $user = new Users();
-    $userForm = new UsersForm($user, ['action' => 'search']);
-    $this->view->form = $userForm;
-  }
-
-  /**
-   * Searches for users
-   */
-  public function searchAction() {
     $numberPage = 1;
     if ($this->request->isPost()) {
-      
+
       $query = Criteria::fromInput($this->di, '\Nucleo\Models\Users', $_POST);
       $this->persistent->parameters = $query->getParams();
     } else {
-      
+
       $numberPage = $this->request->getQuery('page', 'int');
     }
 
@@ -55,18 +45,77 @@ class UsersController extends ControllerBase {
 
     $users = Users::find($parameters);
     if (count($users) == 0) {
-      $this->flash->notice('The search did not find any users');
+      $this->flash->notice('A pesquisa não encontrou quaisquer usuários');
 
       return $this->response->redirect('users');
     }
 
-    $paginator = new Paginator(array(
+    $entity = new Users();
+    
+    $options = [
         'data' => $users,
-        'limit' => 10,
-        'page' => $numberPage
-    ));
+        'url' => 'users/index/',
+        'entity' => [
+            'forms' => $entity->typeForms(),
+            'desc' => $entity->desc(),
+        ],
+        'page' => [
+            'select' => 10,
+            'current' => $numberPage,
+        ],
+        'button' => [
+            3 => [
+                'class' => 'btn-default',
+                'action' => 'search()',
+                'label' => 'Busca Avançada',
+            ],
+            0 => [
+                'class' => 'btn-primary',
+                'action' => 'print()',
+                'label' => 'Imprimir',
+            ],
+            1 => [
+                'class' => 'btn-success',
+                'action' => 'excel()',
+                'label' => 'Excel',
+            ],
+            2 => [
+                'class' => 'btn-danger',
+                'action' => 'pdf()',
+                'label' => 'PDF',
+            ],
+        ],
+        'search' => 'teste',
+        'action' => [
+            0 => [
+                'action' => 'add()',
+                'label' => 'Incluir',
+            ],
+            1 => [
+                'action' => 'edit()',
+                'label' => 'Editar',
+            ],
+            2 => [
+                'action' => 'delete()',
+                'label' => 'Deletar',
+            ],
+            
+        ],
+    ];
 
-    $this->view->page = $paginator->getPaginate();
+
+    $this->view->datatable = new \System\Library\DataTable($options);
+  }
+
+  /**
+   * Searches for users
+   */
+  public function searchAction() {
+    $this->persistent->parameters = null;
+
+    $user = new Users();
+    $userForm = new UsersForm($user, ['action' => 'search']);
+    $this->view->form = $userForm;
   }
 
   public function search2Action() {

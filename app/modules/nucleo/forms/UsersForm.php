@@ -14,7 +14,7 @@
 
 namespace Nucleo\Forms;
 
-class UsersForm extends \FormBase {
+class UsersForm extends \System\Forms\FormBase {
 
     public function initialize($entity = null, $options = array()) {
 

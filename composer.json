@@ -1,5 +1,5 @@
 {
-    "name": "denners/api-phalcon",
+    "name": "denners/api-mpe",
     "description": "API de projetos PHP da empresa MPE",
     "version": "1.0.0",
     "require": {
@@ -28,7 +28,7 @@
             "homepage": "http://devdenner.esy.es/",
             "role": "Developer"
         }],
-    "keywords": ["Phalcon", "Modules", "API", "Oracle", "Whoops", "Forms"],
+    "keywords": ["phalcon", "framework", "api", "app"],
     "type": "app",
     "license": "MIT",
     "homepage": "http://www.grupompe.com.br"
