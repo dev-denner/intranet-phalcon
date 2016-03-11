@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,7 +11,7 @@
  * @author denner.fernandes
  */
 
-namespace System\Plugins;
+namespace DevDenners\Plugins;
 
 use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
@@ -35,7 +34,7 @@ class NotFound extends Plugin {
    * @param Exception $exception
    * @return boolean
    */
-  public function beforeException(Event $event, MvcDispatcher $dispatcher, \Phalcon\Exception $exception) {
+  public function beforeException(Event $event, MvcDispatcher $dispatcher, \Exception $exception) {
     error_log($exception->getMessage() . PHP_EOL . $exception->getTraceAsString());
     if ($exception instanceof DispatcherException) {
       switch ($exception->getCode()) {
@@ -45,8 +44,8 @@ class NotFound extends Plugin {
           return false;
       }
     }
-    $this->response->redirect('nucleo/index/show500');
-    return false;
+    //$this->response->redirect('nucleo/index/show500');
+    //return false;
   }
 
 }

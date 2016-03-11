@@ -1,13 +1,15 @@
 <?php
 
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2016 Grupo MPE
  * @license     New BSD License; see LICENSE
- * @link        http://www.grupompe.com.br
- * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
+ * @link        https://github.com/denners777/API-Phalcon
+ * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
 namespace Nucleo\Models;
+
+use \Phalcon\Mvc\Model\Message as Message;
 
 class Menus extends ModelBase {
 
@@ -118,7 +120,12 @@ use beforeUpdate;
    * @return $this
    */
   public function setParents($parents) {
-    $this->parents = $parents;
+
+    if (empty(trim($parents))) {
+      $this->parents = null;
+    } else {
+      $this->parents = $parents;
+    }
 
     return $this;
   }
@@ -289,9 +296,10 @@ use beforeUpdate;
    * Initialize method for model.
    */
   public function initialize() {
-    $this->hasMany('id', 'Nucleo\Models\Menus', 'parents', array('alias' => 'Menus'));
-    $this->belongsTo('action', 'Nucleo\Models\Actions', 'id', array('alias' => 'Actions'));
-    $this->belongsTo('parents', 'Nucleo\Models\Menus', 'id', array('alias' => 'Menus'));
+    
+    $this->hasMany('id', __NAMESPACE__ . '\Menus', 'parents', ['alias' => 'Menus']);
+    $this->belongsTo('action', __NAMESPACE__ . '\Actions', 'id', ['alias' => 'Actions']);
+    $this->belongsTo('parents', __NAMESPACE__ . '\Menus', 'id', ['alias' => 'Menus']);
 
     $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
         'field' => 'sdel',
@@ -305,7 +313,7 @@ use beforeUpdate;
    * @return string
    */
   public function getSource() {
-    return 'menus';
+    return 'MENU';
   }
 
   /**
@@ -314,23 +322,172 @@ use beforeUpdate;
    *
    * @return array
    */
-  public function columnMap() {
+  public static function columnMap() {
     return array(
-        'id' => 'id',
-        'title' => 'title',
-        'slug' => 'slug',
-        'parents' => 'parents',
-        'action' => 'action',
-        'sdel' => 'sdel',
-        'createBy' => 'createBy',
-        'createIn' => 'createIn',
-        'updateBy' => 'updateBy',
-        'updateIn' => 'updateIn'
+        'ID_MENU' => 'id',
+        'DS_TITULO' => 'title',
+        'DS_SLUG' => 'slug',
+        'CD_PAI' => 'parents',
+        'CD_ACAO' => 'action',
+        'SDEL' => 'sdel',
+        'CREATEBY' => 'createBy',
+        'CREATEIN' => 'createIn',
+        'UPDATEBY' => 'updateBy',
+        'UPDATEIN' => 'updateIn',
+        'PHALCON_RN' => 'PHALCON_RN',
     );
   }
 
   public static function getDeleted() {
     return 'sdel';
+  }
+
+  public function typeForms() {
+    return [
+        'list' => [
+            'id' => true,
+            'title' => true,
+            'slug' => true,
+            'parents' => true,
+            'action' => true,
+            'createBy' => false,
+            'createIn' => false,
+            'updateBy' => false,
+            'updateIn' => false,
+        ],
+        'view' => [
+            'id' => true,
+            'title' => true,
+            'slug' => true,
+            'parents' => true,
+            'action' => true,
+            'createBy' => true,
+            'createIn' => true,
+            'updateBy' => true,
+            'updateIn' => true,
+        ],
+        'search' => [
+            'id' => false,
+            'title' => true,
+            'slug' => true,
+            'parents' => true,
+            'action' => true,
+            'createBy' => false,
+            'createIn' => false,
+            'updateBy' => false,
+            'updateIn' => false,
+        ],
+        'insert' => [
+            'id' => false,
+            'title' => true,
+            'slug' => true,
+            'parents' => true,
+            'action' => true,
+            'createBy' => false,
+            'createIn' => false,
+            'updateBy' => false,
+            'updateIn' => false,
+        ],
+        'update' => [
+            'id' => true,
+            'title' => true,
+            'slug' => true,
+            'parents' => true,
+            'action' => true,
+            'createBy' => false,
+            'createIn' => false,
+            'updateBy' => false,
+            'updateIn' => false,
+        ],
+    ];
+  }
+
+  public function desc() {
+
+    return [
+        'id' => [
+            'type' => 'hidden',
+            'primary' => true,
+            'attributes' => [
+                'maxlength' => 11,
+                'required' => 'required'
+            ],
+            'validation' => [
+                'PresenceOf' => true,
+            ],
+        ],
+        'title' => [
+            'type' => 'text',
+            'title' => 'Título',
+            'attributes' => [
+                'maxlength' => 50,
+                'required' => 'required'
+            ],
+            'validation' => [
+                'PresenceOf' => true,
+            ],
+        ],
+        'slug' => [
+            'type' => 'text',
+            'title' => 'Slug',
+            'attributes' => [
+                'maxlength' => 255,
+            ],
+            'validation' => [
+                'PresenceOf' => true,
+            ],
+        ],
+        'parents' => [
+            'type' => 'select',
+            'title' => 'Pai',
+            'select' => [
+                'entity' => '\Nucleo\Models\Menus',
+                'selectField' => [
+                    'key' => 'id',
+                    'value' => 'title'
+                ],
+                'selectEmpty' => true,
+            ],
+            'foreign' => 'Menus/title',
+            'attributes' => [],
+            'validation' => [],
+        ],
+        'action' => [
+            'type' => 'select',
+            'title' => 'Acao',
+            'select' => [
+                'entity' => '\Nucleo\Models\Actions',
+                'selectField' => [
+                    'key' => 'id',
+                    'value' => 'title'
+                ],
+                'selectEmpty' => true,
+            ],
+            'foreign' => 'Actions/title',
+            'attributes' => [
+                'required' => 'required'
+            ],
+            'validation' => [
+                'PresenceOf' => true,
+            ],
+        ],
+        'createBy' => [
+            'type' => 'text',
+            'title' => 'Criado por',
+        ],
+        'createIn' => [
+            'type' => 'text',
+            'title' => 'Criado em',
+        ],
+        'updateBy' => [
+            'type' => 'text',
+            'title' => 'Atualizado por',
+        ],
+        'updateIn' => [
+            'type' => 'text',
+            'title' => 'Atualizado em',
+        ],
+    ];
   }
 
 }

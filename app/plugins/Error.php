@@ -12,7 +12,7 @@
  * @author DennerFernandes
  */
 
-namespace System\Plugins;
+namespace DevDenners\Plugins;
 
 use Phalcon\DI\FactoryDefault as Di;
 use Phalcon\Mvc\User\Plugin as Plugin;

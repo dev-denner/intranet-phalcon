@@ -6,7 +6,7 @@ return new \Phalcon\Config([
         'libraryDir' => APP_PATH . '/app/library/',
         'helpersDir' => APP_PATH . '/app/helpers/',
         'formsDir' => APP_PATH . '/app/forms/',
-        'baseUri' => '/api-phalcon/',
+        'baseUri' => 'http://localhost/api-phalcon/',
         'timezone' => 'America/Sao_Paulo',
         'cryptSalt' => 'eEAfR|_&G&f,+vU]:jFr!!A&+71w1Ms9~8_4L!<@[N@DyaIP_2My|:+.u>/6m,$D',
         'environment' => 'development',
@@ -34,8 +34,8 @@ return new \Phalcon\Config([
         'stat' => true
     ],
     'pagination' => [
-        'select' => 10,
-        'options' => [10, 25, 50, 75, 100, 'ALL'],
-        'pages' => 5
+        'limiter' => 10,
+        'options' => [10, 25, 50, 75, 100, 500],
+        'perpage' => 5
     ]
         ]);

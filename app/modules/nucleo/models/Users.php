@@ -1,15 +1,18 @@
 <?php
 
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2016 Grupo MPE
  * @license     New BSD License; see LICENSE
- * @link        http://www.grupompe.com.br
- * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
+ * @link        https://github.com/denners777/API-Phalcon
+ * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
 namespace Nucleo\Models;
 
-use Phalcon\Mvc\Model\Validator\Email as Email;
+use \Phalcon\Mvc\Model\Message as Message;
+use \Phalcon\Validation as Validation;
+use \Phalcon\Validation\Validator\Email as ValidatorEmail;
+use \Phalcon\Validation\Validator\Uniqueness as Uniqueness;
 
 class Users extends ModelBase {
 
@@ -356,13 +359,22 @@ use beforeUpdate;
    * @return boolean
    */
   public function validation() {
-    $this->validate(new Email(array('field' => 'email', 'required' => true,)));
 
-    if ($this->validationHasFailed() == true) {
-      return false;
-    }
+    $validation = new Validation();
+    $validation->add('email', new ValidatorEmail(
+            ['field' => 'email', 'required' => false, 'message' => 'E-mail não é válido!']
+    ));
 
-    return true;
+    /* $validation->add('cpf', new Uniqueness(
+      ['field' => 'cpf', 'message' => 'Esse CPF já está cadastrado no sistema!']
+      ));
+      $validation->add('email', new Uniqueness(
+      [ 'field' => 'email', 'message' => 'Esse E-mail já está cadastrado no sistema!']
+      )); */
+
+    $this->validate($validation);
+
+    return $this->validationHasFailed() != true;
   }
 
   /**
@@ -372,15 +384,15 @@ use beforeUpdate;
 
     $this->setSchema('NUCLEO');
 
-    $this->hasMany('id', 'Nucleo\Models\Logins', 'userId', array('alias' => 'Logins'));
-    $this->hasMany('id', 'Nucleo\Models\Notifications', 'userId', array('alias' => 'Notifications'));
-    $this->hasMany('id', 'Nucleo\Models\Perfils', 'user', array('alias' => 'Perfils'));
-    $this->hasMany('id', 'Nucleo\Models\Tokens', 'usersId', array('alias' => 'Tokens'));
-    $this->hasMany('id', 'Nucleo\Models\UsersGroups', 'userId', array('alias' => 'UsersGroups'));
+    $this->hasMany('id', __NAMESPACE__ . '\Logins', 'userId', ['alias' => 'Logins',]);
+    $this->hasMany('id', __NAMESPACE__ . '\Notifications', 'userId', ['alias' => 'Notifications']);
+    $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'user', ['alias' => 'Perfils']);
+    $this->hasMany('id', __NAMESPACE__ . '\Tokens', 'usersId', ['alias' => 'Tokens']);
+    $this->hasMany('id', __NAMESPACE__ . '\UsersGroups', 'userId', ['alias' => 'UsersGroups']);
 
     $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
         'field' => 'sdel',
-        'value' => date('*')
+        'value' => '*'
     ]));
   }
 
@@ -421,8 +433,32 @@ use beforeUpdate;
   }
 
   public function typeForms() {
-    return array(
-        'list' => array(
+    return [
+        'list' => [
+            'id' => true,
+            'cpf' => true,
+            'password' => false,
+            'confirmPassword' => false,
+            'mustChangePassword' => false,
+            'email' => true,
+            'name' => true,
+            'rememberMe' => false,
+            'status' => true,
+            'csrf' => false,
+        ],
+        'view' => [
+            'id' => true,
+            'cpf' => true,
+            'password' => false,
+            'confirmPassword' => false,
+            'mustChangePassword' => true,
+            'email' => true,
+            'name' => true,
+            'rememberMe' => false,
+            'status' => true,
+            'csrf' => false,
+        ],
+        'search' => [
             'id' => false,
             'cpf' => true,
             'password' => false,
@@ -430,21 +466,11 @@ use beforeUpdate;
             'mustChangePassword' => false,
             'email' => true,
             'name' => true,
+            'rememberMe' => false,
             'status' => true,
             'csrf' => false,
-        ),
-        'search' => array(
-            'id' => false,
-            'cpf' => true,
-            'password' => false,
-            'confirmPassword' => false,
-            'mustChangePassword' => false,
-            'email' => true,
-            'name' => true,
-            'status' => true,
-            'csrf' => false,
-        ),
-        'insert' => array(
+        ],
+        'insert' => [
             'id' => false,
             'cpf' => true,
             'password' => true,
@@ -452,10 +478,11 @@ use beforeUpdate;
             'mustChangePassword' => true,
             'email' => true,
             'name' => true,
+            'rememberMe' => false,
             'status' => true,
             'csrf' => false,
-        ),
-        'update' => array(
+        ],
+        'update' => [
             'id' => true,
             'cpf' => true,
             'password' => true,
@@ -463,10 +490,11 @@ use beforeUpdate;
             'mustChangePassword' => true,
             'email' => true,
             'name' => true,
+            'rememberMe' => false,
             'status' => true,
             'csrf' => false,
-        ),
-        'registration' => array(
+        ],
+        'registration' => [
             'id' => false,
             'cpf' => true,
             'password' => true,
@@ -474,10 +502,11 @@ use beforeUpdate;
             'mustChangePassword' => false,
             'email' => true,
             'name' => true,
+            'rememberMe' => false,
             'status' => false,
             'csrf' => true,
-        ),
-        'password' => array(
+        ],
+        'password' => [
             'id' => true,
             'cpf' => false,
             'password' => true,
@@ -485,122 +514,22 @@ use beforeUpdate;
             'mustChangePassword' => false,
             'email' => false,
             'name' => false,
+            'rememberMe' => false,
             'status' => false,
             'csrf' => true,
-        ),
-    );
+        ],
+        'login' => [
+            'id' => false,
+            'cpf' => true,
+            'password' => true,
+            'confirmPassword' => false,
+            'mustChangePassword' => false,
+            'email' => false,
+            'name' => false,
+            'rememberMe' => true,
+            'status' => false,
+            'csrf' => true,
+        ],
+    ];
   }
-
-  public function desc() {
-
-    return array(
-        'id' => array(
-            'type' => 'hidden',
-            'primary' => true,
-            'attributes' => array(
-                'maxlength' => 11,
-                'required' => 'required'
-            ),
-            'validation' => array(
-                'PresenceOf' => true,
-            ),
-        ),
-        'cpf' => array(
-            'type' => 'text',
-            'title' => 'CPF',
-            'attributes' => array(
-                'maxlength' => 14,
-                'required' => 'required'
-            ),
-            'validation' => array(
-                'PresenceOf' => true,
-                'Uniqueness' => 'Users',
-                'Regex' => '([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})',
-            ),
-        ),
-        'password' => array(
-            'type' => 'password',
-            'title' => 'Senha',
-            'attributes' => array(
-                'maxlength' => 105,
-            ),
-            'validation' => array(
-                'PresenceOf' => true,
-            ),
-        ),
-        'confirmPassword' => array(
-            'type' => 'password',
-            'title' => 'Confirme sua Senha',
-            'virtual' => true,
-            'attributes' => array(
-                'maxlength' => 105,
-            ),
-            'validation' => array(
-                'PresenceOf' => true,
-                'Confirmation' => 'password',
-            ),
-        ),
-        'mustChangePassword' => array(
-            'type' => 'checkbox',
-            'title' => 'Forçar troca de Senha',
-            'attributes' => array(),
-            'actions' => array(
-                'list' => false,
-                'search' => false,
-                'insert' => true,
-                'update' => true,
-                'registration' => false,
-            )
-        ), 'email' => array(
-            'type' => 'email',
-            'title' => 'E-mail',
-            'attributes' => array(
-                'maxlength' => 105,
-            ),
-            'validation' => array(
-                'Email' => true,
-                'Uniqueness' => 'Users'
-            ),
-        ),
-        'name' => array(
-            'type' => 'text',
-            'title' => 'Nome',
-            'attributes' => array(
-                'maxlength' => 105
-            ),
-        ),
-        'status' => array(
-            'type' => 'select',
-            'title' => 'Status',
-            'select' => array(
-                'entity' => 'Nucleo\Models\TablesSystem',
-                'filter' => array(
-                    'field' => 'table',
-                    'value' => 'status'
-                ),
-                'selectField' => array(
-                    'key' => 'code',
-                    'value' => 'value'
-                ),
-                'selectEmpty' => true,
-            ),
-            'attributes' => array(
-                'required' => 'required'
-            ),
-            'validation' => array(
-                'PresenceOf' => true,
-            ),
-        ),
-        'csrf' => array(
-            'type' => 'hidden',
-            'attributes' => array(
-                'required' => 'required'
-            ),
-            'validation' => array(
-                'Identical' => true,
-            ),
-        )
-    );
-  }
-
 }

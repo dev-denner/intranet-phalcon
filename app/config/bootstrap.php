@@ -1,37 +1,39 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of Bootstrap
- *
- * @author DennerFernandes
- */
-use Phalcon\Mvc\Application as Application;
+ * @copyright   2016 Grupo MPE
+ * @license     New BSD License; see LICENSE
+ * @link        https://github.com/denners777/API-Phalcon
+ * @author      Denner Fernandes <denners777@hotmail.com>
+ * */
+use DevDenners\Library\Auth as Auth;
+use DevDenners\Library\FlashMessage\Closable as Closable;
+use DevDenners\Plugins\NotFound as NotFound;
+use Phalcon\Assets\Manager as AssetsManager;
+use Phalcon\Crypt as Crypt;
+use Phalcon\Cache\Frontend\Data as CacheFront;
+use Phalcon\Cache\Bachend\File as CacheBack;
+use Phalcon\Db\Adapter\Pdo\Oracle as Oracle;
+use Phalcon\Db\Adapter\Pdo\Mysql as Mysql;
+use Phalcon\Debug as Debug;
+use Phalcon\Exception as Exception;
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Http\Response\Cookies as Cookies;
 use Phalcon\Loader as Loader;
-use Phalcon\Flash\Session as Flash;
-use Phalcon\Mvc\Url as Url;
-use Phalcon\Mvc\Dispatcher as Dispatcher;
 use Phalcon\Logger as Logger;
 use Phalcon\Logger\Adapter\File as LoggerFile;
 use Phalcon\Logger\Formatter\Line as LoggerFormatter;
-use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Mvc\Application as Application;
+use Phalcon\Mvc\Dispatcher as Dispatcher;
+use Phalcon\Mvc\Model\Manager as ModelsManager;
 use Phalcon\Mvc\Model\Metadata\Files as MetadataFiles;
 use Phalcon\Mvc\Model\Metadata\Memory as MetadataMemory;
-use Phalcon\Session\Adapter\Files as Session;
-use Phalcon\Cache\Frontend\Data as CacheFront;
-use Phalcon\Cache\Bachend\File as CacheBack;
-use Phalcon\Security as Security;
+use Phalcon\Mvc\Model\MetaData\Strategy\Annotations as Annotations;
 use Phalcon\Mvc\Router as Router;
-use Phalcon\Assets\Manager as AssetsManager;
-use Phalcon\Crypt as Crypt;
-use Phalcon\Http\Response\Cookies as Cookies;
-use Phalcon\Db\Adapter\Pdo\Oracle as Oracle;
-use Phalcon\Db\Adapter\Pdo\Mysql as Mysql;
+use Phalcon\Mvc\Url as Url;
+use Phalcon\Session\Adapter\Files as Session;
+use Phalcon\Security as Security;
+use Sid\Phalcon\Seeder\Seeder as Seeder;
 
 class Bootstrap {
 
@@ -43,7 +45,7 @@ class Bootstrap {
 
   public function run($options) {
 
-    $loaders = array(
+    $loaders = [
         'config',
         'loader',
         'environment',
@@ -61,7 +63,8 @@ class Bootstrap {
         'security',
         'router',
         'assets',
-    );
+        'auth',
+    ];
 
     try {
 
@@ -79,7 +82,7 @@ class Bootstrap {
       $application->setDI($this->_di);
 
       return $application->handle()->getContent();
-    } catch (\Phalcon\Exception $e) {
+    } catch (Exception $e) {
       echo $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode();
       echo nl2br(htmlentities($e->getTraceAsString()));
     } catch (\PDOException $e) {
@@ -87,7 +90,7 @@ class Bootstrap {
     }
   }
 
-  protected function initConfig($options = array()) {
+  protected function initConfig($options = []) {
     $config = include APP_PATH . '/app/config/config.php';
     $databases = include APP_PATH . '/app/config/database.php';
 
@@ -100,34 +103,31 @@ class Bootstrap {
     });
   }
 
-  protected function initLoader($options = array()) {
+  protected function initLoader($options = []) {
 
     $config = $this->_di->get('config');
 
     $loader = new Loader();
 
-    $loader->registerNamespaces(
-            array(
-                'System\Library' => __DIR__ . '/../library',
-                'System\Forms' => __DIR__ . '/../forms',
-                'System\Plugins' => __DIR__ . '/../plugins',
-                'System\Helpers' => __DIR__ . '/../helpers',
-            )
-    );
+    $loader->registerNamespaces([
+        'DevDenners\Library' => __DIR__ . '/../library',
+        'DevDenners\Forms' => __DIR__ . '/../forms',
+        'DevDenners\Plugins' => __DIR__ . '/../plugins',
+        'DevDenners\Helpers' => __DIR__ . '/../helpers',
+    ]);
 
     $loader->registerDirs(
-            array(
+            [
                 $config->application->pluginsDir,
                 $config->application->libraryDir,
                 $config->application->helpersDir,
                 $config->application->formsDir,
-            )
-    );
+    ]);
 
     $loader->register();
   }
 
-  protected function initEnvironment($options = array()) {
+  protected function initEnvironment($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -136,19 +136,19 @@ class Bootstrap {
     if ($environment) {
       ini_set('display_errors', true);
       error_reporting(E_ALL);
-      $debug = new Phalcon\Debug();
+      $debug = new Debug();
       $debug->listen();
     } else {
       ini_set('display_errors', false);
       error_reporting(-1);
     }
 
-    set_error_handler(array('\System\Plugins\Error', 'normal'));
-    set_exception_handler(array('System\Plugins\Error', 'exception'));
-    register_shutdown_function(array('System\Plugins\Error', 'shutdown'));
+    set_error_handler(['\DevDenners\Plugins\Error', 'normal']);
+    set_exception_handler(['DevDenners\Plugins\Error', 'exception']);
+    register_shutdown_function(['DevDenners\Plugins\Error', 'shutdown']);
   }
 
-  protected function initTimezone($options = array()) {
+  protected function initTimezone($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -159,21 +159,14 @@ class Bootstrap {
     $this->_di->setShared('timezone_default', $timezone);
   }
 
-  protected function initFlash($options = array()) {
+  protected function initFlash($options = []) {
 
     $this->_di->setShared('flash', function() {
-      $params = array(
-          'error' => 'alert alert-danger',
-          'success' => 'alert alert-success',
-          'notice' => 'alert alert-info',
-          'warning' => 'alert alert-warning'
-      );
-
-      return new Flash($params);
+      return new Closable();
     });
   }
 
-  protected function initUrl($options = array()) {
+  protected function initUrl($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -185,7 +178,7 @@ class Bootstrap {
     });
   }
 
-  protected function initDispatcher($options = array()) {
+  protected function initDispatcher($options = []) {
 
     $di = $this->_di;
 
@@ -195,7 +188,7 @@ class Bootstrap {
 
       //$eventsManager->attach('dispatch:beforeDispatch', new SecurityPlugin());
 
-      $eventsManager->attach('dispatch', new System\Plugins\NotFound());
+      $eventsManager->attach('dispatch', new NotFound());
       $dispatcher = new Dispatcher();
       $dispatcher->setEventsManager($eventsManager);
       $dispatcher->setDefaultNamespace('Nucleo');
@@ -204,7 +197,7 @@ class Bootstrap {
     });
   }
 
-  protected function initLogger($options = array()) {
+  protected function initLogger($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -231,7 +224,7 @@ class Bootstrap {
     });
   }
 
-  protected function initDatabase($options = array()) {
+  protected function initDatabase($options = []) {
 
     $config = $this->_di->get('config');
     $databases = $this->_di->get('databases');
@@ -253,14 +246,14 @@ class Bootstrap {
           });
         }
 
-        $params = array(
+        $params = [
             'host' => $value->host,
             'username' => $value->username,
             'password' => $value->password,
             'dbname' => $value->dbname,
             'schema' => $value->schema,
             'options' => [PDO::ATTR_CASE => PDO::CASE_UPPER, PDO::ATTR_PERSISTENT => TRUE,],
-        );
+        ];
 
         switch ($value->adapter) {
           case 'Oracle':
@@ -287,13 +280,10 @@ class Bootstrap {
             mkdir($config->model->metadata->path, 0777, true);
           }
 
-          $modelsMetadata = new MetadataFiles(
-                  array(
-              'metaDataDir' => $config->model->metadata->path
-                  )
+          $modelsMetadata = new MetadataFiles(['metaDataDir' => $config->model->metadata->path]
           );
           $modelsMetadata->setStrategy(
-                  new \Phalcon\Mvc\Model\MetaData\Strategy\Annotations()
+                  new Annotations()
           );
           return $modelsMetadata;
         } else {
@@ -304,16 +294,22 @@ class Bootstrap {
       }
     });
 
+    $this->_di->setShared('modelsManager', function() {
+      return new ModelsManager();
+    });
+
     $this->_di->setShared('seeder', function () {
-      $seeder = new \Sid\Phalcon\Seeder\Seeder();
+      $seeder = new Seeder();
       return $seeder;
     });
   }
 
-  protected function initSession($options = array()) {
+  protected function initSession($options = []) {
 
     $this->_di->setShared('session', function() {
-      $session = new Session();
+      $session = new Session(
+              ['uniqueId' => 'api_phalcon-']
+      );
       if (!$session->isStarted()) {
         $session->start();
       }
@@ -321,7 +317,7 @@ class Bootstrap {
     });
   }
 
-  protected function initCache($options = array()) {
+  protected function initCache($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -333,22 +329,22 @@ class Bootstrap {
       }
 
       $cacheDir = $config->cache->cacheDir;
-      $frontEndOptions = array('lifetime' => $lifetime);
-      $backEndOptions = array('cacheDir' => $cacheDir);
+      $frontEndOptions = ['lifetime' => $lifetime];
+      $backEndOptions = ['cacheDir' => $cacheDir];
 
       $frontCache = new CacheFront($frontEndOptions);
       $cache = new CacheBack($frontCache, $backEndOptions);
     });
   }
 
-  protected function initElements($options = array()) {
+  protected function initElements($options = []) {
 
     $this->_di->setShared('elements', function() {
       return new Elements();
     });
   }
 
-  protected function initCrypt($options = array()) {
+  protected function initCrypt($options = []) {
 
     $config = $this->_di->get('config');
 
@@ -360,7 +356,7 @@ class Bootstrap {
     });
   }
 
-  protected function initCookies($options = array()) {
+  protected function initCookies($options = []) {
 
     $crypt = $this->_di->get('crypt');
 
@@ -371,7 +367,7 @@ class Bootstrap {
     });
   }
 
-  protected function initSecurity($options = array()) {
+  protected function initSecurity($options = []) {
 
     $this->_di->setShared('security', function() {
       $security = new Security();
@@ -381,7 +377,7 @@ class Bootstrap {
     });
   }
 
-  protected function initRouter($options = array()) {
+  protected function initRouter($options = []) {
 
     $this->_di->setShared('router', function () {
 
@@ -394,93 +390,97 @@ class Bootstrap {
     });
   }
 
-  protected function initAssets($options = array()) {
+  protected function initAssets($options = []) {
 
     $this->_di->setShared('assets', function () {
 
       $assets = new AssetsManager();
-      $assets->collection('header')
-              ->addCss('assets/css/main.css', true);
-
-      $assets->collection('footer')
-              ->addJs('assets/js/libs/jquery-2.1.4.min.js', true)
-              ->addJs('assets/js/libs/bootstrap.min.js', true)
-              ->addJs('assets/js/main.js', true);
+      $assets->collection('headerCss');
+      $assets->collection('headerJs');
+      $assets->collection('footerJs');
       return $assets;
     });
   }
 
+  protected function initAuth($options = []) {
+
+    $this->_di->setShared('auth', function () {
+      return new Auth();
+    });
+  }
+
   protected function initModules($application) {
-    $application->registerModules(array(
-        'nucleo' => array(
+    $application->registerModules([
+        'nucleo' => [
             'className' => 'Nucleo\Module',
             'path' => APP_PATH . '/app/modules/nucleo/module.php'
-        ),
-        'cnab' => array(
+        ],
+        'cnab' => [
             'className' => 'Cnab\Module',
             'path' => APP_PATH . '/app/modules/cnab/module.php'
-        ),
-        'imports' => array(
+        ],
+        'imports' => [
             'className' => 'Imports\Module',
             'path' => APP_PATH . '/app/modules/imports/module.php'
-        ),
-    ));
+        ],
+    ]);
   }
 
   protected function initRouters($application) {
 
     $router = $this->_di->get('router');
     $router->removeExtraSlashes(true);
-    $router->notFound(array(
+    $router->notFound([
         'namespace' => 'Nucleo\Controllers',
         'module' => 'nucleo',
         'controller' => 'errors',
         'action' => 'show404'
-    ));
+    ]);
 
-    $router->add('/', array(
+    $router->add('/', [
         'namespace' => 'Nucleo\Controllers',
         'module' => 'nucleo',
         'controller' => 'index',
-        'action' => 'index')
-    );
+        'action' => 'index',
+    ]);
 
-    $router->add('show404', array(
+    $router->add('show404', [
         'namespace' => 'Nucleo\Controllers',
         'module' => 'nucleo',
         'controller' => 'index',
-        'action' => 'show404')
-    );
-    $router->add('show500', array(
+        'action' => 'show404'
+    ]);
+    $router->add('show500', [
         'namespace' => 'Nucleo\Controllers',
         'module' => 'nucleo',
         'controller' => 'index',
-        'action' => 'show500')
-    );
+        'action' => 'show500'
+    ]);
 
     foreach ($application->getModules() as $key => $module) {
       $namespace = str_replace('Module', 'Controllers', $module["className"]);
-      $router->add('/' . $key . '/:params', array(
+      $router->add('/' . $key . '/:params', [
           'namespace' => $namespace,
           'module' => $key,
           'controller' => 'index',
           'action' => 'index',
           'params' => 1
-      ))->setName($key);
-      $router->add('/' . $key . '/:controller/:params', array(
+      ])->setName($key);
+
+      $router->add('/' . $key . '/:controller/:params', [
           'namespace' => $namespace,
           'module' => $key,
           'controller' => 1,
           'action' => 'index',
           'params' => 2
-      ));
-      $router->add('/' . $key . '/:controller/:action/:params', array(
+      ]);
+      $router->add('/' . $key . '/:controller/:action/:params', [
           'namespace' => $namespace,
           'module' => $key,
           'controller' => 1,
           'action' => 2,
           'params' => 3
-      ));
+      ]);
     }
 
     $this->_di->set("router", $router);

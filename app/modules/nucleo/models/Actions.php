@@ -332,7 +332,7 @@ use beforeUpdate;
    * @return string
    */
   public function getSource() {
-    return 'actions';
+    return 'ACAO';
   }
 
   /**
@@ -341,19 +341,20 @@ use beforeUpdate;
    *
    * @return array
    */
-  public function columnMap() {
+  public static function columnMap() {
     return array(
-        'id' => 'id',
-        'title' => 'title',
-        'slug' => 'slug',
-        'controller' => 'controller',
-        'status' => 'status',
-        'isPublic' => 'isPublic',
-        'sdel' => 'sdel',
-        'createBy' => 'createBy',
-        'createIn' => 'createIn',
-        'updateBy' => 'updateBy',
-        'updateIn' => 'updateIn'
+        'ID_ACAO' => 'id',
+        'DS_TITULO' => 'title',
+        'CD_SLUG' => 'slug',
+        'CD_CONTROLADOR' => 'controller',
+        'FL_STATUS' => 'status',
+        'FL_PUBLICO' => 'isPublic',
+        'SDEL' => 'sdel',
+        'CREATEBY' => 'createBy',
+        'CREATEIN' => 'createIn',
+        'UPDATEBY' => 'updateBy',
+        'UPDATEIN' => 'updateIn',
+        'PHALCON_RN' => 'PHALCON_RN',
     );
   }
 

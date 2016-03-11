@@ -1,3 +1,78 @@
-@import 'bootstrap.less';
-@import 'bootstrap-theme.less';
-@import 'sticky-footer.less';
+@import 'app.min.1.less';
+@import 'app.min.2.less';
+@import 'font-awesome.min.less';
+
+body{
+  &.login-content{
+    &:before{
+      background: url('../img/background-login.jpg');
+      content: 'Grupo MPE';
+      font-size: 5em;
+      font-family: roboto; 
+      padding-top: 10%;
+      color: #EDECEC;
+    }
+    .login-navigation{
+      > li{
+        &:hover {
+          border-radius: 20px;
+          padding: 5px 15px;
+          font-size: 14px;
+        }
+        &:not(:hover) {
+          border-radius: 15px;
+          padding: 3px 10px;
+          font-size: 11px;
+        }
+      }
+    } 
+  }
+}
+
+#l-footer{
+  #footer;
+  color: #777777;
+}
+
+.datatable{
+  .dropdown-menu{
+    min-width: 80px;
+    > li{
+      > a{
+        padding: 3px 17px;
+        font-size: 12px;
+      }
+    } 
+  }
+  table{
+    tr{
+      font-size: 0.75em;
+      th{
+        text-align: center;
+        &.text-right{
+          text-align: right;
+        }
+      }
+    }
+  }
+  .pagination{
+    > li {
+      > a {
+        width: 30px;
+        height: 30px;
+        line-height: 27px;
+        > .zmdi{
+          line-height: 28px;
+        }
+      }
+    }
+  }
+}
+
+.gradient_verd_diagonal{
+  background: #a8d6a8;
+  background: -moz-linear-gradient(-45deg,  #a8d6a8 0%, #7ac07a 17%, #4fa94f 33%, #038103 67%, #025202 83%, #012101 100%);
+  background: -webkit-linear-gradient(-45deg,  #a8d6a8 0%,#7ac07a 17%,#4fa94f 33%,#038103 67%,#025202 83%,#012101 100%);
+  background: linear-gradient(135deg,  #a8d6a8 0%,#7ac07a 17%,#4fa94f 33%,#038103 67%,#025202 83%,#012101 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8d6a8', endColorstr='#012101',GradientType=1 );
+}

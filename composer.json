@@ -7,7 +7,7 @@
         "ext-phalcon": ">=2.0",
         "phalcon/incubator": "2.*",
         "swiftmailer/swiftmailer": "@stable",
-        "phpoffice/phpword": "0.*",
+        "phpoffice/phpword": "*",
         "phpoffice/phpexcel": "*",
         "dompdf/dompdf": "0.6.*",
         "aymanrb/php-unstructured-text-parser": "dev-master",

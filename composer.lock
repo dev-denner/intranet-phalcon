@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1da2b6c5a572c4910b3e133edbd60293",
-    "content-hash": "1231fcdfd48b2dd6627b798dede09618",
+    "hash": "80ab976de6c7be41a38ebf12b72c8d1f",
+    "content-hash": "b209599f32e2e49589add1735a54af1f",
     "packages": [
         {
             "name": "aymanrb/php-unstructured-text-parser",
@@ -310,16 +310,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb"
+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5d04bdd2881ac89abde1fb78cc234bce24327bb",
-                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
                 "shasum": ""
             },
             "require": {
@@ -364,7 +364,7 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-01-23 01:23:02"
+            "time": "2016-02-18 21:54:00"
         },
         {
             "name": "m1ome/phalcon-datatables",
@@ -506,34 +506,37 @@
         },
         {
             "name": "phalcon/incubator",
-            "version": "v2.0.7",
+            "version": "v2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phalcon/incubator.git",
-                "reference": "3ca816904d2439847c48b74f0af2f25f9d158a9a"
+                "reference": "e040517e0e05046bad7dae5e352b12ac30e28343"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phalcon/incubator/zipball/3ca816904d2439847c48b74f0af2f25f9d158a9a",
-                "reference": "3ca816904d2439847c48b74f0af2f25f9d158a9a",
+                "url": "https://api.github.com/repos/phalcon/incubator/zipball/e040517e0e05046bad7dae5e352b12ac30e28343",
+                "reference": "e040517e0e05046bad7dae5e352b12ac30e28343",
                 "shasum": ""
             },
             "require": {
                 "ext-phalcon": ">=2.0.4",
-                "php": ">=5.3.21",
+                "php": ">=5.4",
                 "swiftmailer/swiftmailer": "~5.2"
             },
             "require-dev": {
-                "codeception/codeception": "2.0.14",
-                "mockery/mockery": "*",
-                "php-mock/php-mock": "<0.6",
-                "phpunit/phpunit": "4.6.*",
-                "squizlabs/php_codesniffer": "2.*"
+                "codeception/aerospike-module": "^0.1",
+                "codeception/codeception": "^2.1",
+                "codeception/mockery-module": "^0.2",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "suggest": {
+                "duncan3dc/fork-helper": "To use extended class to access the beanstalk queue service",
+                "ext-aerospike": "*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Phalcon": "Library/"
+                "psr-4": {
+                    "Phalcon\\": "Library/Phalcon/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -553,7 +556,7 @@
                 "incubator",
                 "phalcon"
             ],
-            "time": "2015-08-18 07:35:12"
+            "time": "2016-02-05 19:41:15"
         },
         {
             "name": "phenx/php-font-lib",
@@ -841,12 +844,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SidRoberts/phalcon-seeder.git",
-                "reference": "4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6"
+                "reference": "5c248353e056b145c392e3786acd3e0d8c13b071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SidRoberts/phalcon-seeder/zipball/4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6",
-                "reference": "4d40c7fefd22f18d45d39ddeddabd1c2e3f3ddc6",
+                "url": "https://api.github.com/repos/SidRoberts/phalcon-seeder/zipball/5c248353e056b145c392e3786acd3e0d8c13b071",
+                "reference": "5c248353e056b145c392e3786acd3e0d8c13b071",
                 "shasum": ""
             },
             "require": {
@@ -873,7 +876,7 @@
                 }
             ],
             "description": "Database seeder component for Phalcon.",
-            "time": "2016-02-01 09:35:44"
+            "time": "2016-02-24 15:35:57"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -989,16 +992,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3"
+                "reference": "9a6a883c48acb215d4825ce9de61dccf93d62074"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/24bb94807eff00db49374c37ebf56a0304e8aef3",
-                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/9a6a883c48acb215d4825ce9de61dccf93d62074",
+                "reference": "9a6a883c48acb215d4825ce9de61dccf93d62074",
                 "shasum": ""
             },
             "require": {
@@ -1048,7 +1051,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2016-01-07 13:38:51"
+            "time": "2016-02-13 09:23:44"
         },
         {
             "name": "whoops/soap",

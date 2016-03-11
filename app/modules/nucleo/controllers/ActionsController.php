@@ -74,7 +74,11 @@ class ActionsController extends ControllerBase {
   public function editAction($id) {
     if (!$this->request->isPost()) {
 
-      $action = Actions::findFirstByid($id);
+      $action = Actions::find(array(
+                  'conditions' => 'id = ?1',
+                  'bind' => array(1 => $id)
+      ));
+      
       if (!$action) {
         $this->flash->error("action was not found");
 

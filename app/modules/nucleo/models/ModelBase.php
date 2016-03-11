@@ -11,7 +11,9 @@ namespace Nucleo\Models;
 class ModelBase extends \Phalcon\Mvc\Model {
 
   public function initialize() {
-    
+    $this->keepSnapshots(true);
+    $this->useDynamicUpdate(true);
+    \Phalcon\Mvc\Model::setup(['ignoreUnknownColumns' => true]);
   }
 
   /**
@@ -96,6 +98,24 @@ class ModelBase extends \Phalcon\Mvc\Model {
     }
 
     return $parameters;
+  }
+
+  public function autoincrement() {
+    try {
+
+      $class = get_class($this);
+
+      $query = $this->modelsManager->createQuery('SELECT NVL(MAX(id), 0)+1 ID FROM ' . $class . '');
+      $return = $query->execute();
+
+      if (!empty($return[0])) {
+        return $return[0]['ID'];
+      } else {
+        throw new Exception('show_stack_bar_top("error", "Erro", "Erro ao processar autoincrement.")');
+      }
+    } catch (Exception $exc) {
+      echo $exc->getMessage();
+    }
   }
 
 }
