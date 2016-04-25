@@ -1,5 +1,5 @@
 {
-    "name": "denners777/API-Phalcon",
+    "name": "denners777/api-phalcon",
     "description": "API de projetos PHP da empresa MPE",
     "version": "1.0.0",
     "require": {
