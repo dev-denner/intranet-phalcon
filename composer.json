@@ -32,12 +32,12 @@
     },
     "authors": [{
             "name": "Denner Fernandes",
-            "email": "denner.fernandes@grupompe.com.br",
+            "email": "denners777@hotmail.com",
             "homepage": "http://devdenner.esy.es/",
             "role": "Developer"
         }],
     "keywords": ["phalcon", "framework", "api", "app"],
     "type": "app",
     "license": "MIT",
-    "homepage": "http://www.grupompe.com.br"
+    "homepage": "http://devdenner.esy.es"
 }
