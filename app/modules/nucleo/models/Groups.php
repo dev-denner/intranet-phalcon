@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -9,271 +9,305 @@
 
 namespace Nucleo\Models;
 
+use DevDenners\Models\ModelBase;
+use DevDenners\Models\beforeCreate;
+use DevDenners\Models\beforeUpdate;
+use Phalcon\Mvc\Model\Behavior\SoftDelete;
+
 class Groups extends ModelBase {
 
-  use beforeCreate;
+    use beforeCreate;
 
 use beforeUpdate;
 
-  /**
-   *
-   * @var integer
-   */
-  protected $id;
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
 
-  /**
-   *
-   * @var string
-   */
-  protected $name;
+    /**
+     *
+     * @var string
+     */
+    protected $name;
 
-  /**
-   *
-   * @var string
-   */
-  protected $status;
+    /**
+     *
+     * @var string
+     */
+    protected $status;
 
-  /**
-   *
-   * @var string
-   */
-  protected $sdel;
+    /**
+     *
+     * @var string
+     */
+    protected $isPublic;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createBy;
+    /**
+     *
+     * @var string
+     */
+    protected $sdel;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createIn;
+    /**
+     *
+     * @var string
+     */
+    protected $createBy;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateBy;
+    /**
+     *
+     * @var string
+     */
+    protected $createIn;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateIn;
+    /**
+     *
+     * @var string
+     */
+    protected $updateBy;
 
-  /**
-   * Method to set the value of field id
-   *
-   * @param integer $id
-   * @return $this
-   */
-  public function setId($id) {
-    $this->id = $id;
+    /**
+     *
+     * @var string
+     */
+    protected $updateIn;
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field id
+     *
+     * @param integer $id
+     * @return $this
+     */
+    public function setId($id) {
+        $this->id = $id;
 
-  /**
-   * Method to set the value of field name
-   *
-   * @param string $name
-   * @return $this
-   */
-  public function setName($name) {
-    $this->name = $name;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name) {
+        $this->name = $name;
 
-  /**
-   * Method to set the value of field status
-   *
-   * @param string $status
-   * @return $this
-   */
-  public function setStatus($status) {
-    $this->status = $status;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field status
+     *
+     * @param string $status
+     * @return $this
+     */
+    public function setStatus($status) {
+        $this->status = $status;
 
-  /**
-   * Method to set the value of field sdel
-   *
-   * @param string $sdel
-   * @return $this
-   */
-  public function setSdel($sdel) {
-    $this->sdel = $sdel;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field isPublic
+     *
+     * @param string $isPublic
+     * @return $this
+     */
+    public function setIsPublic($isPublic) {
+        $this->isPublic = $isPublic;
 
-  /**
-   * Method to set the value of field createBy
-   *
-   * @param string $createBy
-   * @return $this
-   */
-  public function setCreateBy($createBy) {
-    $this->createBy = $createBy;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field sdel
+     *
+     * @param string $sdel
+     * @return $this
+     */
+    public function setSdel($sdel) {
+        $this->sdel = $sdel;
 
-  /**
-   * Method to set the value of field createIn
-   *
-   * @param string $createIn
-   * @return $this
-   */
-  public function setCreateIn($createIn) {
-    $this->createIn = $createIn;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field createBy
+     *
+     * @param string $createBy
+     * @return $this
+     */
+    public function setCreateBy($createBy) {
+        $this->createBy = $createBy;
 
-  /**
-   * Method to set the value of field updateBy
-   *
-   * @param string $updateBy
-   * @return $this
-   */
-  public function setUpdateBy($updateBy) {
-    $this->updateBy = $updateBy;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field createIn
+     *
+     * @param string $createIn
+     * @return $this
+     */
+    public function setCreateIn($createIn) {
+        $this->createIn = $createIn;
 
-  /**
-   * Method to set the value of field updateIn
-   *
-   * @param string $updateIn
-   * @return $this
-   */
-  public function setUpdateIn($updateIn) {
-    $this->updateIn = $updateIn;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field updateBy
+     *
+     * @param string $updateBy
+     * @return $this
+     */
+    public function setUpdateBy($updateBy) {
+        $this->updateBy = $updateBy;
 
-  /**
-   * Returns the value of field id
-   *
-   * @return integer
-   */
-  public function getId() {
-    return $this->id;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field name
-   *
-   * @return string
-   */
-  public function getName() {
-    return $this->name;
-  }
+    /**
+     * Method to set the value of field updateIn
+     *
+     * @param string $updateIn
+     * @return $this
+     */
+    public function setUpdateIn($updateIn) {
+        $this->updateIn = $updateIn;
 
-  /**
-   * Returns the value of field status
-   *
-   * @return string
-   */
-  public function getStatus() {
-    return $this->status;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field sdel
-   *
-   * @return string
-   */
-  public function getSdel() {
-    return $this->sdel;
-  }
+    /**
+     * Returns the value of field id
+     *
+     * @return integer
+     */
+    public function getId() {
+        return $this->id;
+    }
 
-  /**
-   * Returns the value of field createBy
-   *
-   * @return string
-   */
-  public function getCreateBy() {
-    return $this->createBy;
-  }
+    /**
+     * Returns the value of field name
+     *
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
 
-  /**
-   * Returns the value of field createIn
-   *
-   * @return string
-   */
-  public function getCreateIn() {
-    return $this->createIn;
-  }
+    /**
+     * Returns the value of field status
+     *
+     * @return string
+     */
+    public function getStatus() {
+        return $this->status;
+    }
 
-  /**
-   * Returns the value of field updateBy
-   *
-   * @return string
-   */
-  public function getUpdateBy() {
-    return $this->updateBy;
-  }
+    /**
+     * Returns the value of field isPublic
+     *
+     * @return string
+     */
+    public function getIsPublic() {
+        return $this->isPublic;
+    }
 
-  /**
-   * Returns the value of field updateIn
-   *
-   * @return string
-   */
-  public function getUpdateIn() {
-    return $this->updateIn;
-  }
+    /**
+     * Returns the value of field sdel
+     *
+     * @return string
+     */
+    public function getSdel() {
+        return $this->sdel;
+    }
 
-  /**
-   * Initialize method for model.
-   */
-  public function initialize() {
-    $this->hasMany('id', 'Nucleo\Models\Perfils', 'group', array('alias' => 'Perfils'));
-    $this->hasMany('id', 'Nucleo\Models\UsersGroups', 'groupId', array('alias' => 'UsersGroups'));
+    /**
+     * Returns the value of field createBy
+     *
+     * @return string
+     */
+    public function getCreateBy() {
+        return $this->createBy;
+    }
 
-    $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
-        'field' => 'sdel',
-        'value' => date('*')
-    ]));
-  }
+    /**
+     * Returns the value of field createIn
+     *
+     * @return string
+     */
+    public function getCreateIn() {
+        return $this->createIn;
+    }
 
-  /**
-   * Returns table name mapped in the model.
-   *
-   * @return string
-   */
-  public function getSource() {
-    return 'groups';
-  }
+    /**
+     * Returns the value of field updateBy
+     *
+     * @return string
+     */
+    public function getUpdateBy() {
+        return $this->updateBy;
+    }
 
-  /**
-   * Independent Column Mapping.
-   * Keys are the real names in the table and the values their names in the application
-   *
-   * @return array
-   */
-  public function columnMap() {
-    return array(
-        'id' => 'id',
-        'name' => 'name',
-        'status' => 'status',
-        'sdel' => 'sdel',
-        'createBy' => 'createBy',
-        'createIn' => 'createIn',
-        'updateBy' => 'updateBy',
-        'updateIn' => 'updateIn'
-    );
-  }
+    /**
+     * Returns the value of field updateIn
+     *
+     * @return string
+     */
+    public function getUpdateIn() {
+        return $this->updateIn;
+    }
 
-  public static function getDeleted() {
-    return 'sdel';
-  }
+    /**
+     * Initialize method for model.
+     */
+    public function initialize() {
+        parent::initialize();
+        $this->setSchema('NUCLEO');
+        $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'groupId', ['alias' => 'Perfils']);
+        $this->hasMany('id', __NAMESPACE__ . '\UsersGroups', 'groupId', ['alias' => 'UsersGroups']);
+        $this->addBehavior(new SoftDelete([
+            'field' => 'sdel',
+            'value' => '*'
+        ]));
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource() {
+        return 'GRUPO';
+    }
+
+    /**
+     * Independent Column Mapping.
+     * Keys are the real names in the table and the values their names in the application
+     *
+     * @return array
+     */
+    public static function columnMap() {
+        return array(
+            'ID_GRUPO' => 'id',
+            'DS_NOME' => 'name',
+            'FL_STATUS' => 'status',
+            'FL_PUBLICO' => 'isPublic',
+            'SDEL' => 'sdel',
+            'CREATEBY' => 'createBy',
+            'CREATEIN' => 'createIn',
+            'UPDATEBY' => 'updateBy',
+            'UPDATEIN' => 'updateIn',
+        );
+    }
+
+    public static function getDeleted() {
+        return 'sdel';
+    }
 
 }

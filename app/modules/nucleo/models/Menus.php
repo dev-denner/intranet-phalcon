@@ -9,485 +9,454 @@
 
 namespace Nucleo\Models;
 
-use \Phalcon\Mvc\Model\Message as Message;
+use DevDenners\Models\ModelBase;
+use DevDenners\Models\beforeCreate;
+use DevDenners\Models\beforeUpdate;
+use Phalcon\Mvc\Model\Message as Message;
 
 class Menus extends ModelBase {
 
-  use beforeCreate;
+    use beforeCreate;
 
 use beforeUpdate;
 
-  /**
-   *
-   * @var integer
-   */
-  protected $id;
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
 
-  /**
-   *
-   * @var string
-   */
-  protected $title;
+    /**
+     *
+     * @var string
+     */
+    protected $title;
 
-  /**
-   *
-   * @var string
-   */
-  protected $slug;
+    /**
+     *
+     * @var string
+     */
+    protected $slug;
 
-  /**
-   *
-   * @var integer
-   */
-  protected $parents;
+    /**
+     *
+     * @var integer
+     */
+    protected $department;
 
-  /**
-   *
-   * @var integer
-   */
-  protected $action;
+    /**
+     *
+     * @var integer
+     */
+    protected $module;
 
-  /**
-   *
-   * @var string
-   */
-  protected $sdel;
+    /**
+     *
+     * @var integer
+     */
+    protected $controller;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createBy;
+    /**
+     *
+     * @var integer
+     */
+    protected $action;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createIn;
+    /**
+     *
+     * @var integer
+     */
+    protected $category;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateBy;
+    /**
+     *
+     * @var integer
+     */
+    protected $icon;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateIn;
+    /**
+     *
+     * @var string
+     */
+    protected $sdel;
 
-  /**
-   * Method to set the value of field id
-   *
-   * @param integer $id
-   * @return $this
-   */
-  public function setId($id) {
-    $this->id = $id;
+    /**
+     *
+     * @var string
+     */
+    protected $createBy;
 
-    return $this;
-  }
+    /**
+     *
+     * @var string
+     */
+    protected $createIn;
 
-  /**
-   * Method to set the value of field title
-   *
-   * @param string $title
-   * @return $this
-   */
-  public function setTitle($title) {
-    $this->title = $title;
+    /**
+     *
+     * @var string
+     */
+    protected $updateBy;
 
-    return $this;
-  }
+    /**
+     *
+     * @var string
+     */
+    protected $updateIn;
 
-  /**
-   * Method to set the value of field slug
-   *
-   * @param string $slug
-   * @return $this
-   */
-  public function setSlug($slug) {
-    $this->slug = $slug;
+    /**
+     * Method to set the value of field id
+     *
+     * @param integer $id
+     * @return $this
+     */
+    public function setId($id) {
+        $this->id = $id;
 
-    return $this;
-  }
-
-  /**
-   * Method to set the value of field parents
-   *
-   * @param integer $parents
-   * @return $this
-   */
-  public function setParents($parents) {
-
-    if (empty(trim($parents))) {
-      $this->parents = null;
-    } else {
-      $this->parents = $parents;
+        return $this;
     }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field title
+     *
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle($title) {
+        $this->title = $title;
 
-  /**
-   * Method to set the value of field action
-   *
-   * @param integer $action
-   * @return $this
-   */
-  public function setAction($action) {
-    $this->action = $action;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field slug
+     *
+     * @param string $slug
+     * @return $this
+     */
+    public function setSlug($slug) {
+        $this->slug = $slug;
 
-  /**
-   * Method to set the value of field sdel
-   *
-   * @param string $sdel
-   * @return $this
-   */
-  public function setSdel($sdel) {
-    $this->sdel = $sdel;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Method to set the value of field department
+     *
+     * @param integer $department
+     * @return $this
+     */
+    public function setDepartment($department) {
 
-  /**
-   * Method to set the value of field createBy
-   *
-   * @param string $createBy
-   * @return $this
-   */
-  public function setCreateBy($createBy) {
-    $this->createBy = $createBy;
+        $this->department = $department;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field createIn
-   *
-   * @param string $createIn
-   * @return $this
-   */
-  public function setCreateIn($createIn) {
-    $this->createIn = $createIn;
+    /**
+     * Method to set the value of field module
+     *
+     * @param integer $module
+     * @return $this
+     */
+    public function setModule($module) {
+        $this->module = $module;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field updateBy
-   *
-   * @param string $updateBy
-   * @return $this
-   */
-  public function setUpdateBy($updateBy) {
-    $this->updateBy = $updateBy;
+    /**
+     * Method to set the value of field controller
+     *
+     * @param integer $controller
+     * @return $this
+     */
+    public function setController($controller) {
+        $this->controller = $controller;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field updateIn
-   *
-   * @param string $updateIn
-   * @return $this
-   */
-  public function setUpdateIn($updateIn) {
-    $this->updateIn = $updateIn;
+    /**
+     * Method to set the value of field action
+     *
+     * @param integer $action
+     * @return $this
+     */
+    public function setAction($action) {
+        $this->action = $action;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field id
-   *
-   * @return integer
-   */
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Method to set the value of field category
+     *
+     * @param integer $category
+     * @return $this
+     */
+    public function setCategory($category) {
+        $this->category = $category;
 
-  /**
-   * Returns the value of field title
-   *
-   * @return string
-   */
-  public function getTitle() {
-    return $this->title;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field slug
-   *
-   * @return string
-   */
-  public function getSlug() {
-    return $this->slug;
-  }
+    /**
+     * Method to set the value of field icon
+     *
+     * @param integer $icon
+     * @return $this
+     */
+    public function setIcon($icon) {
+        $this->icon = $icon;
 
-  /**
-   * Returns the value of field parents
-   *
-   * @return integer
-   */
-  public function getParents() {
-    return $this->parents;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field action
-   *
-   * @return integer
-   */
-  public function getAction() {
-    return $this->action;
-  }
+    /**
+     * Method to set the value of field sdel
+     *
+     * @param string $sdel
+     * @return $this
+     */
+    public function setSdel($sdel) {
+        $this->sdel = $sdel;
 
-  /**
-   * Returns the value of field sdel
-   *
-   * @return string
-   */
-  public function getSdel() {
-    return $this->sdel;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field createBy
-   *
-   * @return string
-   */
-  public function getCreateBy() {
-    return $this->createBy;
-  }
+    /**
+     * Method to set the value of field createBy
+     *
+     * @param string $createBy
+     * @return $this
+     */
+    public function setCreateBy($createBy) {
+        $this->createBy = $createBy;
 
-  /**
-   * Returns the value of field createIn
-   *
-   * @return string
-   */
-  public function getCreateIn() {
-    return $this->createIn;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field updateBy
-   *
-   * @return string
-   */
-  public function getUpdateBy() {
-    return $this->updateBy;
-  }
+    /**
+     * Method to set the value of field createIn
+     *
+     * @param string $createIn
+     * @return $this
+     */
+    public function setCreateIn($createIn) {
+        $this->createIn = $createIn;
 
-  /**
-   * Returns the value of field updateIn
-   *
-   * @return string
-   */
-  public function getUpdateIn() {
-    return $this->updateIn;
-  }
+        return $this;
+    }
 
-  /**
-   * Initialize method for model.
-   */
-  public function initialize() {
-    
-    $this->hasMany('id', __NAMESPACE__ . '\Menus', 'parents', ['alias' => 'Menus']);
-    $this->belongsTo('action', __NAMESPACE__ . '\Actions', 'id', ['alias' => 'Actions']);
-    $this->belongsTo('parents', __NAMESPACE__ . '\Menus', 'id', ['alias' => 'Menus']);
+    /**
+     * Method to set the value of field updateBy
+     *
+     * @param string $updateBy
+     * @return $this
+     */
+    public function setUpdateBy($updateBy) {
+        $this->updateBy = $updateBy;
 
-    $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
-        'field' => 'sdel',
-        'value' => date('*')
-    ]));
-  }
+        return $this;
+    }
 
-  /**
-   * Returns table name mapped in the model.
-   *
-   * @return string
-   */
-  public function getSource() {
-    return 'MENU';
-  }
+    /**
+     * Method to set the value of field updateIn
+     *
+     * @param string $updateIn
+     * @return $this
+     */
+    public function setUpdateIn($updateIn) {
+        $this->updateIn = $updateIn;
 
-  /**
-   * Independent Column Mapping.
-   * Keys are the real names in the table and the values their names in the application
-   *
-   * @return array
-   */
-  public static function columnMap() {
-    return array(
-        'ID_MENU' => 'id',
-        'DS_TITULO' => 'title',
-        'DS_SLUG' => 'slug',
-        'CD_PAI' => 'parents',
-        'CD_ACAO' => 'action',
-        'SDEL' => 'sdel',
-        'CREATEBY' => 'createBy',
-        'CREATEIN' => 'createIn',
-        'UPDATEBY' => 'updateBy',
-        'UPDATEIN' => 'updateIn',
-        'PHALCON_RN' => 'PHALCON_RN',
-    );
-  }
+        return $this;
+    }
 
-  public static function getDeleted() {
-    return 'sdel';
-  }
+    /**
+     * Returns the value of field id
+     *
+     * @return integer
+     */
+    public function getId() {
+        return $this->id;
+    }
 
-  public function typeForms() {
-    return [
-        'list' => [
-            'id' => true,
-            'title' => true,
-            'slug' => true,
-            'parents' => true,
-            'action' => true,
-            'createBy' => false,
-            'createIn' => false,
-            'updateBy' => false,
-            'updateIn' => false,
-        ],
-        'view' => [
-            'id' => true,
-            'title' => true,
-            'slug' => true,
-            'parents' => true,
-            'action' => true,
-            'createBy' => true,
-            'createIn' => true,
-            'updateBy' => true,
-            'updateIn' => true,
-        ],
-        'search' => [
-            'id' => false,
-            'title' => true,
-            'slug' => true,
-            'parents' => true,
-            'action' => true,
-            'createBy' => false,
-            'createIn' => false,
-            'updateBy' => false,
-            'updateIn' => false,
-        ],
-        'insert' => [
-            'id' => false,
-            'title' => true,
-            'slug' => true,
-            'parents' => true,
-            'action' => true,
-            'createBy' => false,
-            'createIn' => false,
-            'updateBy' => false,
-            'updateIn' => false,
-        ],
-        'update' => [
-            'id' => true,
-            'title' => true,
-            'slug' => true,
-            'parents' => true,
-            'action' => true,
-            'createBy' => false,
-            'createIn' => false,
-            'updateBy' => false,
-            'updateIn' => false,
-        ],
-    ];
-  }
+    /**
+     * Returns the value of field title
+     *
+     * @return string
+     */
+    public function getTitle() {
+        return $this->title;
+    }
 
-  public function desc() {
+    /**
+     * Returns the value of field slug
+     *
+     * @return string
+     */
+    public function getSlug() {
+        return $this->slug;
+    }
 
-    return [
-        'id' => [
-            'type' => 'hidden',
-            'primary' => true,
-            'attributes' => [
-                'maxlength' => 11,
-                'required' => 'required'
-            ],
-            'validation' => [
-                'PresenceOf' => true,
-            ],
-        ],
-        'title' => [
-            'type' => 'text',
-            'title' => 'Título',
-            'attributes' => [
-                'maxlength' => 50,
-                'required' => 'required'
-            ],
-            'validation' => [
-                'PresenceOf' => true,
-            ],
-        ],
-        'slug' => [
-            'type' => 'text',
-            'title' => 'Slug',
-            'attributes' => [
-                'maxlength' => 255,
-            ],
-            'validation' => [
-                'PresenceOf' => true,
-            ],
-        ],
-        'parents' => [
-            'type' => 'select',
-            'title' => 'Pai',
-            'select' => [
-                'entity' => '\Nucleo\Models\Menus',
-                'selectField' => [
-                    'key' => 'id',
-                    'value' => 'title'
-                ],
-                'selectEmpty' => true,
-            ],
-            'foreign' => 'Menus/title',
-            'attributes' => [],
-            'validation' => [],
-        ],
-        'action' => [
-            'type' => 'select',
-            'title' => 'Acao',
-            'select' => [
-                'entity' => '\Nucleo\Models\Actions',
-                'selectField' => [
-                    'key' => 'id',
-                    'value' => 'title'
-                ],
-                'selectEmpty' => true,
-            ],
-            'foreign' => 'Actions/title',
-            'attributes' => [
-                'required' => 'required'
-            ],
-            'validation' => [
-                'PresenceOf' => true,
-            ],
-        ],
-        'createBy' => [
-            'type' => 'text',
-            'title' => 'Criado por',
-        ],
-        'createIn' => [
-            'type' => 'text',
-            'title' => 'Criado em',
-        ],
-        'updateBy' => [
-            'type' => 'text',
-            'title' => 'Atualizado por',
-        ],
-        'updateIn' => [
-            'type' => 'text',
-            'title' => 'Atualizado em',
-        ],
-    ];
-  }
+    /**
+     * Returns the value of field department
+     *
+     * @return integer
+     */
+    public function getDepartment() {
+        return $this->department;
+    }
+
+    /**
+     * Returns the value of field module
+     *
+     * @return integer
+     */
+    public function getModule() {
+        return $this->module;
+    }
+
+    /**
+     * Returns the value of field controller
+     *
+     * @return integer
+     */
+    public function getController() {
+        return $this->controller;
+    }
+
+    /**
+     * Returns the value of field action
+     *
+     * @return integer
+     */
+    public function getAction() {
+        return $this->action;
+    }
+
+    /**
+     * Returns the value of field category
+     *
+     * @return integer
+     */
+    public function getCategory() {
+        return $this->category;
+    }
+
+    /**
+     * Returns the value of field icon
+     *
+     * @return integer
+     */
+    public function getIcon() {
+        return $this->icon;
+    }
+
+    /**
+     * Returns the value of field sdel
+     *
+     * @return string
+     */
+    public function getSdel() {
+        return $this->sdel;
+    }
+
+    /**
+     * Returns the value of field createBy
+     *
+     * @return string
+     */
+    public function getCreateBy() {
+        return $this->createBy;
+    }
+
+    /**
+     * Returns the value of field createIn
+     *
+     * @return string
+     */
+    public function getCreateIn() {
+        return $this->createIn;
+    }
+
+    /**
+     * Returns the value of field updateBy
+     *
+     * @return string
+     */
+    public function getUpdateBy() {
+        return $this->updateBy;
+    }
+
+    /**
+     * Returns the value of field updateIn
+     *
+     * @return string
+     */
+    public function getUpdateIn() {
+        return $this->updateIn;
+    }
+
+    /**
+     * Initialize method for model.
+     */
+    public function initialize() {
+
+        parent::initialize();
+
+        $this->setSchema('NUCLEO');
+
+        $this->belongsTo('department', __NAMESPACE__ . '\Departments', 'id', ['alias' => 'Departments']);
+        $this->belongsTo('module', __NAMESPACE__ . '\Modules', 'id', ['alias' => 'Modules']);
+        $this->belongsTo('controller', __NAMESPACE__ . '\Controllers', 'id', ['alias' => 'Controllers']);
+        $this->belongsTo('action', __NAMESPACE__ . '\Actions', 'id', ['alias' => 'Actions']);
+        $this->belongsTo('category', __NAMESPACE__ . '\Categories', 'id', ['alias' => 'Categories']);
+
+
+        $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
+            'field' => 'sdel',
+            'value' => '*'
+        ]));
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource() {
+        return 'MENU';
+    }
+
+    /**
+     * Independent Column Mapping.
+     * Keys are the real names in the table and the values their names in the application
+     *
+     * @return array
+     */
+    public static function columnMap() {
+        return array(
+            'ID_MENU' => 'id',
+            'DS_TITULO' => 'title',
+            'DS_SLUG' => 'slug',
+            'CD_DEPARTAMENTO' => 'department',
+            'CD_MODULO' => 'module',
+            'CD_CONTROLADOR' => 'controller',
+            'CD_ACAO' => 'action',
+            'CD_CATEGORIA' => 'category',
+            'DS_ICONE' => 'icon',
+            'SDEL' => 'sdel',
+            'CREATEBY' => 'createBy',
+            'CREATEIN' => 'createIn',
+            'UPDATEBY' => 'updateBy',
+            'UPDATEIN' => 'updateIn',
+        );
+    }
+
+    public static function getDeleted() {
+        return 'sdel';
+    }
 
 }

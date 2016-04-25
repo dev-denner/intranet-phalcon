@@ -24,6 +24,7 @@ try {
 
     echo $app->run(array());
 } catch (\Phalcon\Exception $e) {
-    echo $e->getMessage();
+    echo dump($e->getMessage()) . '<br>';
+    echo '<pre>' . $e->getTraceAsString() . '</pre>';
 }
 

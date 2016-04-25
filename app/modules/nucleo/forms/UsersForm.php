@@ -29,7 +29,6 @@ class UsersForm extends \DevDenners\Library\Forms\FormBase {
         'name' => [],
         'rememberMe' => [],
         'status' => [],
-        'csrf' => [],
     ];
 
     $element = $reset;
@@ -101,12 +100,7 @@ class UsersForm extends \DevDenners\Library\Forms\FormBase {
     ];
     $element['status'] = $this->_select('status', $attributes['status'], $select);
     $element['status']->setLabel('Status');
-    $element['csrf'] = $this->_hidden($this->security->getTokenKey(), [
-        'required' => 'required',
-        'value' => $this->security->getToken(),
-    ]);
-    $element['csrf'] = $this->validatorIdentical($element['csrf']);
-
+    
     //////////////////////////////////// validator ////////////////////////////////////
 
     $element['id'] = $this->validatorPresenceOf($element['id']);

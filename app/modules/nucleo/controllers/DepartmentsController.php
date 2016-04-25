@@ -1,7 +1,7 @@
 <?php
- 
+
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -9,64 +9,44 @@
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Departments;
+use DevDenners\Controllers\ControllerBase;
 
-class DepartmentsController extends ControllerBase
-{
+class DepartmentsController extends ControllerBase {
+
     /**
-     * Index action
+     * initialize
      */
-    public function indexAction()
-    {
-        $this->persistent->parameters = null;
+    public function initialize() {
+        $this->tag->setTitle(' Departamentos ');
+        parent::initialize();
+
+        $this->entity = new Departments();
     }
 
     /**
-     * Searches for departments
+     * Index department
      */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, '\Nucleo\Models\Departments', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+    public function indexAction() {
+        try {
+            $this->view->departments = Departments::find();
+            $this->view->pesquisa = '';
+            if ($this->request->isPost()) {
+                $departments = $this->request->getPost('departments', 'string');
+                $search = "(UPPER(title) LIKE UPPER('%" . $departments . "%') OR UPPER(cc) LIKE UPPER('%" . $departments . "%'))";
+                $this->view->departments = Departments::find($search);
+                $this->view->pesquisa = $this->request->getPost('departments');
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
         }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "id";
-
-        $departments = Departments::find($parameters);
-        if (count($departments) == 0) {
-            $this->flash->notice("The search did not find any departments");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $departments,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
-
+    public function newAction() {
+        $this->assets->collection('footerJs')->addJs('app/commons/icon.js');
     }
 
     /**
@@ -74,132 +54,102 @@ class DepartmentsController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
+    public function editAction($id) {
+        try {
 
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
+            $this->assets->collection('footerJs')->addJs('app/commons/icon.js');
             $department = Departments::findFirstByid($id);
             if (!$department) {
-                $this->flash->error("department was not found");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "departments",
-                    "action" => "index"
-                ));
+                throw new Exception('Departamento não encontrado!');
             }
 
             $this->view->id = $department->id;
+            $this->view->icon = $department->icon;
 
-            $this->tag->setDefault("id", $department->getId());
-            $this->tag->setDefault("name", $department->getName());
-            $this->tag->setDefault("status", $department->getStatus());
-            $this->tag->setDefault("sdel", $department->getSdel());
-            $this->tag->setDefault("createBy", $department->getCreateby());
-            $this->tag->setDefault("createIn", $department->getCreatein());
-            $this->tag->setDefault("updateBy", $department->getUpdateby());
-            $this->tag->setDefault("updateIn", $department->getUpdatein());
-            
+            $this->tag->setDefault('id', $department->getId());
+            $this->tag->setDefault('title', $department->getTitle());
+            $this->tag->setDefault('cc', $department->getCc());
+            $this->tag->setDefault('icon', $department->getIcon());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/departments');
         }
     }
 
     /**
      * Creates a new department
      */
-    public function createAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "index"
-            ));
-        }
+    public function createAction() {
 
-        $department = new Departments();
+        try {
 
-        $department->setId($this->request->getPost("id"));
-        $department->setName($this->request->getPost("name"));
-        $department->setStatus($this->request->getPost("status"));
-        $department->setSdel($this->request->getPost("sdel"));
-        $department->setCreateby($this->request->getPost("createBy"));
-        $department->setCreatein($this->request->getPost("createIn"));
-        $department->setUpdateby($this->request->getPost("updateBy"));
-        $department->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$department->save()) {
-            foreach ($department->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "new"
-            ));
+            $department = $this->entity;
+
+            $department->setId($department->autoincrement());
+            $department->setTitle($this->request->getPost('title'));
+            $department->setCc($this->request->getPost('cc'));
+            $department->setIcon($this->request->getPost('icon'));
+
+            if (!$department->create()) {
+                $msg = '';
+                foreach ($department->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Departamento gravado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("department was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "departments",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/departments');
     }
 
     /**
      * Saves a department edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "index"
-            ));
-        }
+        try {
 
-        $id = $this->request->getPost("id");
-
-        $department = Departments::findFirstByid($id);
-        if (!$department) {
-            $this->flash->error("department does not exist " . $id);
-
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "index"
-            ));
-        }
-
-        $department->setId($this->request->getPost("id"));
-        $department->setName($this->request->getPost("name"));
-        $department->setStatus($this->request->getPost("status"));
-        $department->setSdel($this->request->getPost("sdel"));
-        $department->setCreateby($this->request->getPost("createBy"));
-        $department->setCreatein($this->request->getPost("createIn"));
-        $department->setUpdateby($this->request->getPost("updateBy"));
-        $department->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$department->save()) {
-
-            foreach ($department->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "edit",
-                "params" => array($department->id)
-            ));
+            $id = $this->request->getPost('id');
+
+            $department = Departments::findFirstByid($id);
+            if (!$department) {
+                throw new Exception('Departamento não encontrado!');
+            }
+
+            $department->setId($this->request->getPost('id'));
+            $department->setTitle($this->request->getPost('title'));
+            $department->setCc($this->request->getPost('cc'));
+            $department->setIcon($this->request->getPost('icon'));
+
+            if (!$department->update()) {
+
+                $msg = '';
+                foreach ($department->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Departamento atualizado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("department was updated successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "departments",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/departments');
     }
 
     /**
@@ -207,36 +157,37 @@ class DepartmentsController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
-        $department = Departments::findFirstByid($id);
-        if (!$department) {
-            $this->flash->error("department was not found");
+    public function deleteAction() {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "index"
-            ));
-        }
-
-        if (!$department->delete()) {
-
-            foreach ($department->getMessages() as $message) {
-                $this->flash->error($message);
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "departments",
-                "action" => "search"
-            ));
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
+
+            $id = $this->request->getPost('id');
+
+            $department = Departments::findFirstByid($id);
+            if (!$department) {
+                throw new Exception('Departamento não encontrado!');
+            }
+
+            if (!$department->delete()) {
+
+                $msg = '';
+                foreach ($department->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/departments');
         }
-
-        $this->flash->success("department was deleted successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "departments",
-            "action" => "index"
-        ));
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
- 
+
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -9,63 +9,41 @@
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Groups;
+use Nucleo\Models\TablesSystem;
+use DevDenners\Controllers\ControllerBase;
 
-class GroupsController extends ControllerBase
-{
+class GroupsController extends ControllerBase {
+
     /**
-     * Index action
+     * initialize
      */
-    public function indexAction()
-    {
-        $this->persistent->parameters = null;
+    public function initialize() {
+        $this->tag->setTitle(' Grupos ');
+        parent::initialize();
+
+        $this->entity = new Groups();
     }
 
     /**
-     * Searches for groups
+     * Index action
      */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, '\Nucleo\Models\Groups', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+    public function indexAction() {
+        try {
+            $this->view->groups = Groups::find();
+            if ($this->request->isPost()) {
+                $this->view->groups = Groups::find("UPPER(name) LIKE UPPER('%" . $this->request->getPost('groups', 'string') . "%')");
+                $this->view->pesquisa = $this->request->getPost('groups');
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
         }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "id";
-
-        $groups = Groups::find($parameters);
-        if (count($groups) == 0) {
-            $this->flash->notice("The search did not find any groups");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $groups,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -74,132 +52,103 @@ class GroupsController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
+    public function editAction($id) {
+        try {
+
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
 
             $group = Groups::findFirstByid($id);
             if (!$group) {
-                $this->flash->error("group was not found");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "groups",
-                    "action" => "index"
-                ));
+                throw new Exception('Grupo não encontrado!');
             }
 
             $this->view->id = $group->id;
+            $this->view->isPublic = $group->isPublic;
 
-            $this->tag->setDefault("id", $group->getId());
-            $this->tag->setDefault("name", $group->getName());
-            $this->tag->setDefault("status", $group->getStatus());
-            $this->tag->setDefault("sdel", $group->getSdel());
-            $this->tag->setDefault("createBy", $group->getCreateby());
-            $this->tag->setDefault("createIn", $group->getCreatein());
-            $this->tag->setDefault("updateBy", $group->getUpdateby());
-            $this->tag->setDefault("updateIn", $group->getUpdatein());
-            
+            $this->tag->setDefault('id', $group->getId());
+            $this->tag->setDefault('name', $group->getName());
+            $this->tag->setDefault('status', $group->getStatus());
+            $this->tag->setDefault('isPublic', $group->getIsPublic());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/groups');
         }
     }
 
     /**
      * Creates a new group
      */
-    public function createAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "index"
-            ));
-        }
+    public function createAction() {
 
-        $group = new Groups();
+        try {
 
-        $group->setId($this->request->getPost("id"));
-        $group->setName($this->request->getPost("name"));
-        $group->setStatus($this->request->getPost("status"));
-        $group->setSdel($this->request->getPost("sdel"));
-        $group->setCreateby($this->request->getPost("createBy"));
-        $group->setCreatein($this->request->getPost("createIn"));
-        $group->setUpdateby($this->request->getPost("updateBy"));
-        $group->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$group->save()) {
-            foreach ($group->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "new"
-            ));
+            $group = new Groups();
+
+            $group->setId($group->autoincrement());
+            $group->setName($this->request->getPost('name'));
+            $group->setStatus($this->request->getPost('status'));
+            $group->setIsPublic($this->request->getPost('isPublic'));
+
+            if (!$group->create()) {
+                $msg = '';
+                foreach ($group->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Grupo gravado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("group was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "groups",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/groups');
     }
 
     /**
      * Saves a group edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "index"
-            ));
-        }
+        try {
 
-        $id = $this->request->getPost("id");
-
-        $group = Groups::findFirstByid($id);
-        if (!$group) {
-            $this->flash->error("group does not exist " . $id);
-
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "index"
-            ));
-        }
-
-        $group->setId($this->request->getPost("id"));
-        $group->setName($this->request->getPost("name"));
-        $group->setStatus($this->request->getPost("status"));
-        $group->setSdel($this->request->getPost("sdel"));
-        $group->setCreateby($this->request->getPost("createBy"));
-        $group->setCreatein($this->request->getPost("createIn"));
-        $group->setUpdateby($this->request->getPost("updateBy"));
-        $group->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$group->save()) {
-
-            foreach ($group->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "edit",
-                "params" => array($group->id)
-            ));
+            $id = $this->request->getPost('id');
+
+            $group = Groups::findFirstByid($id);
+            if (!$group) {
+                throw new Exception('Grupo não encontrado!');
+            }
+
+            $group->setId($this->request->getPost('id'));
+            $group->setName($this->request->getPost('name'));
+            $group->setStatus($this->request->getPost('status'));
+            $group->setIsPublic($this->request->getPost('isPublic'));
+
+
+            if (!$group->update()) {
+
+                $msg = '';
+                foreach ($group->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Grupo atualizado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("group was updated successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "groups",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/groups');
     }
 
     /**
@@ -207,36 +156,37 @@ class GroupsController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
-        $group = Groups::findFirstByid($id);
-        if (!$group) {
-            $this->flash->error("group was not found");
+    public function deleteAction() {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "index"
-            ));
-        }
-
-        if (!$group->delete()) {
-
-            foreach ($group->getMessages() as $message) {
-                $this->flash->error($message);
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "groups",
-                "action" => "search"
-            ));
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
+
+            $id = $this->request->getPost('id');
+
+            $group = Groups::findFirstByid($id);
+            if (!$group) {
+                throw new Exception('Grupo não encontrado!');
+            }
+
+            if (!$group->delete()) {
+
+                $msg = '';
+                foreach ($group->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/groups');
         }
-
-        $this->flash->success("group was deleted successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "groups",
-            "action" => "index"
-        ));
     }
 
 }

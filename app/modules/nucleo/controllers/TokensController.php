@@ -1,5 +1,5 @@
 <?php
- 
+
 /**
  * @copyright   2015 Grupo MPE
  * @license     New BSD License; see LICENSE
@@ -12,22 +12,21 @@ namespace Nucleo\Controllers;
 use Phalcon\Mvc\Model\Criteria as Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Tokens;
+use DevDenners\Controllers\ControllerBase;
 
-class TokensController extends ControllerBase
-{
+class TokensController extends ControllerBase {
+
     /**
      * Index action
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->persistent->parameters = null;
     }
 
     /**
      * Searches for tokens
      */
-    public function searchAction()
-    {
+    public function searchAction() {
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, '\Nucleo\Models\Tokens', $_POST);
@@ -47,14 +46,14 @@ class TokensController extends ControllerBase
             $this->flash->notice("The search did not find any tokens");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "index"
+                        "controller" => "tokens",
+                        "action" => "index"
             ));
         }
 
         $paginator = new Paginator(array(
             "data" => $tokens,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -64,8 +63,7 @@ class TokensController extends ControllerBase
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -74,8 +72,7 @@ class TokensController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         if (!$this->request->isPost()) {
 
             $token = Tokens::findFirstByid($id);
@@ -83,8 +80,8 @@ class TokensController extends ControllerBase
                 $this->flash->error("token was not found");
 
                 return $this->dispatcher->forward(array(
-                    "controller" => "tokens",
-                    "action" => "index"
+                            "controller" => "tokens",
+                            "action" => "index"
                 ));
             }
 
@@ -95,19 +92,17 @@ class TokensController extends ControllerBase
             $this->tag->setDefault("token", $token->getToken());
             $this->tag->setDefault("userAgent", $token->getUseragent());
             $this->tag->setDefault("createIn", $token->getCreatein());
-            
         }
     }
 
     /**
      * Creates a new token
      */
-    public function createAction()
-    {
+    public function createAction() {
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "index"
+                        "controller" => "tokens",
+                        "action" => "index"
             ));
         }
 
@@ -117,7 +112,7 @@ class TokensController extends ControllerBase
         $token->setToken($this->request->getPost("token"));
         $token->setUseragent($this->request->getPost("userAgent"));
         $token->setCreatein($this->request->getPost("createIn"));
-        
+
 
         if (!$token->save()) {
             foreach ($token->getMessages() as $message) {
@@ -125,16 +120,16 @@ class TokensController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "new"
+                        "controller" => "tokens",
+                        "action" => "new"
             ));
         }
 
         $this->flash->success("token was created successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tokens",
-            "action" => "index"
+                    "controller" => "tokens",
+                    "action" => "index"
         ));
     }
 
@@ -142,13 +137,12 @@ class TokensController extends ControllerBase
      * Saves a token edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "index"
+                        "controller" => "tokens",
+                        "action" => "index"
             ));
         }
 
@@ -159,8 +153,8 @@ class TokensController extends ControllerBase
             $this->flash->error("token does not exist " . $id);
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "index"
+                        "controller" => "tokens",
+                        "action" => "index"
             ));
         }
 
@@ -168,7 +162,7 @@ class TokensController extends ControllerBase
         $token->setToken($this->request->getPost("token"));
         $token->setUseragent($this->request->getPost("userAgent"));
         $token->setCreatein($this->request->getPost("createIn"));
-        
+
 
         if (!$token->save()) {
 
@@ -177,17 +171,17 @@ class TokensController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "edit",
-                "params" => array($token->id)
+                        "controller" => "tokens",
+                        "action" => "edit",
+                        "params" => array($token->id)
             ));
         }
 
         $this->flash->success("token was updated successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tokens",
-            "action" => "index"
+                    "controller" => "tokens",
+                    "action" => "index"
         ));
     }
 
@@ -196,15 +190,14 @@ class TokensController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $token = Tokens::findFirstByid($id);
         if (!$token) {
             $this->flash->error("token was not found");
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "index"
+                        "controller" => "tokens",
+                        "action" => "index"
             ));
         }
 
@@ -215,16 +208,16 @@ class TokensController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "tokens",
-                "action" => "search"
+                        "controller" => "tokens",
+                        "action" => "search"
             ));
         }
 
         $this->flash->success("token was deleted successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "tokens",
-            "action" => "index"
+                    "controller" => "tokens",
+                    "action" => "index"
         ));
     }
 

@@ -1,0 +1,87 @@
+{{ content() }}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h2>Linhas Celular TIM <small>Insira os dados para criar uma nova linha.</small></h2>
+            </div>
+
+            <div class="card-body card-padding">
+                {{ form("telephony/cell_phone_line/create", "method":"post", "autocomplete" : "off") }}
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ text_field("linha", "class" : "form-control fg-input", 'required': 'required') }}
+                        <label class="fg-label">Linha</label>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        <div class="select">
+                            <?php
+                            echo $this->tag->select(['tipo',
+                                [
+                                    'Colaborador' => 'Colaborador',
+                                    'Terceiro' => 'Terceiro',
+                                    'Outro' => 'Outro',
+                                ],
+                                'useEmpty' => true,
+                                'emptyText' => '',
+                                'emptyValue' => '',
+                                'class' => 'form-control',
+                                'required' => 'required']
+                            );
+                            ?>
+                            <label class="fg-label">Tipo</label>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ text_field("cpf", "class" : "form-control fg-input") }}
+                        <label class="fg-label">CPF atribuído à Linha</label>
+                    </div>
+                </div>
+                <br />
+                <div class="errors">
+                    <p class="text-danger"></p>
+                </div>
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ text_field("name", "class" : "form-control fg-input", 'required': 'required', 'readonly': 'readonly') }}
+                        <label class="fg-label">Nome atribuído à Linha</label>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ text_field("cceo", "class" : "form-control fg-input", 'required': 'required', 'readonly': 'readonly') }}
+                        <label class="fg-label">CC ou EO atribuído à Linha</label>
+                    </div>
+                </div>
+                <br />
+
+                <div class="checkbox">
+                    <label>
+                        {{ check_field('descontaFolha', 'value':'S') }}
+                        <i class="input-helper"></i>
+                        Desconta em Folha?
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-sm m-t-10 waves-effect">Inserir</button>
+                </div>
+            </div>
+
+        </div>
+        {{ end_form() }}
+    </div>
+</div>

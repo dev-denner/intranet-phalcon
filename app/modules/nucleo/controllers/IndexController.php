@@ -9,34 +9,17 @@
 
 namespace Nucleo\Controllers;
 
-/**
- * Class IndexController
- * @package Mpeapi\Nucleo\Controllers
- */
+use DevDenners\Controllers\ControllerBase;
+
 class IndexController extends ControllerBase {
 
-  public function initialize() {
-    $this->tag->setTitle('Home');
-    parent::initialize();
-  }
+    public function initialize() {
+        $this->tag->setTitle('Home');
+        parent::initialize();
+    }
 
-  public function indexAction() {
-    
-  }
+    public function indexAction() {
 
-  public function show404Action() {
-    $this->tag->setTitle('Oops!');
-    $this->response->setStatusCode(404, "Não Encontrado");
-  }
-
-  public function show401Action() {
-    $this->tag->setTitle('Oops!');
-    $this->response->setStatusCode(401, "Não Autorizado");
-  }
-
-  public function show500Action() {
-    $this->tag->setTitle('Oops!');
-    $this->response->setStatusCode(500, "Erro Interno");
-  }
+    }
 
 }

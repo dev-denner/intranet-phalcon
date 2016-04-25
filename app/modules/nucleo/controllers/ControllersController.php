@@ -1,6 +1,7 @@
 <?php
- /**
- * @copyright   2015 Grupo MPE
+
+/**
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -8,63 +9,42 @@
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Controllers;
+use DevDenners\Controllers\ControllerBase;
 
-class ControllersController extends ControllerBase
-{
+class ControllersController extends ControllerBase {
+
     /**
-     * Index action
+     * initialize
      */
-    public function indexAction()
-    {
-        $this->persistent->parameters = null;
+    public function initialize() {
+        $this->tag->setTitle(' Controladores ');
+        parent::initialize();
+
+        $this->entity = new Controllers();
     }
 
     /**
-     * Searches for controllers
+     * Index controller
      */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, '\Nucleo\Models\Controllers', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+    public function indexAction() {
+        try {
+            $this->view->controllers = Controllers::find();
+            $this->view->pesquisa = '';
+            if ($this->request->isPost()) {
+                $search = "(UPPER(title) LIKE UPPER('%" . $this->request->getPost('controllers', 'string') . "%') OR UPPER(slug) LIKE UPPER('%" . $this->request->getPost('controllers', 'string') . "%'))";
+                $this->view->controllers = Controllers::find($search);
+                $this->view->pesquisa = $this->request->getPost('controllers');
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
         }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "id";
-
-        $controllers = Controllers::find($parameters);
-        if (count($controllers) == 0) {
-            $this->flash->notice("The search did not find any controllers");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $controllers,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -73,141 +53,98 @@ class ControllersController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
+    public function editAction($id) {
+        try {
+
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
 
             $controller = Controllers::findFirstByid($id);
             if (!$controller) {
-                $this->flash->error("controller was not found");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "controllers",
-                    "action" => "index"
-                ));
+                throw new Exception('Controlador não encontrado!');
             }
 
             $this->view->id = $controller->id;
 
-            $this->tag->setDefault("id", $controller->getId());
-            $this->tag->setDefault("title", $controller->getTitle());
-            $this->tag->setDefault("slug", $controller->getSlug());
-            $this->tag->setDefault("module", $controller->getModule());
-            $this->tag->setDefault("status", $controller->getStatus());
-            $this->tag->setDefault("isPublic", $controller->getIspublic());
-            $this->tag->setDefault("sdel", $controller->getSdel());
-            $this->tag->setDefault("createBy", $controller->getCreateby());
-            $this->tag->setDefault("createIn", $controller->getCreatein());
-            $this->tag->setDefault("updateBy", $controller->getUpdateby());
-            $this->tag->setDefault("updateIn", $controller->getUpdatein());
-            
+            $this->tag->setDefault('id', $controller->getId());
+            $this->tag->setDefault('title', $controller->getTitle());
+            $this->tag->setDefault('slug', $controller->getSlug());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/controllers');
         }
     }
 
     /**
      * Creates a new controller
      */
-    public function createAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "index"
-            ));
-        }
+    public function createAction() {
 
-        $controller = new Controllers();
+        try {
 
-        $controller->setId($this->request->getPost("id"));
-        $controller->setTitle($this->request->getPost("title"));
-        $controller->setSlug($this->request->getPost("slug"));
-        $controller->setModule($this->request->getPost("module"));
-        $controller->setStatus($this->request->getPost("status"));
-        $controller->setIspublic($this->request->getPost("isPublic"));
-        $controller->setSdel($this->request->getPost("sdel"));
-        $controller->setCreateby($this->request->getPost("createBy"));
-        $controller->setCreatein($this->request->getPost("createIn"));
-        $controller->setUpdateby($this->request->getPost("updateBy"));
-        $controller->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$controller->save()) {
-            foreach ($controller->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "new"
-            ));
+            $controller = $this->entity;
+
+            $controller->setId($controller->autoincrement());
+            $controller->setTitle($this->request->getPost('title'));
+            $controller->setSlug($this->request->getPost('slug'));
+
+            if (!$controller->create()) {
+                $msg = '';
+                foreach ($controller->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Controlador gravado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("controller was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "controllers",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/controllers');
     }
 
     /**
      * Saves a controller edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "index"
-            ));
-        }
+        try {
 
-        $id = $this->request->getPost("id");
-
-        $controller = Controllers::findFirstByid($id);
-        if (!$controller) {
-            $this->flash->error("controller does not exist " . $id);
-
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "index"
-            ));
-        }
-
-        $controller->setId($this->request->getPost("id"));
-        $controller->setTitle($this->request->getPost("title"));
-        $controller->setSlug($this->request->getPost("slug"));
-        $controller->setModule($this->request->getPost("module"));
-        $controller->setStatus($this->request->getPost("status"));
-        $controller->setIspublic($this->request->getPost("isPublic"));
-        $controller->setSdel($this->request->getPost("sdel"));
-        $controller->setCreateby($this->request->getPost("createBy"));
-        $controller->setCreatein($this->request->getPost("createIn"));
-        $controller->setUpdateby($this->request->getPost("updateBy"));
-        $controller->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$controller->save()) {
-
-            foreach ($controller->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "edit",
-                "params" => array($controller->id)
-            ));
+            $id = $this->request->getPost('id');
+
+            $controller = Controllers::findFirstByid($id);
+            if (!$controller) {
+                throw new Exception('Controlador não encontrado!');
+            }
+
+            $controller->setId($this->request->getPost('id'));
+            $controller->setTitle($this->request->getPost('title'));
+            $controller->setSlug($this->request->getPost('slug'));
+
+            if (!$controller->update()) {
+
+                $msg = '';
+                foreach ($controller->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Controlador atualizado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("controller was updated successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "controllers",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/controllers');
     }
 
     /**
@@ -215,36 +152,37 @@ class ControllersController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
-        $controller = Controllers::findFirstByid($id);
-        if (!$controller) {
-            $this->flash->error("controller was not found");
+    public function deleteAction() {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "index"
-            ));
-        }
-
-        if (!$controller->delete()) {
-
-            foreach ($controller->getMessages() as $message) {
-                $this->flash->error($message);
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "controllers",
-                "action" => "search"
-            ));
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
+
+            $id = $this->request->getPost('id');
+
+            $controller = Controllers::findFirstByid($id);
+            if (!$controller) {
+                throw new Exception('Controlador não encontrado!');
+            }
+
+            if (!$controller->delete()) {
+
+                $msg = '';
+                foreach ($controller->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/controllers');
         }
-
-        $this->flash->success("controller was deleted successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "controllers",
-            "action" => "index"
-        ));
     }
 
 }

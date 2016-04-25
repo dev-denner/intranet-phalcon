@@ -1,19 +1,19 @@
 {{ content() }}
 <!-- Login -->
 <div class="lc-block toggled" id="l-login">
-  {{ form('session/login', 'method': 'post', 'autocomplete': 'off') }}
-  <input type="hidden" name="{{ security.getTokenKey() }}" value="{{ security.getToken() }}" />
+  {{ form('login/logon', 'method': 'post', 'autocomplete': 'off') }}
+  <input type="hidden" name="{{ keyToken }}" value="{{ valueToken }}" />
   <div class="input-group m-b-20">
     <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
     <div class="fg-line">
-      {{ text_field('cpf', 'class': 'form-control', 'placeholder': 'CPF') }}
+      {{ text_field('cpf', 'class': 'form-control', 'placeholder': 'CPF', 'required': 'required', 'maxlength': 14) }}
     </div>
   </div>
 
   <div class="input-group m-b-20">
     <span class="input-group-addon"><i class="zmdi zmdi-lock zmdi-hc-fw"></i></span>
     <div class="fg-line">
-      {{ password_field('password', 'class': 'form-control', 'placeholder': 'Senha') }}
+      {{ password_field('password', 'class': 'form-control', 'placeholder': 'Senha', 'required': 'required') }}
     </div>
   </div>
 
@@ -21,7 +21,7 @@
 
   <div class="checkbox">
     <label>
-      <input type="checkbox" value="rememberMe">
+      <input type="checkbox" name="rememberMe">
       <i class="input-helper"></i>
       Mantenha-me conectado
     </label>
@@ -39,12 +39,12 @@
 
 <!-- Register -->
 <div class="lc-block" id="l-register">
-  {{ form('session/login', 'method': 'post', 'autocomplete': 'off') }}
-  <input type="hidden" name="{{ security.getTokenKey() }}" value="{{ security.getToken() }}" />
+  {{ form('login/register', 'method': 'post', 'autocomplete': 'off') }}
+  <input type="hidden" name="{{ keyToken }}" value="{{ valueToken }}" />
   <div class="input-group m-b-20">
     <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
     <div class="fg-line">
-      {{ text_field('cpf', 'class': 'form-control', 'placeholder': 'CPF', 'required': 'required') }}
+      {{ text_field('cpf', 'class': 'form-control', 'placeholder': 'CPF', 'required': 'required', 'maxlength': 14) }}
     </div>
   </div>
 
@@ -84,8 +84,8 @@
 
 <!-- Forgot Password -->
 <div class="lc-block" id="l-forget-password">
-  {{ form('session/login', 'method': 'post', 'autocomplete': 'off') }}
-  <input type="hidden" name="{{ security.getTokenKey() }}" value="{{ security.getToken() }}" />
+  {{ form('login/forgotPassword', 'method': 'post', 'autocomplete': 'off') }}
+  <input type="hidden" name="{{ keyToken }}" value="{{ valueToken }}" />
   <p class="text-left">Se você esqueceu sua senha digite seu e-mail para uma nova senha temporária.</p>
 
   <div class="input-group m-b-20">

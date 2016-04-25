@@ -1,14 +1,18 @@
 <?php
 
-return new \Phalcon\Config([
+use Phalcon\Config;
+use Phalcon\Logger;
+
+return new Config([
     'application' => [
         'pluginsDir' => APP_PATH . '/app/plugins/',
         'libraryDir' => APP_PATH . '/app/library/',
         'helpersDir' => APP_PATH . '/app/helpers/',
         'formsDir' => APP_PATH . '/app/forms/',
-        'baseUri' => 'http://localhost/api-phalcon/',
+        'viewsDir' => APP_PATH . '/app/shared/views',
+        'baseUri' => 'http://192.168.1.6/',
         'timezone' => 'America/Sao_Paulo',
-        'cryptSalt' => 'eEAfR|_&G&f,+vU]:jFr!!A&+71w1Ms9~8_4L!<@[N@DyaIP_2My|:+.u>/6m,$D',
+        'cryptSalt' => '8f6bf30e9688ff321db47803211756eb266df08f',
         'environment' => 'development',
     ],
     'model' => [
@@ -25,7 +29,8 @@ return new \Phalcon\Config([
     'logger' => [
         'adapter' => 'File',
         'file' => APP_PATH . '/logs/',
-        'format' => '[%date%][%type%] %message%'
+        'format' => '[%date%][%type%] %message%',
+        'logLevel' => Logger::DEBUG,
     ],
     'volt' => [
         'path' => APP_PATH . '/cache/volt/',
@@ -37,5 +42,23 @@ return new \Phalcon\Config([
         'limiter' => 10,
         'options' => [10, 25, 50, 75, 100, 500],
         'perpage' => 5
-    ]
+    ],
+    'mail' => [
+        'fromName' => 'Grupo MPE',
+        'fromEmail' => 'noreply@grupompe.com.br',
+        'smtp' => [
+            'server' => 'mpemta.grupompe.com.br',
+            'port' => 587,
+            'security' => '',
+            'username' => 'user',
+            'password' => 'secret'
+        ]
+    ],
+    'amazon' => [
+        'AWSAccessKeyId' => '',
+        'AWSSecretKey' => ''
+    ],
+    'access' => [
+        'path' => APP_PATH . '/cache/access/'
+    ],
         ]);

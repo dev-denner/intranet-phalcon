@@ -1,525 +1,230 @@
 <?php
 
 /**
- * @copyright   2016 Grupo MPE
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
- * @link        https://github.com/denners777/API-Phalcon
- * @author      Denner Fernandes <denners777@hotmail.com>
+ * @link        http://www.grupompe.com.br
+ * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
-use DevDenners\Library\DataTable\Datatable;
 use Nucleo\Models\Users;
-use Nucleo\Forms\UsersForm;
+use Nucleo\Models\Protheus\Colaboradores;
+use Nucleo\Models\RM\Pfunc;
+use DevDenners\Controllers\ControllerBase;
 
 class UsersController extends ControllerBase {
 
-  /**
-   *
-   * @var type 
-   */
-  public $entity;
+    /**
+     * initialize
+     */
+    public function initialize() {
+        $this->tag->setTitle(' Usuários ');
+        parent::initialize();
 
-  /**
-   * initialize
-   */
-  public function initialize() {
-    $this->tag->setTitle(' Usuários ');
-    parent::initialize();
-
-    $this->entity = new Users();
-  }
-
-  /**
-   * Index action
-   * 
-   * @return type
-   */
-  public function indexAction() {
-
-    $numberPage = 1;
-
-    if ($this->request->isPost()) {
-      $this->setSessionDataTable();
-      $query = Criteria::fromInput($this->di, '\Nucleo\Models\Users', $_POST);
-      $this->persistent->parameters = $query->getParams();
-      $this->persistent->parameters = $this->setSearch($this->entity);
-      $this->persistent->searchparameters = $_POST;
-    } else {
-      $numberPage = $this->request->getQuery('page', 'int', 1, true);
+        $this->entity = new Users();
     }
 
-    $limiter = empty($this->session->get('datatable_length')) ? 10 : $this->session->get('datatable_length');
-    $filter = empty($this->session->get('datatable_filter')) ? '' : $this->session->get('datatable_filter');
-    $order = empty($this->session->get('datatable_order')) ? 'id' : $this->session->get('datatable_order');
-
-    $parameters = $this->persistent->parameters;
-
-    if (!is_array($parameters)) {
-      $parameters = array();
+    /**
+     * Index user
+     */
+    public function indexAction() {
+        try {
+            $this->view->users = Users::find();
+            $this->view->pesquisa = '';
+            if ($this->request->isPost()) {
+                $users = $this->request->getPost('users', 'string');
+                $search = "(UPPER(cpf) LIKE UPPER('%" . $users . "%') OR UPPER(email) LIKE UPPER('%" . $users . "%'))";
+                $this->view->users = Users::find($search);
+                $this->view->pesquisa = $users;
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
+        }
     }
 
-    $parameters['order'] = $order;
-
-    $users = Users::find($parameters);
-
-    $paginator = new Paginator(array(
-        'data' => $users,
-        'limit' => $limiter,
-        'page' => $numberPage
-    ));
-
-    $datatable = new Datatable();
-    $datatable->setTitle('Usuários');
-    $datatable->setSubTitle('Todos os usuários do sistema.');
-    $datatable->setUrl($this->uri . 'users/');
-    $datatable->setAction($this->_actions($this->actionsController()));
-    $datatable->setOrder($order);
-    $datatable->setLength(['limiter' => $limiter]);
-    $datatable->setFilter($filter);
-    $datatable->setPagination($paginator->getPaginate());
-    $datatable->setHearder($this->getHeader());
-    $datatable->setData($this->getDatas($paginator->getPaginate()));
-
-    $this->view->datatable = $datatable;
-  }
-
-  public function getHeader() {
-    return [
-        'id' => 'ID',
-        'cpf' => 'CPF',
-        'email' => 'E-mail',
-        'name' => 'Nome',
-        'status' => 'Status',
-    ];
-  }
-
-  public function getDatas($dados) {
-
-    $return = [];
-    $rows = [];
-    $header = $this->getHeader();
-
-    foreach ($dados->items as $num => $object) {
-      foreach ($header as $keyHeader => $valueHeader) {
-        $rows[$keyHeader] = $object->$keyHeader;
-      }
-      $return[$num] = $rows;
+    /**
+     * Displays the creation form
+     */
+    public function newAction() {
+        $this->assets->collection('footerJs')->addJs('app/nucleo/users/info-user.js');
     }
 
-    return $return;
-  }
+    /**
+     * Edits a user
+     *
+     * @param string $id
+     */
+    public function editAction($id) {
+        try {
 
-  /**
-   * Displays the creation form
-   */
-  public function newAction() {
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
 
-    if ($this->request->isAjax()) {
-      $this->newAjax();
-    } else {
-      $this->newGet();
-    }
-  }
+            $user = Users::findFirstByid($id);
+            if (!$user) {
+                throw new Exception('Usuário não encontrado!');
+            }
 
-  /**
-   * 
-   */
-  private function newGet() {
-    $user = $this->entity;
-    $form = ['type' => 'insert'];
-    $userForm = new UsersForm($user, $form);
-    $this->view->form = $userForm;
-  }
+            $this->assets->collection('footerJs')->addJs('app/nucleo/users/info-user.js');
 
-  /**
-   * 
-   */
-  private function newAjax() {
-    $user = $this->entity;
+            $this->view->id = $user->id;
+            $this->view->info_user = $this->infoUserAction($user->cpf);
 
-    $form = [
-        'type' => 'insert',
-        'title' => false
-    ];
-
-    $userForm = new UsersForm($user, $form);
-    $this->view->disable();
-    echo $userForm->renderForm();
-  }
-
-  /**
-   * Edits a user
-   *
-   * @param string $id
-   */
-  public function editAction($id) {
-
-    if ($this->request->isAjax()) {
-      $this->editAjax($id);
-    } else {
-      $this->editGet($id);
-    }
-  }
-
-  /**
-   * 
-   * @param type $id
-   * @return type
-   */
-  private function editGet($id) {
-    if (is_null($id)) {
-      $this->flash->error('Usuário não encontrado');
-      return $this->response->redirect('users');
+            $this->tag->setDefault('id', $user->getId());
+            $this->tag->setDefault('cpf', $user->getCpf());
+            $this->tag->setDefault('password', $user->getPassword());
+            $this->tag->setDefault('mustChangePassword', $user->getMustChangePassword());
+            $this->tag->setDefault('email', $user->getEmail());
+            $this->tag->setDefault('status', $user->getStatus());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/users');
+        }
     }
 
-    $user = Users::find(array(
-                'conditions' => 'id = ?1',
-                'bind' => array(1 => $id)
-    ));
+    /**
+     * Creates a new user
+     */
+    public function createAction() {
 
-    if (!$user) {
-      $this->flash->error('Usuário não encontrado');
-      return $this->response->redirect('users');
+        try {
+
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
+            }
+
+            $user = $this->entity;
+
+            $user->setId($user->autoincrement());
+            $user->setCpf($this->request->getPost('cpf', 'int'));
+            $user->setPassword($this->security->hash($this->request->getPost('password')));
+            $user->setMustChangePassword($_POST['mustChangePassword']);
+            $user->setEmail($this->request->getPost('email', 'email'));
+            $user->setStatus('A');
+
+            if (!$user->create()) {
+                $msg = '';
+                foreach ($user->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Usuário gravado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+        }
+        return $this->response->redirect('nucleo/users');
     }
 
-    $form = [
-        'type' => 'update',
-    ];
+    /**
+     * Saves a user edited
+     *
+     */
+    public function saveAction() {
 
-    $user = $user[0];
-    $userForm = new UsersForm($user, $form);
-    $this->view->form = $userForm;
-  }
+        try {
 
-  /**
-   * 
-   * @param type $id
-   */
-  private function editAjax($id) {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
+            }
 
-    if (!is_null($id)) {
-      $user = Users::find(array(
-                  'conditions' => 'id = ?1',
-                  'bind' => array(1 => $id)
-      ));
-      if ($user) {
+            $id = $this->request->getPost('id');
 
-        $form = [
-            'type' => 'update',
-            'title' => false
-        ];
+            $user = Users::findFirstByid($id);
+            if (!$user) {
+                throw new Exception('Usuário não encontrado!');
+            }
 
-        $user = $user[0];
-        $userForm = new UsersForm($user, $form);
-        $this->view->disable();
+            $user->setId($this->request->getPost('id'));
+            $user->setCpf($this->request->getPost('cpf'));
+            $user->setMustChangePassword($this->request->getPost('mustChangePassword'));
+            $user->setEmail($this->request->getPost('email'));
+            $user->setStatus($this->request->getPost('status'));
 
-        echo $userForm->renderForm();
-      } else {
-        echo 'Usuário não encontrado!';
-      }
-    } else {
-      echo 'Usuário não encontrado!';
-    }
-  }
+            if (!$user->update()) {
 
-  /**
-   * Creates a new user
-   */
-  public function createAction() {
-    if (!$this->request->isPost()) {
-      $this->flash->error('Acesso Inválido');
-      return $this->response->redirect('users');
+                $msg = '';
+                foreach ($user->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Usuário atualizado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+        }
+        return $this->response->redirect('nucleo/users');
     }
 
-    $user = $this->entity;
+    /**
+     * Deletes a user
+     *
+     * @param string $id
+     */
+    public function deleteAction() {
 
-    $form = [
-        'action' => 'validation',
-        'type' => 'insert',
-    ];
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
+            }
 
-    $userForm = new UsersForm($user, $form);
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
 
-    $data = $this->request->getPost();
+            $id = $this->request->getPost('id');
 
-    if (!$userForm->isValid($data, $user)) {
-      foreach ($userForm->getMessages() as $message) {
-        $this->flash->error($message);
-      }
-      return $this->response->redirect('users/new');
+            $user = Users::findFirstByid($id);
+            if (!$user) {
+                throw new Exception('Usuário não encontrado!');
+            }
+
+            if (!$user->delete()) {
+
+                $msg = '';
+                foreach ($user->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/users');
+        }
     }
 
-    $user->setId($user->autoincrement());
-    $user->setCpf($this->request->getPost('cpf', 'int'));
-    $user->setPassword($this->request->getPost('password'));
-    $user->setMustChangePassword($this->request->getPost('mustChangePassword'));
-    $user->setEmail($this->request->getPost('email', 'email'));
-    $user->setName($this->request->getPost('name'));
-    $user->setStatus($this->request->getPost('status'));
+    public function profileAction() {
 
-    if (!$user->create()) {
-      foreach ($user->getMessages() as $message) {
-        $this->flash->error($message);
-      }
-      return $this->response->redirect('users/new');
-    }
-    $this->flash->success('Usuário criado com sucesso');
-    return $this->response->redirect('users');
-  }
-
-  /**
-   * Saves a user edited
-   *
-   */
-  public function saveAction() {
-
-    if (!$this->request->isPost()) {
-      $this->flash->error('Acesso Inválido');
-      return $this->response->redirect('users');
-    }
-    $id = $this->request->getPost('id', 'int');
-
-    $user = Users::find(array(
-                'conditions' => 'id = ?1',
-                'bind' => array(1 => $id)
-    ));
-    if (!$user) {
-      $this->flash->error('Usuário ' . $id . ' não existe');
-      return $this->response->redirect('users');
     }
 
-    $user = $user[0];
+    public function infoUserAction($cpf = null) {
+        try {
 
-    $form = [
-        'action' => 'validation',
-        'type' => 'update',
-    ];
+            if (is_null($cpf)) {
+                $cpf = $this->request->getPost('cpf', 'alphanum');
+            }
+            $colaborador = new Colaboradores();
+            $return = $colaborador->getDadosFuncionario($cpf);
 
-    $userForm = new UsersForm($user, $form);
-
-    $data = $this->request->getPost();
-
-    var_dump($userForm->isValid($data, $user));
-    if (!$userForm->isValid($data, $user)) {
-      foreach ($userForm->getMessages() as $message) {
-        $this->flash->error($message);
-      }
-      return $this->response->redirect('users/edit/' . $id);
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+                if (is_null($return)) {
+                    echo 'Não encontrado';
+                } else {
+                    echo json_encode($return);
+                }
+            } else {
+                return $return;
+            }
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
     }
-
-    $user->setId($this->request->getPost('id'));
-    $user->setCpf($this->request->getPost('cpf'));
-    $user->setPassword($this->request->getPost('password'));
-    $user->setMustChangePassword($this->request->getPost('mustChangePassword'));
-    $user->setEmail($this->request->getPost('email', 'email'));
-    $user->setName($this->request->getPost('name'));
-    $user->setStatus($this->request->getPost('status'));
-
-    if (!$user->update()) {
-
-      foreach ($user->getMessages() as $message) {
-        $this->flash->error($message);
-      }
-      return $this->response->redirect('users/edit/' . $user->id);
-    }
-    $this->flash->success('Usuário atualizado com sucesso');
-    return $this->response->redirect('users');
-  }
-
-  /**
-   * Deletes a user
-   *
-   * @param string $id
-   */
-  public function deleteAction() {
-
-    if ($this->request->isAjax()) {
-      $this->deleteAjaxAction();
-    } else {
-      $this->deletePostAction();
-    }
-  }
-
-  /**
-   * 
-   * @param type $id
-   * @return type
-   */
-  private function deletePostAction() {
-
-    if (!$this->request->isPost()) {
-      $this->flash->error('Acesso Inválido.');
-      return $this->response->redirect('users');
-    }
-
-    $user = Users::find(array(
-                'conditions' => 'id = ?1',
-                'bind' => array(1 => $this->request->getPost('id'))
-    ));
-
-    if (!$user) {
-      $this->flash->error('Usuário não encontrado.');
-      return $this->response->redirect('users');
-    }
-
-    if (!$user->delete()) {
-
-      foreach ($user->getMessages() as $message) {
-        $this->flash->error($message);
-      }
-      return $this->response->redirect('users');
-    }
-    $this->flash->success('Usuário deletado com sucesso.');
-    return $this->response->redirect('users');
-  }
-
-  /**
-   * 
-   * @return type
-   */
-  private function deleteAjaxAction() {
-    if (!$this->request->isPost()) {
-      echo 'Acesso Inválido.';
-      return $this->response->redirect('users');
-    }
-
-    $user = Users::find(array(
-                'conditions' => 'id = ?1',
-                'bind' => array(1 => $this->request->getPost('id', 'int'))
-    ));
-
-    if (!$user) {
-      return 'Usuário não encontrado';
-    }
-    if (!$user->delete()) {
-      $return = '';
-      foreach ($user->getMessages() as $message) {
-        $return .= $message;
-      }
-      echo $return;
-    } else {
-      echo 'ok';
-    }
-    exit;
-    $this->view->disable();
-  }
-
-  /**
-   * viewAction
-   * access ajax
-   */
-  public function viewAction($id) {
-    if ($this->request->isAjax($id)) {
-      $this->viewAjax($id);
-    } else {
-      $this->viewGet($id);
-    }
-  }
-
-  /**
-   * 
-   * @param type $id
-   * @return type
-   */
-  private function viewGet($id) {
-    return $this->response->redirect('users');
-  }
-
-  /**
-   * 
-   * @param type $id
-   */
-  private function viewAjax($id) {
-
-    $header = $this->getHeader();
-    $data = [];
-
-    $user = Users::find(array(
-                'conditions' => 'id = ?1',
-                'bind' => array(1 => (int) $id)
-    ));
-
-    foreach ($user as $num => $object) {
-      foreach ($header as $keyHeader => $valueHeader) {
-        $data[$keyHeader] = $object->$keyHeader;
-      }
-    }
-
-    $return = [];
-
-    foreach ($header as $key => $value) {
-
-      $return[$key] = [
-          'header' => $value,
-          'data' => $data[$key],
-      ];
-    }
-
-    $this->view->disable();
-    echo $this->makeView($return, 'dl-horizontal');
-  }
-
-  /**
-   * Searches for users
-   * access ajax
-   */
-  public function searchAction() {
-
-    if ($this->request->isAjax()) {
-      $this->searchAjax();
-    } else {
-      $this->searchGet();
-    }
-  }
-
-  /**
-   * 
-   * @return type
-   */
-  private function searchGet() {
-    return $this->response->redirect('users');
-  }
-
-  /**
-   * 
-   */
-  private function searchAjax() {
-
-    $form = [
-        'type' => 'search',
-        'title' => false
-    ];
-
-    $user = $this->entity;
-    $userForm = new UsersForm($user, $form);
-
-    if (!is_null($this->persistent->searchparameters)) {
-      $user->setCpf($this->persistent->searchparameters['cpf']);
-      $user->setEmail($this->persistent->searchparameters['email']);
-      $user->setName($this->persistent->searchparameters['name']);
-      $user->setStatus($this->persistent->searchparameters['status']);
-    }
-    $this->view->disable();
-    echo $userForm->renderForm();
-  }
-
-  /**
-   * 
-   * @return type
-   */
-  private function actionsController() {
-    return [
-        'add' => [],
-        'search' => [],
-        'print' => [],
-        'excel' => [],
-        'pdf' => [],
-        'word' => [],
-    ];
-  }
 
 }

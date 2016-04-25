@@ -1,5 +1,5 @@
 <?php
- 
+
 /**
  * @copyright   2015 Grupo MPE
  * @license     New BSD License; see LICENSE
@@ -12,22 +12,21 @@ namespace Nucleo\Controllers;
 use Phalcon\Mvc\Model\Criteria as Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Logins;
+use DevDenners\Controllers\ControllerBase;
 
-class LoginsController extends ControllerBase
-{
+class LoginsController extends ControllerBase {
+
     /**
      * Index action
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->persistent->parameters = null;
     }
 
     /**
      * Searches for logins
      */
-    public function searchAction()
-    {
+    public function searchAction() {
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, '\Nucleo\Models\Logins', $_POST);
@@ -47,14 +46,14 @@ class LoginsController extends ControllerBase
             $this->flash->notice("The search did not find any logins");
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "index"
+                        "controller" => "logins",
+                        "action" => "index"
             ));
         }
 
         $paginator = new Paginator(array(
             "data" => $logins,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -64,8 +63,7 @@ class LoginsController extends ControllerBase
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -74,8 +72,7 @@ class LoginsController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         if (!$this->request->isPost()) {
 
             $login = Logins::findFirstByid($id);
@@ -83,8 +80,8 @@ class LoginsController extends ControllerBase
                 $this->flash->error("login was not found");
 
                 return $this->dispatcher->forward(array(
-                    "controller" => "logins",
-                    "action" => "index"
+                            "controller" => "logins",
+                            "action" => "index"
                 ));
             }
 
@@ -97,19 +94,17 @@ class LoginsController extends ControllerBase
             $this->tag->setDefault("attempted", $login->getAttempted());
             $this->tag->setDefault("userAgent", $login->getUseragent());
             $this->tag->setDefault("createIn", $login->getCreatein());
-            
         }
     }
 
     /**
      * Creates a new login
      */
-    public function createAction()
-    {
+    public function createAction() {
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "index"
+                        "controller" => "logins",
+                        "action" => "index"
             ));
         }
 
@@ -121,7 +116,7 @@ class LoginsController extends ControllerBase
         $login->setAttempted($this->request->getPost("attempted"));
         $login->setUseragent($this->request->getPost("userAgent"));
         $login->setCreatein($this->request->getPost("createIn"));
-        
+
 
         if (!$login->save()) {
             foreach ($login->getMessages() as $message) {
@@ -129,16 +124,16 @@ class LoginsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "new"
+                        "controller" => "logins",
+                        "action" => "new"
             ));
         }
 
         $this->flash->success("login was created successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "logins",
-            "action" => "index"
+                    "controller" => "logins",
+                    "action" => "index"
         ));
     }
 
@@ -146,13 +141,12 @@ class LoginsController extends ControllerBase
      * Saves a login edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "index"
+                        "controller" => "logins",
+                        "action" => "index"
             ));
         }
 
@@ -163,8 +157,8 @@ class LoginsController extends ControllerBase
             $this->flash->error("login does not exist " . $id);
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "index"
+                        "controller" => "logins",
+                        "action" => "index"
             ));
         }
 
@@ -174,7 +168,7 @@ class LoginsController extends ControllerBase
         $login->setAttempted($this->request->getPost("attempted"));
         $login->setUseragent($this->request->getPost("userAgent"));
         $login->setCreatein($this->request->getPost("createIn"));
-        
+
 
         if (!$login->save()) {
 
@@ -183,17 +177,17 @@ class LoginsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "edit",
-                "params" => array($login->id)
+                        "controller" => "logins",
+                        "action" => "edit",
+                        "params" => array($login->id)
             ));
         }
 
         $this->flash->success("login was updated successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "logins",
-            "action" => "index"
+                    "controller" => "logins",
+                    "action" => "index"
         ));
     }
 
@@ -202,15 +196,14 @@ class LoginsController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $login = Logins::findFirstByid($id);
         if (!$login) {
             $this->flash->error("login was not found");
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "index"
+                        "controller" => "logins",
+                        "action" => "index"
             ));
         }
 
@@ -221,16 +214,16 @@ class LoginsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "logins",
-                "action" => "search"
+                        "controller" => "logins",
+                        "action" => "search"
             ));
         }
 
         $this->flash->success("login was deleted successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "logins",
-            "action" => "index"
+                    "controller" => "logins",
+                    "action" => "index"
         ));
     }
 

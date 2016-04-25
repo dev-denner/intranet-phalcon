@@ -1,7 +1,7 @@
 <?php
- 
+
 /**
- * @copyright   2015 Grupo MPE
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -9,63 +9,51 @@
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Funcionarios;
+use DevDenners\Controllers\ControllerBase;
 
-class FuncionariosController extends ControllerBase
-{
+class FuncionariosController extends ControllerBase {
+
     /**
-     * Index action
+     * initialize
      */
-    public function indexAction()
-    {
-        $this->persistent->parameters = null;
+    public function initialize() {
+        $this->tag->setTitle(' Funcionarios ');
+        parent::initialize();
+
+        $this->entity = new Funcionarios();
     }
 
     /**
-     * Searches for funcionarios
+     * Index funcionario
      */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, '\Nucleo\Models\Funcionarios', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+    public function indexAction() {
+        try {
+            $this->view->funcionarios = Funcionarios::find();
+            $this->view->pesquisa = '';
+            if ($this->request->isPost()) {
+                $funcionarios = $this->request->getPost('funcionarios', 'string');
+                $search = "(UPPER(chapa) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(nome) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(cpf) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(situacao) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(tipo) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(cargo) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(email) LIKE UPPER('%" . $funcionarios . "%')
+                         OR UPPER(cc) LIKE UPPER('%" . $funcionarios . "%')
+                        )";
+                $this->view->funcionarios = Funcionarios::find($search);
+                $this->view->pesquisa = $this->request->getPost('funcionarios');
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
         }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "id";
-
-        $funcionarios = Funcionarios::find($parameters);
-        if (count($funcionarios) == 0) {
-            $this->flash->notice("The search did not find any funcionarios");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $funcionarios,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -74,156 +62,122 @@ class FuncionariosController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
+    public function editAction($id) {
+        try {
+
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
 
             $funcionario = Funcionarios::findFirstByid($id);
             if (!$funcionario) {
-                $this->flash->error("funcionario was not found");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "funcionarios",
-                    "action" => "index"
-                ));
+                throw new Exception('Funcionario não encontrado!');
             }
 
             $this->view->id = $funcionario->id;
 
-            $this->tag->setDefault("id", $funcionario->getId());
-            $this->tag->setDefault("chapa", $funcionario->getChapa());
-            $this->tag->setDefault("nome", $funcionario->getNome());
-            $this->tag->setDefault("cpf", $funcionario->getCpf());
-            $this->tag->setDefault("empresa", $funcionario->getEmpresa());
-            $this->tag->setDefault("situacao", $funcionario->getSituacao());
-            $this->tag->setDefault("tipo", $funcionario->getTipo());
-            $this->tag->setDefault("dataAdmissao", $funcionario->getDataadmissao());
-            $this->tag->setDefault("cargo", $funcionario->getCargo());
-            $this->tag->setDefault("email", $funcionario->getEmail());
-            $this->tag->setDefault("centroCusto", $funcionario->getCentrocusto());
-            $this->tag->setDefault("sdel", $funcionario->getSdel());
-            $this->tag->setDefault("createBy", $funcionario->getCreateby());
-            $this->tag->setDefault("createIn", $funcionario->getCreatein());
-            $this->tag->setDefault("updateBy", $funcionario->getUpdateby());
-            $this->tag->setDefault("updateIn", $funcionario->getUpdatein());
-            
+            $this->tag->setDefault('id', $funcionario->getId());
+            $this->tag->setDefault('chapa', $funcionario->getChapa());
+            $this->tag->setDefault('nome', $funcionario->getNome());
+            $this->tag->setDefault('cpf', $funcionario->getCpf());
+            $this->tag->setDefault('empresa', $funcionario->getEmpresa());
+            $this->tag->setDefault('situacao', $funcionario->getSituacao());
+            $this->tag->setDefault('tipo', $funcionario->getTipo());
+            $this->tag->setDefault('dataAdmissao', $funcionario->getDataAdmissao());
+            $this->tag->setDefault('cargo', $funcionario->getCargo());
+            $this->tag->setDefault('email', $funcionario->getEmail());
+            $this->tag->setDefault('cc', $funcionario->getCc());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/funcionarios');
         }
     }
 
     /**
      * Creates a new funcionario
      */
-    public function createAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "index"
-            ));
-        }
+    public function createAction() {
 
-        $funcionario = new Funcionarios();
+        try {
 
-        $funcionario->setId($this->request->getPost("id"));
-        $funcionario->setChapa($this->request->getPost("chapa"));
-        $funcionario->setNome($this->request->getPost("nome"));
-        $funcionario->setCpf($this->request->getPost("cpf"));
-        $funcionario->setEmpresa($this->request->getPost("empresa"));
-        $funcionario->setSituacao($this->request->getPost("situacao"));
-        $funcionario->setTipo($this->request->getPost("tipo"));
-        $funcionario->setDataadmissao($this->request->getPost("dataAdmissao"));
-        $funcionario->setCargo($this->request->getPost("cargo"));
-        $funcionario->setEmail($this->request->getPost("email", "email"));
-        $funcionario->setCentrocusto($this->request->getPost("centroCusto"));
-        $funcionario->setSdel($this->request->getPost("sdel"));
-        $funcionario->setCreateby($this->request->getPost("createBy"));
-        $funcionario->setCreatein($this->request->getPost("createIn"));
-        $funcionario->setUpdateby($this->request->getPost("updateBy"));
-        $funcionario->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$funcionario->save()) {
-            foreach ($funcionario->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "new"
-            ));
+            $funcionario = $this->entity;
+
+            $funcionario->setId($funcionario->autoincrement());
+            $funcionario->setChapa($this->request->getPost('chapa'));
+            $funcionario->setNome($this->request->getPost('nome'));
+            $funcionario->setCpf($this->request->getPost('cpf'));
+            $funcionario->setEmpresa($this->request->getPost('empresa'));
+            $funcionario->setSituacao($this->request->getPost('situacao'));
+            $funcionario->setTipo($this->request->getPost('tipo'));
+            $funcionario->setDataAdmissao($this->request->getPost('dataAdmissao'));
+            $funcionario->setCargo($this->request->getPost('cargo'));
+            $funcionario->setEmail($this->request->getPost('email'));
+            $funcionario->setCc($this->request->getPost('cc'));
+
+            if (!$funcionario->create()) {
+                $msg = '';
+                foreach ($funcionario->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Funcionario gravado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("funcionario was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "funcionarios",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/funcionarios');
     }
 
     /**
      * Saves a funcionario edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "index"
-            ));
-        }
+        try {
 
-        $id = $this->request->getPost("id");
-
-        $funcionario = Funcionarios::findFirstByid($id);
-        if (!$funcionario) {
-            $this->flash->error("funcionario does not exist " . $id);
-
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "index"
-            ));
-        }
-
-        $funcionario->setId($this->request->getPost("id"));
-        $funcionario->setChapa($this->request->getPost("chapa"));
-        $funcionario->setNome($this->request->getPost("nome"));
-        $funcionario->setCpf($this->request->getPost("cpf"));
-        $funcionario->setEmpresa($this->request->getPost("empresa"));
-        $funcionario->setSituacao($this->request->getPost("situacao"));
-        $funcionario->setTipo($this->request->getPost("tipo"));
-        $funcionario->setDataadmissao($this->request->getPost("dataAdmissao"));
-        $funcionario->setCargo($this->request->getPost("cargo"));
-        $funcionario->setEmail($this->request->getPost("email", "email"));
-        $funcionario->setCentrocusto($this->request->getPost("centroCusto"));
-        $funcionario->setSdel($this->request->getPost("sdel"));
-        $funcionario->setCreateby($this->request->getPost("createBy"));
-        $funcionario->setCreatein($this->request->getPost("createIn"));
-        $funcionario->setUpdateby($this->request->getPost("updateBy"));
-        $funcionario->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$funcionario->save()) {
-
-            foreach ($funcionario->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "edit",
-                "params" => array($funcionario->id)
-            ));
+            $id = $this->request->getPost('id');
+
+            $funcionario = Funcionarios::findFirstByid($id);
+            if (!$funcionario) {
+                throw new Exception('Funcionario não encontrado!');
+            }
+
+            $funcionario->setId($this->request->getPost('id'));
+            $funcionario->setChapa($this->request->getPost('chapa'));
+            $funcionario->setNome($this->request->getPost('nome'));
+            $funcionario->setCpf($this->request->getPost('cpf'));
+            $funcionario->setEmpresa($this->request->getPost('empresa'));
+            $funcionario->setSituacao($this->request->getPost('situacao'));
+            $funcionario->setTipo($this->request->getPost('tipo'));
+            $funcionario->setDataAdmissao($this->request->getPost('dataAdmissao'));
+            $funcionario->setCargo($this->request->getPost('cargo'));
+            $funcionario->setEmail($this->request->getPost('email'));
+            $funcionario->setCc($this->request->getPost('cc'));
+
+            if (!$funcionario->update()) {
+
+                $msg = '';
+                foreach ($funcionario->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Funcionario atualizado com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("funcionario was updated successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "funcionarios",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/funcionarios');
     }
 
     /**
@@ -231,36 +185,37 @@ class FuncionariosController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
-        $funcionario = Funcionarios::findFirstByid($id);
-        if (!$funcionario) {
-            $this->flash->error("funcionario was not found");
+    public function deleteAction() {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "index"
-            ));
-        }
-
-        if (!$funcionario->delete()) {
-
-            foreach ($funcionario->getMessages() as $message) {
-                $this->flash->error($message);
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "funcionarios",
-                "action" => "search"
-            ));
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
+
+            $id = $this->request->getPost('id');
+
+            $funcionario = Funcionarios::findFirstByid($id);
+            if (!$funcionario) {
+                throw new Exception('Funcionario não encontrado!');
+            }
+
+            if (!$funcionario->delete()) {
+
+                $msg = '';
+                foreach ($funcionario->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/funcionarios');
         }
-
-        $this->flash->success("funcionario was deleted successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "funcionarios",
-            "action" => "index"
-        ));
     }
 
 }

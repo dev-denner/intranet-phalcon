@@ -9,382 +9,388 @@
 
 namespace Nucleo\Models;
 
+use DevDenners\Models\ModelBase;
+use DevDenners\Models\beforeCreate;
+use DevDenners\Models\beforeUpdate;
+use Phalcon\Mvc\Model\Behavior\SoftDelete;
+
 class Empresas extends ModelBase {
 
-  use beforeCreate;
+    use beforeCreate;
 
 use beforeUpdate;
 
-  /**
-   *
-   * @var integer
-   */
-  protected $id;
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
 
-  /**
-   *
-   * @var string
-   */
-  protected $codigo;
+    /**
+     *
+     * @var string
+     */
+    protected $codigo;
 
-  /**
-   *
-   * @var string
-   */
-  protected $cnpj;
+    /**
+     *
+     * @var string
+     */
+    protected $cnpj;
 
-  /**
-   *
-   * @var string
-   */
-  protected $razaoSocial;
+    /**
+     *
+     * @var string
+     */
+    protected $razaoSocial;
 
-  /**
-   *
-   * @var string
-   */
-  protected $nomeFantasia;
+    /**
+     *
+     * @var string
+     */
+    protected $nomeFantasia;
 
-  /**
-   *
-   * @var string
-   */
-  protected $codProtheus;
+    /**
+     *
+     * @var string
+     */
+    protected $codProtheus;
 
-  /**
-   *
-   * @var string
-   */
-  protected $lojaProtheus;
+    /**
+     *
+     * @var string
+     */
+    protected $lojaProtheus;
 
-  /**
-   *
-   * @var string
-   */
-  protected $sdel;
+    /**
+     *
+     * @var string
+     */
+    protected $sdel;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createBy;
+    /**
+     *
+     * @var string
+     */
+    protected $createBy;
 
-  /**
-   *
-   * @var string
-   */
-  protected $createIn;
+    /**
+     *
+     * @var string
+     */
+    protected $createIn;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateBy;
+    /**
+     *
+     * @var string
+     */
+    protected $updateBy;
 
-  /**
-   *
-   * @var string
-   */
-  protected $updateIn;
+    /**
+     *
+     * @var string
+     */
+    protected $updateIn;
 
-  /**
-   * Method to set the value of field id
-   *
-   * @param integer $id
-   * @return $this
-   */
-  public function setId($id) {
-    $this->id = $id;
+    /**
+     * Method to set the value of field id
+     *
+     * @param integer $id
+     * @return $this
+     */
+    public function setId($id) {
+        $this->id = $id;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field codigo
-   *
-   * @param string $codigo
-   * @return $this
-   */
-  public function setCodigo($codigo) {
-    $this->codigo = $codigo;
+    /**
+     * Method to set the value of field codigo
+     *
+     * @param string $codigo
+     * @return $this
+     */
+    public function setCodigo($codigo) {
+        $this->codigo = $codigo;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field cnpj
-   *
-   * @param string $cnpj
-   * @return $this
-   */
-  public function setCnpj($cnpj) {
-    $this->cnpj = $cnpj;
+    /**
+     * Method to set the value of field cnpj
+     *
+     * @param string $cnpj
+     * @return $this
+     */
+    public function setCnpj($cnpj) {
+        $this->cnpj = $cnpj;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field razaoSocial
-   *
-   * @param string $razaoSocial
-   * @return $this
-   */
-  public function setRazaoSocial($razaoSocial) {
-    $this->razaoSocial = $razaoSocial;
+    /**
+     * Method to set the value of field razaoSocial
+     *
+     * @param string $razaoSocial
+     * @return $this
+     */
+    public function setRazaoSocial($razaoSocial) {
+        $this->razaoSocial = $razaoSocial;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field nomeFantasia
-   *
-   * @param string $nomeFantasia
-   * @return $this
-   */
-  public function setNomeFantasia($nomeFantasia) {
-    $this->nomeFantasia = $nomeFantasia;
+    /**
+     * Method to set the value of field nomeFantasia
+     *
+     * @param string $nomeFantasia
+     * @return $this
+     */
+    public function setNomeFantasia($nomeFantasia) {
+        $this->nomeFantasia = $nomeFantasia;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field codProtheus
-   *
-   * @param string $codProtheus
-   * @return $this
-   */
-  public function setCodProtheus($codProtheus) {
-    $this->codProtheus = $codProtheus;
+    /**
+     * Method to set the value of field codProtheus
+     *
+     * @param string $codProtheus
+     * @return $this
+     */
+    public function setCodProtheus($codProtheus) {
+        $this->codProtheus = $codProtheus;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field lojaProtheus
-   *
-   * @param string $lojaProtheus
-   * @return $this
-   */
-  public function setLojaProtheus($lojaProtheus) {
-    $this->lojaProtheus = $lojaProtheus;
+    /**
+     * Method to set the value of field lojaProtheus
+     *
+     * @param string $lojaProtheus
+     * @return $this
+     */
+    public function setLojaProtheus($lojaProtheus) {
+        $this->lojaProtheus = $lojaProtheus;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field sdel
-   *
-   * @param string $sdel
-   * @return $this
-   */
-  public function setSdel($sdel) {
-    $this->sdel = $sdel;
+    /**
+     * Method to set the value of field sdel
+     *
+     * @param string $sdel
+     * @return $this
+     */
+    public function setSdel($sdel) {
+        $this->sdel = $sdel;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field createBy
-   *
-   * @param string $createBy
-   * @return $this
-   */
-  public function setCreateBy($createBy) {
-    $this->createBy = $createBy;
+    /**
+     * Method to set the value of field createBy
+     *
+     * @param string $createBy
+     * @return $this
+     */
+    public function setCreateBy($createBy) {
+        $this->createBy = $createBy;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field createIn
-   *
-   * @param string $createIn
-   * @return $this
-   */
-  public function setCreateIn($createIn) {
-    $this->createIn = $createIn;
+    /**
+     * Method to set the value of field createIn
+     *
+     * @param string $createIn
+     * @return $this
+     */
+    public function setCreateIn($createIn) {
+        $this->createIn = $createIn;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field updateBy
-   *
-   * @param string $updateBy
-   * @return $this
-   */
-  public function setUpdateBy($updateBy) {
-    $this->updateBy = $updateBy;
+    /**
+     * Method to set the value of field updateBy
+     *
+     * @param string $updateBy
+     * @return $this
+     */
+    public function setUpdateBy($updateBy) {
+        $this->updateBy = $updateBy;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Method to set the value of field updateIn
-   *
-   * @param string $updateIn
-   * @return $this
-   */
-  public function setUpdateIn($updateIn) {
-    $this->updateIn = $updateIn;
+    /**
+     * Method to set the value of field updateIn
+     *
+     * @param string $updateIn
+     * @return $this
+     */
+    public function setUpdateIn($updateIn) {
+        $this->updateIn = $updateIn;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns the value of field id
-   *
-   * @return integer
-   */
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Returns the value of field id
+     *
+     * @return integer
+     */
+    public function getId() {
+        return $this->id;
+    }
 
-  /**
-   * Returns the value of field codigo
-   *
-   * @return string
-   */
-  public function getCodigo() {
-    return $this->codigo;
-  }
+    /**
+     * Returns the value of field codigo
+     *
+     * @return string
+     */
+    public function getCodigo() {
+        return $this->codigo;
+    }
 
-  /**
-   * Returns the value of field cnpj
-   *
-   * @return string
-   */
-  public function getCnpj() {
-    return $this->cnpj;
-  }
+    /**
+     * Returns the value of field cnpj
+     *
+     * @return string
+     */
+    public function getCnpj() {
+        return $this->cnpj;
+    }
 
-  /**
-   * Returns the value of field razaoSocial
-   *
-   * @return string
-   */
-  public function getRazaoSocial() {
-    return $this->razaoSocial;
-  }
+    /**
+     * Returns the value of field razaoSocial
+     *
+     * @return string
+     */
+    public function getRazaoSocial() {
+        return $this->razaoSocial;
+    }
 
-  /**
-   * Returns the value of field nomeFantasia
-   *
-   * @return string
-   */
-  public function getNomeFantasia() {
-    return $this->nomeFantasia;
-  }
+    /**
+     * Returns the value of field nomeFantasia
+     *
+     * @return string
+     */
+    public function getNomeFantasia() {
+        return $this->nomeFantasia;
+    }
 
-  /**
-   * Returns the value of field codProtheus
-   *
-   * @return string
-   */
-  public function getCodProtheus() {
-    return $this->codProtheus;
-  }
+    /**
+     * Returns the value of field codProtheus
+     *
+     * @return string
+     */
+    public function getCodProtheus() {
+        return $this->codProtheus;
+    }
 
-  /**
-   * Returns the value of field lojaProtheus
-   *
-   * @return string
-   */
-  public function getLojaProtheus() {
-    return $this->lojaProtheus;
-  }
+    /**
+     * Returns the value of field lojaProtheus
+     *
+     * @return string
+     */
+    public function getLojaProtheus() {
+        return $this->lojaProtheus;
+    }
 
-  /**
-   * Returns the value of field sdel
-   *
-   * @return string
-   */
-  public function getSdel() {
-    return $this->sdel;
-  }
+    /**
+     * Returns the value of field sdel
+     *
+     * @return string
+     */
+    public function getSdel() {
+        return $this->sdel;
+    }
 
-  /**
-   * Returns the value of field createBy
-   *
-   * @return string
-   */
-  public function getCreateBy() {
-    return $this->createBy;
-  }
+    /**
+     * Returns the value of field createBy
+     *
+     * @return string
+     */
+    public function getCreateBy() {
+        return $this->createBy;
+    }
 
-  /**
-   * Returns the value of field createIn
-   *
-   * @return string
-   */
-  public function getCreateIn() {
-    return $this->createIn;
-  }
+    /**
+     * Returns the value of field createIn
+     *
+     * @return string
+     */
+    public function getCreateIn() {
+        return $this->createIn;
+    }
 
-  /**
-   * Returns the value of field updateBy
-   *
-   * @return string
-   */
-  public function getUpdateBy() {
-    return $this->updateBy;
-  }
+    /**
+     * Returns the value of field updateBy
+     *
+     * @return string
+     */
+    public function getUpdateBy() {
+        return $this->updateBy;
+    }
 
-  /**
-   * Returns the value of field updateIn
-   *
-   * @return string
-   */
-  public function getUpdateIn() {
-    return $this->updateIn;
-  }
+    /**
+     * Returns the value of field updateIn
+     *
+     * @return string
+     */
+    public function getUpdateIn() {
+        return $this->updateIn;
+    }
 
-  /**
-   * Initialize method for model.
-   */
-  public function initialize() {
-    $this->hasMany('id', 'Nucleo\Models\Funcionarios', 'empresa', array('alias' => 'Funcionarios'));
+    /**
+     * Initialize method for model.
+     */
+    public function initialize() {
+        parent::initialize();
+        $this->setSchema('NUCLEO');
+        $this->hasMany('id', __NAMESPACE__ . '\Funcionarios', 'empresa', array('alias' => 'Funcionarios'));
+        $this->addBehavior(new SoftDelete([
+            'field' => 'sdel',
+            'value' => '*'
+        ]));
+    }
 
-    $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
-        'field' => 'sdel',
-        'value' => date('*')
-    ]));
-  }
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource() {
+        return 'EMPRESA_N';
+    }
 
-  /**
-   * Returns table name mapped in the model.
-   *
-   * @return string
-   */
-  public function getSource() {
-    return 'empresas';
-  }
+    /**
+     * Independent Column Mapping.
+     * Keys are the real names in the table and the values their names in the application
+     *
+     * @return array
+     */
+    public static function columnMap() {
+        return array(
+            'ID_EMPRESA' => 'id',
+            'CD_CODIGO' => 'codigo',
+            'CD_CNPJ' => 'cnpj',
+            'DS_RAZAOSOCIAL' => 'razaoSocial',
+            'DS_NOMEFANTASIA' => 'nomeFantasia',
+            'CD_CODPROTHEUS' => 'codProtheus',
+            'CD_LOJAPROTHEUS' => 'lojaProtheus',
+            'SDEL' => 'sdel',
+            'CREATEBY' => 'createBy',
+            'CREATEIN' => 'createIn',
+            'UPDATEBY' => 'updateBy',
+            'UPDATEIN' => 'updateIn'
+        );
+    }
 
-  /**
-   * Independent Column Mapping.
-   * Keys are the real names in the table and the values their names in the application
-   *
-   * @return array
-   */
-  public function columnMap() {
-    return array(
-        'id' => 'id',
-        'codigo' => 'codigo',
-        'cnpj' => 'cnpj',
-        'razaoSocial' => 'razaoSocial',
-        'nomeFantasia' => 'nomeFantasia',
-        'codProtheus' => 'codProtheus',
-        'lojaProtheus' => 'lojaProtheus',
-        'sdel' => 'sdel',
-        'createBy' => 'createBy',
-        'createIn' => 'createIn',
-        'updateBy' => 'updateBy',
-        'updateIn' => 'updateIn'
-    );
-  }
-
-  public static function getDeleted() {
-    return 'sdel';
-  }
+    public static function getDeleted() {
+        return 'sdel';
+    }
 
 }

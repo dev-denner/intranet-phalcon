@@ -1,5 +1,5 @@
 <?php
- 
+
 /**
  * @copyright   2015 Grupo MPE
  * @license     New BSD License; see LICENSE
@@ -12,22 +12,21 @@ namespace Nucleo\Controllers;
 use Phalcon\Mvc\Model\Criteria as Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Notifications;
+use DevDenners\Controllers\ControllerBase;
 
-class NotificationsController extends ControllerBase
-{
+class NotificationsController extends ControllerBase {
+
     /**
      * Index action
      */
-    public function indexAction()
-    {
+    public function indexAction() {
         $this->persistent->parameters = null;
     }
 
     /**
      * Searches for notifications
      */
-    public function searchAction()
-    {
+    public function searchAction() {
         $numberPage = 1;
         if ($this->request->isPost()) {
             $query = Criteria::fromInput($this->di, '\Nucleo\Models\Notifications', $_POST);
@@ -47,14 +46,14 @@ class NotificationsController extends ControllerBase
             $this->flash->notice("The search did not find any notifications");
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "index"
+                        "controller" => "notifications",
+                        "action" => "index"
             ));
         }
 
         $paginator = new Paginator(array(
             "data" => $notifications,
-            "limit"=> 10,
+            "limit" => 10,
             "page" => $numberPage
         ));
 
@@ -64,8 +63,7 @@ class NotificationsController extends ControllerBase
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -74,8 +72,7 @@ class NotificationsController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
         if (!$this->request->isPost()) {
 
             $notification = Notifications::findFirstByid($id);
@@ -83,8 +80,8 @@ class NotificationsController extends ControllerBase
                 $this->flash->error("notification was not found");
 
                 return $this->dispatcher->forward(array(
-                    "controller" => "notifications",
-                    "action" => "index"
+                            "controller" => "notifications",
+                            "action" => "index"
                 ));
             }
 
@@ -100,19 +97,17 @@ class NotificationsController extends ControllerBase
             $this->tag->setDefault("seen", $notification->getSeen());
             $this->tag->setDefault("createIn", $notification->getCreatein());
             $this->tag->setDefault("updateIn", $notification->getUpdatein());
-            
         }
     }
 
     /**
      * Creates a new notification
      */
-    public function createAction()
-    {
+    public function createAction() {
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "index"
+                        "controller" => "notifications",
+                        "action" => "index"
             ));
         }
 
@@ -127,7 +122,7 @@ class NotificationsController extends ControllerBase
         $notification->setSeen($this->request->getPost("seen"));
         $notification->setCreatein($this->request->getPost("createIn"));
         $notification->setUpdatein($this->request->getPost("updateIn"));
-        
+
 
         if (!$notification->save()) {
             foreach ($notification->getMessages() as $message) {
@@ -135,16 +130,16 @@ class NotificationsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "new"
+                        "controller" => "notifications",
+                        "action" => "new"
             ));
         }
 
         $this->flash->success("notification was created successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "notifications",
-            "action" => "index"
+                    "controller" => "notifications",
+                    "action" => "index"
         ));
     }
 
@@ -152,13 +147,12 @@ class NotificationsController extends ControllerBase
      * Saves a notification edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
         if (!$this->request->isPost()) {
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "index"
+                        "controller" => "notifications",
+                        "action" => "index"
             ));
         }
 
@@ -169,8 +163,8 @@ class NotificationsController extends ControllerBase
             $this->flash->error("notification does not exist " . $id);
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "index"
+                        "controller" => "notifications",
+                        "action" => "index"
             ));
         }
 
@@ -183,7 +177,7 @@ class NotificationsController extends ControllerBase
         $notification->setSeen($this->request->getPost("seen"));
         $notification->setCreatein($this->request->getPost("createIn"));
         $notification->setUpdatein($this->request->getPost("updateIn"));
-        
+
 
         if (!$notification->save()) {
 
@@ -192,17 +186,17 @@ class NotificationsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "edit",
-                "params" => array($notification->id)
+                        "controller" => "notifications",
+                        "action" => "edit",
+                        "params" => array($notification->id)
             ));
         }
 
         $this->flash->success("notification was updated successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "notifications",
-            "action" => "index"
+                    "controller" => "notifications",
+                    "action" => "index"
         ));
     }
 
@@ -211,15 +205,14 @@ class NotificationsController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
+    public function deleteAction($id) {
         $notification = Notifications::findFirstByid($id);
         if (!$notification) {
             $this->flash->error("notification was not found");
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "index"
+                        "controller" => "notifications",
+                        "action" => "index"
             ));
         }
 
@@ -230,16 +223,16 @@ class NotificationsController extends ControllerBase
             }
 
             return $this->dispatcher->forward(array(
-                "controller" => "notifications",
-                "action" => "search"
+                        "controller" => "notifications",
+                        "action" => "search"
             ));
         }
 
         $this->flash->success("notification was deleted successfully");
 
         return $this->dispatcher->forward(array(
-            "controller" => "notifications",
-            "action" => "index"
+                    "controller" => "notifications",
+                    "action" => "index"
         ));
     }
 

@@ -1,6 +1,7 @@
 <?php
- /**
- * @copyright   2015 Grupo MPE
+
+/**
+ * @copyright   2015 - 2016 Grupo MPE
  * @license     New BSD License; see LICENSE
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
@@ -8,63 +9,49 @@
 
 namespace Nucleo\Controllers;
 
-use Phalcon\Mvc\Model\Criteria as Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Empresas;
+use DevDenners\Controllers\ControllerBase;
 
-class EmpresasController extends ControllerBase
-{
+class EmpresasController extends ControllerBase {
+
     /**
-     * Index action
+     * initialize
      */
-    public function indexAction()
-    {
-        $this->persistent->parameters = null;
+    public function initialize() {
+        $this->tag->setTitle(' Empresas ');
+        parent::initialize();
+
+        $this->entity = new Empresas();
     }
 
     /**
-     * Searches for empresas
+     * Index empresa
      */
-    public function searchAction()
-    {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, '\Nucleo\Models\Empresas', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
+    public function indexAction() {
+        try {
+            $this->view->empresas = Empresas::find();
+            $this->view->pesquisa = '';
+            if ($this->request->isPost()) {
+                $empresas = $this->request->getPost('empresas', 'string');
+                $search = "(UPPER(codigo) LIKE UPPER('%" . $empresas . "%')
+                         OR UPPER(cnpj) LIKE UPPER('%" . $empresas . "%')
+                         OR UPPER(razaoSocial) LIKE UPPER('%" . $empresas . "%')
+                         OR UPPER(nomeFantasia) LIKE UPPER('%" . $empresas . "%')
+                         OR UPPER(codProtheus) LIKE UPPER('%" . $empresas . "%')
+                         OR UPPER(lojaProtheus) LIKE UPPER('%" . $empresas . "%')
+                        )";
+                $this->view->empresas = Empresas::find($search);
+                $this->view->pesquisa = $this->request->getPost('empresas');
+            }
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
         }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = array();
-        }
-        $parameters["order"] = "id";
-
-        $empresas = Empresas::find($parameters);
-        if (count($empresas) == 0) {
-            $this->flash->notice("The search did not find any empresas");
-
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "index"
-            ));
-        }
-
-        $paginator = new Paginator(array(
-            "data" => $empresas,
-            "limit"=> 10,
-            "page" => $numberPage
-        ));
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction()
-    {
+    public function newAction() {
 
     }
 
@@ -73,144 +60,110 @@ class EmpresasController extends ControllerBase
      *
      * @param string $id
      */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
+    public function editAction($id) {
+        try {
+
+            if ($this->request->isPost()) {
+                throw new Exception('Acesso inválido a essa action!!!');
+            }
 
             $empresa = Empresas::findFirstByid($id);
             if (!$empresa) {
-                $this->flash->error("empresa was not found");
-
-                return $this->dispatcher->forward(array(
-                    "controller" => "empresas",
-                    "action" => "index"
-                ));
+                throw new Exception('Empresa não encontrada!');
             }
 
             $this->view->id = $empresa->id;
 
-            $this->tag->setDefault("id", $empresa->getId());
-            $this->tag->setDefault("codigo", $empresa->getCodigo());
-            $this->tag->setDefault("cnpj", $empresa->getCnpj());
-            $this->tag->setDefault("razaoSocial", $empresa->getRazaosocial());
-            $this->tag->setDefault("nomeFantasia", $empresa->getNomefantasia());
-            $this->tag->setDefault("codProtheus", $empresa->getCodprotheus());
-            $this->tag->setDefault("lojaProtheus", $empresa->getLojaprotheus());
-            $this->tag->setDefault("sdel", $empresa->getSdel());
-            $this->tag->setDefault("createBy", $empresa->getCreateby());
-            $this->tag->setDefault("createIn", $empresa->getCreatein());
-            $this->tag->setDefault("updateBy", $empresa->getUpdateby());
-            $this->tag->setDefault("updateIn", $empresa->getUpdatein());
-            
+            $this->tag->setDefault('id', $empresa->getId());
+            $this->tag->setDefault('codigo', $empresa->getCodigo());
+            $this->tag->setDefault('cnpj', $empresa->getCnpj());
+            $this->tag->setDefault('razaoSocial', $empresa->getRazaoSocial());
+            $this->tag->setDefault('nomeFantasia', $empresa->getNomeFantasia());
+            $this->tag->setDefault('codProtheus', $empresa->getCodProtheus());
+            $this->tag->setDefault('lojaProtheus', $empresa->getLojaProtheus());
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/empresas');
         }
     }
 
     /**
      * Creates a new empresa
      */
-    public function createAction()
-    {
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "index"
-            ));
-        }
+    public function createAction() {
 
-        $empresa = new Empresas();
+        try {
 
-        $empresa->setId($this->request->getPost("id"));
-        $empresa->setCodigo($this->request->getPost("codigo"));
-        $empresa->setCnpj($this->request->getPost("cnpj"));
-        $empresa->setRazaosocial($this->request->getPost("razaoSocial"));
-        $empresa->setNomefantasia($this->request->getPost("nomeFantasia"));
-        $empresa->setCodprotheus($this->request->getPost("codProtheus"));
-        $empresa->setLojaprotheus($this->request->getPost("lojaProtheus"));
-        $empresa->setSdel($this->request->getPost("sdel"));
-        $empresa->setCreateby($this->request->getPost("createBy"));
-        $empresa->setCreatein($this->request->getPost("createIn"));
-        $empresa->setUpdateby($this->request->getPost("updateBy"));
-        $empresa->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$empresa->save()) {
-            foreach ($empresa->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "new"
-            ));
+            $empresa = $this->entity;
+
+            $empresa->setId($empresa->autoincrement());
+            $empresa->setCodigo($this->request->getPost('codigo'));
+            $empresa->setCnpj($this->request->getPost('cnpj'));
+            $empresa->setRazaoSocial($this->request->getPost('razaoSocial'));
+            $empresa->setNomeFantasia($this->request->getPost('nomeFantasia'));
+            $empresa->setCodProtheus($this->request->getPost('codProtheus'));
+            $empresa->setLojaProtheus($this->request->getPost('lojaProtheus'));
+
+            if (!$empresa->create()) {
+                $msg = '';
+                foreach ($empresa->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Empresa gravada com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("empresa was created successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "empresas",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/empresas');
     }
 
     /**
      * Saves a empresa edited
      *
      */
-    public function saveAction()
-    {
+    public function saveAction() {
 
-        if (!$this->request->isPost()) {
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "index"
-            ));
-        }
+        try {
 
-        $id = $this->request->getPost("id");
-
-        $empresa = Empresas::findFirstByid($id);
-        if (!$empresa) {
-            $this->flash->error("empresa does not exist " . $id);
-
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "index"
-            ));
-        }
-
-        $empresa->setId($this->request->getPost("id"));
-        $empresa->setCodigo($this->request->getPost("codigo"));
-        $empresa->setCnpj($this->request->getPost("cnpj"));
-        $empresa->setRazaosocial($this->request->getPost("razaoSocial"));
-        $empresa->setNomefantasia($this->request->getPost("nomeFantasia"));
-        $empresa->setCodprotheus($this->request->getPost("codProtheus"));
-        $empresa->setLojaprotheus($this->request->getPost("lojaProtheus"));
-        $empresa->setSdel($this->request->getPost("sdel"));
-        $empresa->setCreateby($this->request->getPost("createBy"));
-        $empresa->setCreatein($this->request->getPost("createIn"));
-        $empresa->setUpdateby($this->request->getPost("updateBy"));
-        $empresa->setUpdatein($this->request->getPost("updateIn"));
-        
-
-        if (!$empresa->save()) {
-
-            foreach ($empresa->getMessages() as $message) {
-                $this->flash->error($message);
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "edit",
-                "params" => array($empresa->id)
-            ));
+            $id = $this->request->getPost('id');
+
+            $empresa = Empresas::findFirstByid($id);
+            if (!$empresa) {
+                throw new Exception('Empresa não encontrada!');
+            }
+
+            $empresa->setId($this->request->getPost('id'));
+            $empresa->setCodigo($this->request->getPost('codigo'));
+            $empresa->setCnpj($this->request->getPost('cnpj'));
+            $empresa->setRazaoSocial($this->request->getPost('razaoSocial'));
+            $empresa->setNomeFantasia($this->request->getPost('nomeFantasia'));
+            $empresa->setCodProtheus($this->request->getPost('codProtheus'));
+            $empresa->setLojaProtheus($this->request->getPost('lojaProtheus'));
+
+            if (!$empresa->update()) {
+
+                $msg = '';
+                foreach ($empresa->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+
+            $this->flash->success('Empresa atualizada com sucesso!!!');
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
         }
-
-        $this->flash->success("empresa was updated successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "empresas",
-            "action" => "index"
-        ));
+        return $this->response->redirect('nucleo/empresas');
     }
 
     /**
@@ -218,36 +171,37 @@ class EmpresasController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
-    {
-        $empresa = Empresas::findFirstByid($id);
-        if (!$empresa) {
-            $this->flash->error("empresa was not found");
+    public function deleteAction() {
 
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "index"
-            ));
-        }
-
-        if (!$empresa->delete()) {
-
-            foreach ($empresa->getMessages() as $message) {
-                $this->flash->error($message);
+        try {
+            if (!$this->request->isPost()) {
+                throw new Exception('Acesso não permitido a essa action.');
             }
 
-            return $this->dispatcher->forward(array(
-                "controller" => "empresas",
-                "action" => "search"
-            ));
+            if ($this->request->isAjax()) {
+                $this->view->disable();
+            }
+
+            $id = $this->request->getPost('id');
+
+            $empresa = Empresas::findFirstByid($id);
+            if (!$empresa) {
+                throw new Exception('Empresa não encontrada!');
+            }
+
+            if (!$empresa->delete()) {
+
+                $msg = '';
+                foreach ($empresa->getMessages() as $message) {
+                    $msg .= $message . '<br />';
+                }
+                throw new Exception($msg);
+            }
+            echo 'ok';
+        } catch (Exception $exc) {
+            $this->flash->error($exc->getMessage());
+            return $this->response->redirect('nucleo/empresas');
         }
-
-        $this->flash->success("empresa was deleted successfully");
-
-        return $this->dispatcher->forward(array(
-            "controller" => "empresas",
-            "action" => "index"
-        ));
     }
 
 }
