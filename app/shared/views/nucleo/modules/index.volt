@@ -49,7 +49,9 @@
                     <tr>
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="name">Nome</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="slug">Slug</th>
+                        <th data-column-id="description">Descrição</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,10 +59,9 @@
                     <tr>
                         <td>{{ module.id }}</td>
                         <td>{{ module.name }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/modules/edit/'~module.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/modules/delete')}}', '{{module.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ module.slug }}</td>
+                        <td>{{ module.description }}</td>
+                        <td>{{ static_url('nucleo/modules')}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

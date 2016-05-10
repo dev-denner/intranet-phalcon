@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Library\Mail;
+namespace SysPhalcon\Library\Mail;
 
 use Phalcon\Mvc\User\Component;
 use Phalcon\Mvc\View;
@@ -48,9 +48,9 @@ class Mail extends Component {
     }
 
     public function getTemplate($name, $params) {
-
-        return $this->view->getRender('common/emailTemplates', $name, $params, function ($view) {
-                    //$view->setRenderLevel(View::LEVEL_LAYOUT);
+        $parameters = array_merge(['publicUrl' => $this->config->application->baseUri,], $params);
+        return $this->view->getRender('emailTemplates', $name, $parameters, function($view) use ($name) {
+                    $view->setMainView('common/emailTemplates/' . $name);
                 });
         return $view->getContent();
     }
@@ -60,16 +60,12 @@ class Mail extends Component {
         $mailSettings = $this->config->mail;
 
         $template = $this->getTemplate($name, $params);
-        dump($template);
-        exit;
 
         $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
                 ->setTo($to)
-                ->setFrom(array(
-                    $mailSettings->fromEmail => $mailSettings->fromName
-                ))
-                //->setReplyTo()
+                ->setFrom([$mailSettings->fromEmail => $mailSettings->fromName])
+                ->setReplyTo([$mailSettings->fromEmail => $mailSettings->fromName])
                 ->setBody($template, 'text/html');
 
         if ($this->directSmtp) {

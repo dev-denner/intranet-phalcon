@@ -1,0 +1,2 @@
+{{ content() }}
+{{ elements.renderCategories(idDepartment) }}

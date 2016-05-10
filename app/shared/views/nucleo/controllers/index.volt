@@ -50,7 +50,7 @@
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="title">Título</th>
                         <th data-column-id="slug">Slug</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,10 +59,7 @@
                         <td>{{ controller.id }}</td>
                         <td>{{ controller.title }}</td>
                         <td>{{ controller.slug }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/controllers/edit/'~controller.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/controllers/delete')}}', '{{controller.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/controllers')}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

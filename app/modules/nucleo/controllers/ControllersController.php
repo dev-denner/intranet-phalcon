@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Controllers;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class ControllersController extends ControllerBase {
 

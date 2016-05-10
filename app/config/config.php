@@ -10,7 +10,7 @@ return new Config([
         'helpersDir' => APP_PATH . '/app/helpers/',
         'formsDir' => APP_PATH . '/app/forms/',
         'viewsDir' => APP_PATH . '/app/shared/views',
-        'baseUri' => 'http://192.168.1.6/',
+        'baseUri' => 'http://localhost/',
         'timezone' => 'America/Sao_Paulo',
         'cryptSalt' => '8f6bf30e9688ff321db47803211756eb266df08f',
         'environment' => 'development',
@@ -28,7 +28,7 @@ return new Config([
     ],
     'logger' => [
         'adapter' => 'File',
-        'file' => APP_PATH . '/logs/',
+        'file' => APP_PATH . '/logs',
         'format' => '[%date%][%type%] %message%',
         'logLevel' => Logger::DEBUG,
     ],
@@ -36,6 +36,7 @@ return new Config([
         'path' => APP_PATH . '/cache/volt/',
         'extension' => '.php',
         'separator' => '_',
+        'compileAlways' => true,
         'stat' => true
     ],
     'pagination' => [
@@ -44,14 +45,14 @@ return new Config([
         'perpage' => 5
     ],
     'mail' => [
-        'fromName' => 'Grupo MPE',
+        'fromName' => 'Intranet – Grupo MPE',
         'fromEmail' => 'noreply@grupompe.com.br',
         'smtp' => [
             'server' => 'mpemta.grupompe.com.br',
             'port' => 587,
             'security' => '',
-            'username' => 'user',
-            'password' => 'secret'
+            'username' => 'gestaodepessoas',
+            'password' => 'alterar1'
         ]
     ],
     'amazon' => [

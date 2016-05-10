@@ -9,9 +9,9 @@
 
 namespace Telephony\Models;
 
-use DevDenners\Models\ModelBase;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\ModelBase;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 
 class CellPhoneLine extends ModelBase {
@@ -46,7 +46,7 @@ use beforeUpdate;
 
     /**
      *
-     * @var integer
+     * @var string
      */
     protected $tipo;
 
@@ -244,6 +244,11 @@ use beforeUpdate;
      * @return \Telephony\Models\CellPhoneLine
      */
     public function setDescontaFolha($descontaFolha) {
+
+        if (is_null($descontaFolha)) {
+            $descontaFolha = 'N';
+        }
+
         $this->descontaFolha = $descontaFolha;
         return $this;
     }

@@ -9,9 +9,10 @@ var getEmailUser = function (e) {
             url: '/nucleo/users/infoUser',
             data: {cpf: cpf}
         }).success(function (returned) {
+            $('.error_cpf').html('');
             $('#email').val(returned.EMAIL);
         }).fail(function (returned) {
-
+            $('.error_cpf').html('CPF não cadastrado no sistema ERP da empresa. Por favor procure o administrador do sistema.');
         });
     }
 }

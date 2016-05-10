@@ -9,7 +9,7 @@
 
 namespace Telephony\Controllers;
 
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 use Telephony\Models\CellPhoneLine;
 use Telephony\Models\AccessLine;
 use Telephony\Models\Statement;
@@ -30,17 +30,18 @@ class IndexController extends ControllerBase {
             if ($this->request->isPost()) {
                 $linhas = $this->request->getPost('linhas', 'string');
                 $mes = str_replace('20', '', $this->request->getPost('mes', 'string'));
-
                 $this->view->extratos = Statement::find("operLd IS NOT NULL AND numAcs = '{$linhas}' AND mes = '{$mes}'");
                 $this->view->totais = Statement::find("operLd IS NULL AND numAcs = '{$linhas}' AND mes = '{$mes}'");
-                $this->view->total = $this->telefoniaDb->fetchAll("SELECT SUM(VALOR) valor FROM EXTRATO
-                                                                   WHERE OPERLD IS NULL
-                                                                   AND NUMACS = '{$linhas}' AND MESREF = '{$mes}'");
+                $statement = new Statement();
+                $this->view->totalLinha = $statement->getTotal($linhas, $mes);
                 $this->view->pesquisa = $linhas . ' | ' . $this->request->getPost('mes', 'string');
+                $this->view->export = true;
             }
 
-            $cellPhoneLine = CellPhoneLine::findByCpf($auth_identity->cpf);
-            $accessLine = AccessLine::findByCpf($auth_identity->cpf);
+            $cpf = $this->session->get('auth-identity')['userInfo']['cpf'];
+
+            $cellPhoneLine = CellPhoneLine::findByCpf($cpf);
+            $accessLine = AccessLine::findByCpf($cpf);
 
             $linhas = [];
 
@@ -55,7 +56,7 @@ class IndexController extends ControllerBase {
             if (empty($linhas)) {
                 throw new Exception('Não há linhas telefônicas cadastradas no seu CPF.');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -72,13 +73,13 @@ class IndexController extends ControllerBase {
 
                 $this->view->extratos = Statement::find("operLd IS NOT NULL AND numAcs = '{$linhas}' AND mes = '{$mes}'");
                 $this->view->totais = Statement::find("operLd IS NULL AND numAcs = '{$linhas}' AND mes = '{$mes}'");
-                $this->view->total = $this->telefoniaDb->fetchAll("SELECT SUM(VALOR) valor FROM EXTRATO
-                                                                   WHERE OPERLD IS NULL
-                                                                   AND NUMACS = '{$linhas}' AND MESREF = '{$mes}'");
+                $statement = new Statement();
+                $this->view->totalLinha = $statement->getTotal($linhas, $mes);
                 $this->view->pesquisa = $linhas . ' | ' . $this->request->getPost('mes', 'string');
+                $this->view->export = true;
             }
 
-            $cellPhoneLine = CellPhoneLine::find();
+            $cellPhoneLine = CellPhoneLine::find(['order' => 'linha']);
 
             $linhas = [];
 
@@ -87,7 +88,7 @@ class IndexController extends ControllerBase {
             }
 
             $this->view->linhas = $linhas;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -97,10 +98,12 @@ class IndexController extends ControllerBase {
         try {
             $this->view->linhasAlteradas = '';
             if ($this->request->isPost()) {
+                $nameFile = implode('', array_reverse(explode('/', $this->request->getPost('mes', 'string'))));
+
                 $statement = new \Telephony\Models\Statement();
-                $this->view->linhasAlteradas = $statement->importExternalTable();
+                $this->view->linhasAlteradas = $statement->importExternalTable($nameFile);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }

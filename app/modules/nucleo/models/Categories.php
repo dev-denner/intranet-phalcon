@@ -9,12 +9,12 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 use Phalcon\Mvc\Model\Behavior\SoftDelete as SoftDelete;
 use Phalcon\Mvc\Model\Message as Message;
 use Phalcon\Validation as Validation;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 
 class Categories extends ModelBase {
 

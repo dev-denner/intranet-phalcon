@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Actions;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class ActionsController extends ControllerBase {
 

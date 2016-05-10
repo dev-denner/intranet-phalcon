@@ -51,7 +51,7 @@
                         <th data-column-id="cpf">CPF</th>
                         <th data-column-id="email">E-mail</th>
                         <th data-column-id="status">Status</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,10 +61,7 @@
                         <td>{{ user.cpf }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.status }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/users/edit/'~user.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/users/delete')}}', '{{user.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/users') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

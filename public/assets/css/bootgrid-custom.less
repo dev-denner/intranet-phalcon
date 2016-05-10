@@ -1,0 +1,102 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : 03/05/2016, 16:02:50
+    Author     : denner.fernandes
+*/
+
+
+.bootgrid-header{
+    .actionBar{
+        .search{
+            .pull-right;
+        }
+        .actions{
+            .pull-left;
+        }
+    }
+}
+.bootgrid-table{
+    thead{
+        tr{
+            th{
+                font-size: 12px;
+                background-color: #313A30;
+                color: #A0A693;
+                text-align: center;
+                padding: 5px;
+                .trans-500ms;
+                &:hover, &:active{
+                    background: #80A035;
+                    color: #313A30;
+                    .trans-500ms;
+                    a.column-header-anchor{
+                        color: #313A30;
+                        .trans-500ms;
+                    }
+                }
+                a.column-header-anchor{
+                    color: #A0A693;
+                    .trans-500ms;
+                }
+                &[data-column-id=commands]{
+                    width: 5%;
+                }
+            }
+        }
+    }
+    tbody, tfoot{
+        tr{
+            td{
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 11px;
+            }
+            &:nth-of-type(odd) {
+                background-color: #eaf3d4;
+            }
+        }
+    }
+    tfoot{
+        tr{
+            background-color: #eaf3d4;
+            td{
+                font-weight: 800;
+                font-size: 12px;
+            }
+        }
+    }
+}
+.bootgrid-footer {
+    margin:0;
+    .pagination{
+        margin: 6px 0;
+        > li{
+            margin: 0;
+            &.active{
+                > a, > span{
+                    background-color: #4caf50;
+                }
+            }
+            > a, > span{
+                width: 30px;
+                height: 30px;
+                line-height: 28px;
+                font-size: 11px;
+                background-color: #eaf3d9;
+
+            }
+        }
+    }
+}
+
+.trans-500ms{
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+}

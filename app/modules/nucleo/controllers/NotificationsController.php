@@ -12,7 +12,7 @@ namespace Nucleo\Controllers;
 use Phalcon\Mvc\Model\Criteria as Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Nucleo\Models\Notifications;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class NotificationsController extends ControllerBase {
 

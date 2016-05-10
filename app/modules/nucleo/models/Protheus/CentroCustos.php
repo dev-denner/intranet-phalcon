@@ -9,7 +9,8 @@
 
 namespace Nucleo\Models\Protheus;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
+use Phalcon\Config as ObjectPhalcon;
 
 class CentroCustos extends ModelBase {
 
@@ -108,6 +109,58 @@ class CentroCustos extends ModelBase {
             'CTT_OPERAC' => 'cttOperac',
             'D_E_L_E_T_' => 'cttSdel',
         ];
+    }
+
+    public function getCentroCusto($search) {
+
+        $connection = $this->customConnection();
+
+        if (!empty($search)) {
+            $search = "AND (CTT.CTT_CUSTO LIKE '%{$search}%'
+                OR CTT.CTT_DESC01 LIKE '%{$search}%'
+                OR SZ9.Z9_CODIGO LIKE '%{$search}%'
+                OR SZ9.Z9_NOMECOM LIKE '%{$search}%'
+                OR SZB.ZB_CODIGO LIKE '%{$search}%'
+                OR SZB.ZB_NOME LIKE '%{$search}%'
+                OR TSZ.TSZ_CODSER LIKE '%{$search}%'
+                OR TSZ.TSZ_DESSER LIKE '%{$search}%')";
+        }
+
+        $query = "
+            SELECT TRIM(CTT.CTT_CUSTO) CODIGO_CC,
+                   TRIM(CTT.CTT_DESC01) DESCRICAO_CC,
+                   TRIM(SZ9.Z9_CODIGO) CODIGO_EMPRESA,
+                   UPPER(TRIM(SZ9.Z9_NOMECOM)) NOME_EMPRESA,
+                   TRIM(SZB.ZB_CODIGO) CODIGO_GESTOR,
+                   TRIM(SZB.ZB_NOME) NOME_GESTOR,
+                   TRIM(TSZ.TSZ_CODSER) CODIGO_OPERACAO,
+                   TRIM(TSZ.TSZ_DESSER) DESCRICAO_OPERACAO,
+                   CASE
+                        WHEN TRIM(CTT.CTT_XBLMOV) IS NOT NULL
+                        THEN TO_CHAR(TO_DATE(CTT.CTT_XBLMOV, 'YYYYMMDD'), 'DD/MM/YYYY')
+                        ELSE NULL
+                    END DATA_BLOQUEIO,
+                    TRIM(CTT.CTT_XPARA) NOVO_CODIGO_CC
+            FROM {$this->schema}.CTT010 CTT
+            LEFT JOIN (
+                SELECT DISTINCT SQSZ9.Z9_CODIGO, SQSZ9.Z9_NOMECOM
+                FROM {$this->schema}.SZ9010 SQSZ9
+                WHERE SQSZ9.D_E_L_E_T_ = ' ') SZ9
+            ON SZ9.Z9_CODIGO = CTT.CTT_MAT
+            LEFT JOIN {$this->schema}.SZB010 SZB
+            ON SZB.D_E_L_E_T_ = ' '
+            AND SZB.ZB_CODIGO = CTT.CTT_XGEST
+            LEFT JOIN {$this->schema}.TSZ010 TSZ
+            ON TSZ.D_E_L_E_T_ = ' '
+            AND TSZ.TSZ_CODSER = CTT.CTT_OPERAC
+            WHERE CTT.D_E_L_E_T_ = ' '
+            {$search}
+            ORDER BY CTT.CTT_CUSTO";
+
+        $result = $connection->select($query);
+        $return = $connection->fetchAll($result);
+        $connection->bye();
+        return new ObjectPhalcon($return);
     }
 
 }

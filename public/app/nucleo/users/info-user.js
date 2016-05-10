@@ -21,6 +21,7 @@ var getInfoUser = function (e) {
                     $('.data-' + index).html(value);
                 });
                 $('#email').val(returned.EMAIL);
+                $('#name').val(returned.NOME);
             }
         }).fail(function (returned) {
             $('.errors > p').html('Não foi possível identificar a origem dos dados desse usuário.<br>');

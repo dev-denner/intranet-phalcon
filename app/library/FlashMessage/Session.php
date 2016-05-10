@@ -12,22 +12,22 @@
  * @author denner.fernandes
  */
 
-namespace DevDenners\Library\FlashMessage;
+namespace SysPhalcon\Library\FlashMessage;
 
 use Phalcon\Flash\Session as FlashSession;
 
 class Session extends FlashSession {
 
-  public function __construct($cssClasses = null) {
-    if ($cssClasses === null) {
-      $cssClasses = array(
-          'success' => 'alert alert-success',
-          'notice' => 'alert alert-info',
-          'warning' => 'alert alert-warning',
-          'error' => 'alert alert-danger',
-      );
+    public function __construct($cssClasses = null) {
+        if ($cssClasses === null) {
+            $cssClasses = array(
+                'success' => 'alert alert-success',
+                'notice' => 'alert alert-info',
+                'warning' => 'alert alert-warning',
+                'error' => 'alert alert-danger',
+            );
+        }
+        parent::__construct($cssClasses);
     }
-    parent::__construct($cssClasses);
-  }
 
 }

@@ -12,7 +12,7 @@ namespace Nucleo\Controllers;
 use Nucleo\Models\Users;
 use Nucleo\Models\Protheus\Colaboradores;
 use Nucleo\Models\RM\Pfunc;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class UsersController extends ControllerBase {
 
@@ -75,7 +75,8 @@ class UsersController extends ControllerBase {
 
             $this->tag->setDefault('id', $user->getId());
             $this->tag->setDefault('cpf', $user->getCpf());
-            $this->tag->setDefault('password', $user->getPassword());
+            $this->tag->setDefault('userName', $user->getUserName());
+            $this->tag->setDefault('name', $user->getName());
             $this->tag->setDefault('mustChangePassword', $user->getMustChangePassword());
             $this->tag->setDefault('email', $user->getEmail());
             $this->tag->setDefault('status', $user->getStatus());
@@ -99,10 +100,13 @@ class UsersController extends ControllerBase {
             $user = $this->entity;
 
             $user->setId($user->autoincrement());
-            $user->setCpf($this->request->getPost('cpf', 'int'));
-            $user->setPassword($this->security->hash($this->request->getPost('password')));
-            $user->setMustChangePassword($_POST['mustChangePassword']);
-            $user->setEmail($this->request->getPost('email', 'email'));
+            $user->setName($this->request->getPost('name', 'string'));
+            $user->setCpf($this->request->getPost('cpf', 'alphanum'));
+            $user->setPassword($this->security->hash($this->request->getPost('cpf', 'alphanum')));
+            $user->setMustChangePassword('S');
+            $email = $this->request->getPost('email', 'email');
+            $user->setEmail($email);
+            $user->setUserName(explode('@', $email)[0]);
             $user->setStatus('A');
 
             if (!$user->create()) {
@@ -140,9 +144,12 @@ class UsersController extends ControllerBase {
             }
 
             $user->setId($this->request->getPost('id'));
-            $user->setCpf($this->request->getPost('cpf'));
-            $user->setMustChangePassword($this->request->getPost('mustChangePassword'));
-            $user->setEmail($this->request->getPost('email'));
+            $user->setName($this->request->getPost('name', 'string'));
+            $user->setCpf($this->request->getPost('cpf', 'alphanum'));
+            $user->setMustChangePassword($_POST['mustChangePassword']);
+            $email = $this->request->getPost('email', 'email');
+            $user->setEmail($email);
+            $user->setUserName(explode('@', $email)[0]);
             $user->setStatus($this->request->getPost('status'));
 
             if (!$user->update()) {
@@ -152,9 +159,9 @@ class UsersController extends ControllerBase {
                     $msg .= $message . '<br />';
                 }
                 throw new Exception($msg);
+            } else {
+                $this->flash->success('Usuário atualizado com sucesso!!!');
             }
-
-            $this->flash->success('Usuário atualizado com sucesso!!!');
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
         }

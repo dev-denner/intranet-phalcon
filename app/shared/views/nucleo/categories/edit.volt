@@ -21,7 +21,7 @@
 
                 <div class="form-group fg-float">
                     <div class="fg-line">
-                        {{ text_area("description", "class" : "form-control fg-input") }}
+                        {{ text_field("description", "class" : "form-control fg-input") }}
                         <label class="fg-label">Descrição</label>
                     </div>
                 </div>

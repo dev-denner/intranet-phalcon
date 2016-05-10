@@ -27,99 +27,104 @@
                 <br />
             </div>
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['module',
-                                \Nucleo\Models\Modules::find(),
+                                \Nucleo\Models\Modules::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Módulo (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Módulo (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
             </div>
             <div class="col-lg-5">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['controller',
-                                \Nucleo\Models\Controllers::find(),
+                                \Nucleo\Models\Controllers::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Controlador (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Controlador (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
             </div>
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['action',
-                                \Nucleo\Models\Actions::find(),
+                                \Nucleo\Models\Actions::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Ação (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Ação (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
             </div>
             <div class="col-lg-5">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['department',
-                                \Nucleo\Models\Departments::find(),
+                                \Nucleo\Models\Departments::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Departamento',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Departamento</label>
                     </div>
                 </div>
                 <br />
             </div>
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['category',
-                                \Nucleo\Models\Categories::find(),
+                                \Nucleo\Models\Categories::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Categoria',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Categoria</label>
                     </div>
                 </div>
                 <br />

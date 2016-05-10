@@ -2,7 +2,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Produtos e Serviços <small>Digite abaixo o produto ou serviço desejado e então clique no botão Buscar.</small></h2>
+        <h2>Produtos e Serviços <small>Digite a informação desejada.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">
@@ -14,6 +14,7 @@
                         <input type="text" class="form-control" name="produto" id="produto" value="{{ pesquisa }}" onclick="this.select()" required />
                         <label class="fg-label">Digite sua pesquisa</label>
                     </div>
+                    <p class="help-block">Buscar por Código, Descrição ou Grupo.</p>
                 </div>
             </div>
             <div class="col-sm-2">
@@ -35,40 +36,44 @@
 {% if pesquisa is not empty %}
 <div class="card">
     <div class="card-header">
-        Resultado para pesquisa: {{ pesquisa }}
+        Resultado para pesquisa: <span class="text-danger">{{ pesquisa }}</span>
+        <ul class="actions">
+            {% if export %}
+            <li>
+                {{ link_to('export?obj=produtos&type=excel&search='~pesquisa, '<i class="fa fa-file-excel-o c-green" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para Excel', 'target': '_new') }}
+            </li>
+            <li>
+                {{ link_to('export?obj=produtos&type=pdf&search='~pesquisa, '<i class="fa fa-file-pdf-o c-red" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para PDF', 'target': '_new') }}
+            </li>
+            {% endif %}
+        </ul>
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
-            {% if produtos is not empty %}
             <table class="table table-striped table-vmiddle datatable">
                 <thead>
                     <tr>
                         <th data-column-id="CODIGO" data-type="numeric">CÓDIGO</th>
-                        <th data-column-id="DESCPROD">DESCRIÇÃO PRODUTO</th>
-                        <th data-column-id="DESCPRODCOMP">DESCRIÇÃO PRODUTO COMPLETA</th>
-                        <th data-column-id="GRUPO">GRUPO</th>
-                        <th data-column-id="UM">UM</th>
+                        <th data-column-id="DESCRICAO">DESCRIÇÃO</th>
+                        <th data-column-id="DESCRICAO_COMPLETA">DESCRIÇÃO COMPLETA</th>
+                        <th data-column-id="DESCRICAO_GRUPO">GRUPO</th>
+                        <th data-column-id="UN">UN</th>
                         <th data-column-id="NCM">NCM</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for produto in produtos %}
                     <tr>
-                        <td>{{ produto['CODIGO']|trim }}</td>
-                        <td>{{ produto['DESCPROD']|trim }}</td>
-                        <td>{{ produto['DESCPRODCOMP']|trim }}</td>
-                        <td>{{ produto['DESCGRUPO']|trim }}</td>
-                        <td>{{ produto['UM']|trim }}</td>
-                        <td>{{ produto['NCM']|trim }}</td>
+                        <td>{{ produto.CODIGO }}</td>
+                        <td>{{ produto.DESCRICAO }}</td>
+                        <td>{{ produto.DESCRICAO_COMPLETA }}</td>
+                        <td>{{ produto.DESCRICAO_GRUPO }}</td>
+                        <td>{{ produto.UN }}</td>
+                        <td>{{ produto.NCM }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-            <table class="table table-striped table-vmiddle">
-                <tr><td>Não há dados a exibir</td></tr>
-            </table>
-            {% endif %}
         </div>
     </div>
 </div>

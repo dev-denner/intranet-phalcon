@@ -9,24 +9,32 @@
 
 namespace Nucleo\Controllers;
 
-use DevDenners\Library\Auth\Exception as AuthException;
+use SysPhalcon\Library\Auth\Exception as AuthException;
 use Nucleo\Controllers\UsersController;
 use Nucleo\Forms\UsersForm;
 use Nucleo\Models\Users;
-use Nucleo\Models\ResetPasswords;
+use Nucleo\Models\Mysql\ResetPasswords;
+use Nucleo\Models\Mysql\PasswordChanges;
 use Nucleo\Models\RM\Pfunc;
 use Nucleo\Models\Protheus\Colaboradores;
 use Nucleo\Models\UsersGroups;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class SessionController extends ControllerBase {
 
+    /**
+     *
+     */
     public function initialize() {
         $this->tag->setTitle(' Login ');
         parent::initialize();
         $this->view->setTemplateBefore('public');
     }
 
+    /**
+     *
+     * @return type
+     */
     public function indexAction() {
         try {
             if ($this->auth->hasRememberMe()) {
@@ -37,143 +45,126 @@ class SessionController extends ControllerBase {
             $this->view->empresas = $colaboradores->getEmpresas();
             $this->view->keyToken = $this->security->getTokenKey();
             $this->view->valueToken = $this->security->getToken();
-        } catch (Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
+    /**
+     *
+     * @return type
+     * @throws Exception
+     */
     public function logonAction() {
 
         try {
             if ($this->request->isPost()) {
-                //if ($this->security->checkToken()) {
-                $form = [
-                    'type' => 'login',
-                    'title' => false
-                ];
-                $user = new Users();
+                if ($this->security->checkToken()) {
 
-                /* $formUsers = new UsersForm($user, $form);
+                    if ($this->validation()) {
 
-                  if ($formUsers->isValid($this->request->getPost()) == false) {
-                  $msg = '';
-                  foreach ($formUsers->getMessages() as $message) {
-                  $msg .= $message . '<br />';
-                  }
-                  throw new Exception($msg);
-                  } else { */
-                $this->auth->check([
-                    'cpf' => $this->request->getPost('cpf', 'alphanum'),
-                    'password' => $this->request->getPost('password'),
-                    'rememberMe' => $this->request->getPost('rememberMe')
-                ]);
+                        $this->auth->check([
+                            'cpf' => $this->request->getPost('cpf', 'alphanum'),
+                            'password' => $this->request->getPost('password'),
+                            'rememberMe' => $this->request->getPost('rememberMe')
+                        ]);
 
-                return $this->response->redirect('/');
-                //}
-                /* } else {
-                  $this->security->hash(rand());
-                  throw new Exception('Chave CSRF inválida.');
-                  } */
+                        $user = $this->auth->getUser();
+
+                        if ($user->mustChangePassword == 'S') {
+                            $msg = 'Este é seu primeiro acesso ao sistema, ou foi solicitado a mudança de sua senha pelo Administrador.<br>Por favor, redefina sua senha.';
+                            $this->flash->notice($msg);
+                            return $this->response->redirect('change-password');
+                        }
+
+                        return $this->response->redirect();
+                    }
+                } else {
+                    $this->security->hash(rand());
+                    throw new Exception('Chave CSRF inválida.');
+                }
             }
-        } catch (AuthException $e) {
-            $this->flash->error($e->getMessage());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('login');
     }
 
+    /**
+     *
+     * @return type
+     * @throws Exception
+     */
     public function registerAction() {
 
         try {
             if (!$this->request->isPost()) {
                 return $this->response->redirect('login');
             } else {
-                //if ($this->security->checkToken()) {
+                if ($this->security->checkToken()) {
 
-                $form = [
-                    'type' => 'login',
-                    'title' => false
-                ];
-                $user = new Users();
-                /* $formUsers = new UsersForm($user, $form);
+                    if ($this->validation()) {
 
-                  if ($formUsers->isValid($this->request->getPost()) == false) {
-                  $msg = '';
-                  foreach ($formUsers->getMessages() as $message) {
-                  $msg .= $message . '<br />';
-                  }
-                  throw new Exception($msg);
-                  } else { */
-
-                if ($this->makeRegister()) {
-                    $this->flash->success('Cadastro realizado com sucesso.');
+                        if ($this->makeRegister()) {
+                            $this->flash->success('Cadastro realizado com sucesso.');
+                        }
+                    }
+                } else {
+                    $this->security->hash(rand());
+                    throw new Exception('Chave CSRF inválida.');
                 }
-                //}
-                /* } else {
-                  $this->security->hash(rand());
-                  throw new Exception('Chave CSRF inválida.');
-                  } */
             }
-        } catch (AuthException $e) {
-            $this->flash->error($e->getMessage());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
 
         return $this->response->redirect('login');
     }
 
+    /**
+     * Shows the forgot password form
+     */
     public function forgotPasswordAction() {
 
         try {
             if ($this->request->isPost()) {
-                //if ($this->security->checkToken()) {
-                /* $form = [
-                  'type' => 'forgot',
-                  'title' => false
-                  ]; */
-                $users = new Users();
-                /* $formUsers = new UsersForm($users, $form);
-
-                  if ($formUsers->isValid($this->request->getPost()) == false) {
-                  $msg = '';
-                  foreach ($formUsers->getMessages() as $message) {
-                  $msg .= $message . '<br>';
-                  }
-                  throw new Exception($msg);
-                  } else { */
-                $user = Users::findFirstByEmail($this->request->getPost('email'));
-                if (!$user) {
-                    throw new Exception('Não há nenhuma conta associada a este e-mail');
-                } else {
-                    $resetPassword = new ResetPasswords();
-                    $resetPassword->id = $resetPassword->autoincrement();
-                    $resetPassword->usersId = $user->id;
-                    if ($resetPassword->save()) {
-                        $this->flash->success('Sucesso! Por favor verifique suas mensagens de e-mail para uma redefinir sua senha.');
-                    } else {
-                        foreach ($resetPassword->getMessages() as $message) {
-                            $msg = '';
-                            foreach ($resetPassword->getMessages() as $message) {
-                                $msg .= $message . '<br>';
+                if ($this->security->checkToken()) {
+                    if ($this->validation()) {
+                        $user = Users::findFirstByEmail($this->request->getPost('email', 'email'));
+                        if (!$user) {
+                            throw new Exception('Não há nenhuma conta associada a este e-mail');
+                        } else {
+                            $resetPassword = new ResetPasswords();
+                            $userName = explode('@', $user->email)[0];
+                            $resetPassword->usersName = $userName;
+                            if ($resetPassword->save()) {
+                                $this->flash->success('Sucesso! Por favor verifique suas mensagens de e-mail para uma redefinir sua senha.');
+                            } else {
+                                foreach ($resetPassword->getMessages() as $message) {
+                                    $msg = '';
+                                    foreach ($resetPassword->getMessages() as $message) {
+                                        $msg .= $message . '<br>';
+                                    }
+                                    throw new Exception($msg);
+                                }
                             }
-                            throw new Exception($msg);
                         }
                     }
+                } else {
+                    $this->security->hash(rand());
+                    throw new Exception('Chave CSRF inválida.');
                 }
-                //}
-                /* } else {
-                  $this->security->hash(rand());
-                  throw new Exception('Chave CSRF inválida.');
-                  } */
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('login');
     }
 
+    /**
+     *
+     * @return type
+     */
     public function logoutAction() {
         $this->auth->remove();
         $this->session->destroy();
@@ -186,9 +177,71 @@ class SessionController extends ControllerBase {
      * @return boolean
      * @throws Exception
      */
-    public function makeRegister() {
+    private function validation() {
 
-        $cpf = str_replace('-', '', $this->request->getPost('cpf', 'int'));
+        $cpf = $this->request->getPost('cpf', 'alphanum');
+        $password = $this->request->getPost('password');
+        $confirmPassword = $this->request->getPost('confirmPassword');
+        $email = $this->request->getPost('email', 'email');
+        $dataAdmissao = $this->request->getPost('dataAdmissao', 'string');
+        $empresa = $this->request->getPost('empresa');
+
+        $msg = '';
+        $validator = $this->validator;
+
+        if (!is_null($cpf)) {
+            if (!$validator::stringType()->notEmpty()->validate($cpf)) {
+                $msg .= 'Por favor preencha o campo CPF.<br>';
+            }
+        }
+        if (!is_null($password)) {
+            if (!$validator::stringType()->notEmpty()->validate($password)) {
+                $msg .= 'Por favor preencha o campo Senha.<br>';
+            }
+        }
+        if (!is_null($confirmPassword)) {
+            if (!$validator::stringType()->notEmpty()->validate($confirmPassword)) {
+                $msg .= 'Por favor preencha o campo Confirme sua Senha.<br>';
+            }
+            if (!$validator::equals($password)->validate($confirmPassword)) {
+                $msg .= 'As senhas não conferem.<br>';
+            }
+        }
+        if (!is_null($email)) {
+            if (!$validator::stringType()->notEmpty()->validate($email)) {
+                $msg .= 'Por favor preencha o campo E-mail.<br>';
+            }
+            if (!$validator::email()->validate($email)) {
+                $msg .= 'E-mail não é válido.<br>';
+            }
+        }
+        if (!is_null($dataAdmissao)) {
+            if (!$validator::stringType()->notEmpty()->validate($dataAdmissao)) {
+                $msg .= 'Por favor preencha o campo Data de Admissão.<br>';
+            }
+            if (!$validator::date('d/m/Y')->validate($dataAdmissao)) {
+                $msg .= 'Por favor insira Data de Admissão no formato dd/mm/aaaa<br>';
+            }
+        }
+        if (!is_null($empresa)) {
+            if (!$validator::stringType()->notEmpty()->validate($empresa)) {
+                $msg .= 'Por favor escolha uma opção do campo Empresa.<br>';
+            }
+        }
+        if (!empty($msg)) {
+            throw new Exception($msg);
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @return boolean
+     * @throws Exception
+     */
+    private function makeRegister() {
+
+        $cpf = $this->request->getPost('cpf', 'alphanum');
         $dataAdmissao = $this->request->getPost('dataAdmissao');
         $empresa = $this->request->getPost('empresa', 'int');
 
@@ -202,8 +255,11 @@ class SessionController extends ControllerBase {
         $user = new Users();
 
         $user->setId($user->autoincrement());
+        $user->setName($this->request->getPost('name', 'string'));
         $user->setCpf($cpf);
-        $user->setEmail($this->request->getPost('email', 'email'));
+        $email = $this->request->getPost('email', 'email');
+        $user->setEmail($email);
+        $user->setUserName(explode('@', $email)[0]);
         $user->setPassword($this->security->hash($this->request->getPost('password')));
         $user->setMustChangePassword('S');
         $user->setStatus('A');
@@ -235,96 +291,46 @@ class SessionController extends ControllerBase {
     /**
      *
      * @return type
-     */
-    public function confirmEmailAction() {
-        $code = $this->dispatcher->getParam('code');
-
-        $confirmation = EmailConfirmations::findFirstByCode($code);
-
-        if (!$confirmation) {
-            return $this->response->redirect('nucleo/login');
-        }
-
-        if ($confirmation->confirmed != 'N') {
-            return $this->response->redirect('nucleo/login');
-        }
-
-        $confirmation->confirmed = 'Y';
-
-        $confirmation->user->status = 'Y';
-
-
-        if (!$confirmation->save()) {
-
-            foreach ($confirmation->getMessages() as $message) {
-                $this->flash->error($message);
-            }
-
-            return $this->dispatcher->forward(array(
-                        'controller' => 'index',
-                        'action' => 'index'
-            ));
-        }
-
-        /**
-         * Identify the user in the application
-         */
-        $this->auth->authUserById($confirmation->user->id);
-
-        /**
-         * Check if the user must change his/her password
-         */
-        if ($confirmation->user->mustChangePassword == 'Y') {
-
-            $this->flash->success('The email was successfully confirmed. Now you must change your password');
-
-            return $this->dispatcher->forward(array(
-                        'controller' => 'users',
-                        'action' => 'changePassword'
-            ));
-        }
-
-        $this->flash->success('The email was successfully confirmed');
-
-        return $this->dispatcher->forward(array(
-                    'controller' => 'users',
-                    'action' => 'index'
-        ));
-    }
-
-    /**
-     *
-     * @return type
      * @throws Exception
      */
     public function resetPasswordAction() {
-        $code = $this->dispatcher->getParam('code');
 
-        $resetPassword = ResetPasswords::findFirstByCode($code);
+        try {
 
-        if (!$resetPassword) {
-            $this->flash->error('Não foi possível encontrar o codigo.');
-            return $this->response->redirect('login');
-        }
+            $code = $this->dispatcher->getParam('code');
 
-        if ($resetPassword->reset != 'N') {
-            return $this->response->redirect('login');
-        }
+            $resetPassword = ResetPasswords::findFirstByCode($code);
 
-        $resetPassword->reset = 'Y';
-
-        if (!$resetPassword->save()) {
-            $msg = '';
-            foreach ($resetPassword->getMessages() as $message) {
-                $msg .= $message . '<br>';
+            if (!$resetPassword) {
+                throw new Exception('Não foi possível encontrar o código.');
             }
-            throw new Exception($msg);
 
-            return $this->response->redirect('login');
+            if ($resetPassword->reset != 'N') {
+                throw new Exception('Código expirado.');
+            }
+
+            $resetPassword->reset = 'Y';
+
+            if (!$resetPassword->save()) {
+                $msg = '';
+                foreach ($resetPassword->getMessages() as $message) {
+                    $msg .= $message . '<br>';
+                }
+                throw new Exception($msg);
+            }
+
+            $user = Users::findFirst([
+                        'userName = ?0',
+                        'bind' => [$resetPassword->usersName]
+            ]);
+
+            $this->auth->authUserById($user->id);
+            $this->flash->notice('Por favor, redefina sua senha.');
+            return $this->response->redirect('change-password');
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
-        $this->auth->authUserById($resetPassword->usersId);
-        $this->flash->success('Por favor, redefina sua senha');
-        return $this->response->redirect('change-password');
+        return $this->response->redirect('login');
     }
 
     /**
@@ -332,56 +338,54 @@ class SessionController extends ControllerBase {
      * @throws Exception
      */
     public function changePasswordAction() {
+
         try {
-            $form = [
-                'type' => 'password',
-                'title' => false,
-                'action' => 'change-password'
-            ];
+            $user = $this->auth->getUser();
 
-            $user = $this->entity;
-            $userForm = new UsersForm($user, $form);
-
+            if (!$user) {
+                throw new Exception('Acesso inválido.');
+            }
             if ($this->request->isPost()) {
                 if ($this->security->checkToken()) {
-
-                    if (!$userForm->isValid($this->request->getPost())) {
-
-                        $msg = '';
-                        foreach ($userForm->getMessages() as $message) {
-                            $msg .= $message . '<br>';
-                        }
-                        throw new Exception($msg);
-                    } else {
-
-                        $user = $this->auth->getUser();
-
+                    if ($this->validation()) {
                         $user->password = $this->security->hash($this->request->getPost('password'));
                         $user->mustChangePassword = 'N';
-
-                        $passwordChange = new PasswordChanges();
-                        $passwordChange->user = $user;
-                        $passwordChange->ipAddress = $this->request->getClientAddress();
-                        $passwordChange->userAgent = $this->request->getUserAgent();
-
-                        if (!$passwordChange->save()) {
-                            $this->flash->error($passwordChange->getMessages());
+                        if (!$user->update()) {
+                            $msg = '';
+                            foreach ($user->getMessages() as $message) {
+                                $msg .= $message . '<br>';
+                            }
+                            throw new Exception($msg);
                         } else {
+                            $passwordChange = new PasswordChanges();
+                            $passwordChange->usersName = $user->userName;
+                            $passwordChange->ipAddress = $this->request->getClientAddress();
+                            $passwordChange->userAgent = $this->request->getUserAgent();
 
-                            $this->flash->success('Your password was successfully changed');
+                            if (!$passwordChange->save()) {
+                                $msg = '';
+                                foreach ($passwordChange->getMessages() as $message) {
+                                    $msg .= $message . '<br>';
+                                }
+                                throw new Exception($msg);
+                            } else {
 
-                            Tag::resetInput();
+                                $this->flash->success('Sua senha foi alterada com sucesso');
+                            }
                         }
                     }
                 } else {
                     $this->security->hash(rand());
                     throw new Exception('Chave CSRF inválida.');
                 }
+                return $this->response->redirect();
             }
-
-            $this->view->form = $userForm;
-        } catch (Exception $e) {
+            $this->view->name = $user->name;
+            $this->view->keyToken = $this->security->getTokenKey();
+            $this->view->valueToken = $this->security->getToken();
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
+            return $this->response->redirect('login');
         }
     }
 

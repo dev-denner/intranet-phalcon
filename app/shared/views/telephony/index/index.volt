@@ -2,7 +2,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Pesquisar Conta Celular TIM <small>Escolha o número da linha desejado, escolha mês e ano e então clique no botão Buscar.</small></h2>
+        <h2>Extrato de Conta Celular<small>Escolha o número da linha desejado, escolha mês e ano e então clique no botão Buscar.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">
@@ -47,6 +47,16 @@
 <div class="card">
     <div class="card-header">
         Resultado para pesquisa: <span class="text-danger">{{ pesquisa }}</span>
+        <ul class="actions">
+            {% if export %}
+            <li>
+                {{ link_to('export?obj=telefonia&type=excel&search='~pesquisa, '<i class="fa fa-file-excel-o c-green" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para Excel', 'target': '_new') }}
+            </li>
+            <li>
+                {{ link_to('export?obj=telefonia&type=pdf&search='~pesquisa, '<i class="fa fa-file-pdf-o c-red" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para PDF', 'target': '_new') }}
+            </li>
+            {% endif %}
+        </ul>
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
@@ -89,12 +99,12 @@
                         <td>{{ total.numAcs }}</td>
                         <td colspan="3">{{ total.plano }}</td>
                         <td colspan="4">{{ total.tpServ }}</td>
-                        <td>R$ <?php echo number_format($extrato->valor, 2, ',', '.'); ?></td>
+                        <td>R$ <?php echo number_format($total->valor, 2, ',', '.'); ?></td>
                     </tr>
                     {% endfor %}
                     <tr>
-                        <th colspan="9">Total</th>
-                        <th>R$ <?php echo number_format($total->valor, 2, ',', '.'); ?></th>
+                        <td colspan="9"><b>Total</b></td>
+                        <td><b>R$ <?php echo number_format($totalLinha->VALOR, 2, ',', '.'); ?></b></td>
                     </tr>
                 </tfoot>
             </table>

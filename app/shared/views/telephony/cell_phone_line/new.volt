@@ -4,11 +4,11 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="card">
             <div class="card-header">
-                <h2>Linhas Celular TIM <small>Insira os dados para criar uma nova linha.</small></h2>
+                <h2>Cadastro de Linhas <small>Insira os dados para criar um novo cadastro de linha.</small></h2>
             </div>
 
             <div class="card-body card-padding">
-                {{ form("telephony/cell_phone_line/create", "method":"post", "autocomplete" : "off") }}
+                {{ form("telephony/cell_phone_line/create", "method":"post", "autocomplete" : "off", 'onsubmit': 'return validaAccessLine();') }}
 
                 <div class="form-group fg-float">
                     <div class="fg-line">
@@ -28,9 +28,6 @@
                                     'Terceiro' => 'Terceiro',
                                     'Outro' => 'Outro',
                                 ],
-                                'useEmpty' => true,
-                                'emptyText' => '',
-                                'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );

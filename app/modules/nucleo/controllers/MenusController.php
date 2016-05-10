@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Menus;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class MenusController extends ControllerBase {
 
@@ -73,10 +73,10 @@ class MenusController extends ControllerBase {
             $this->tag->setDefault('id', $menu->getId());
             $this->tag->setDefault('title', $menu->getTitle());
             $this->tag->setDefault('slug', $menu->getSlug());
-            $this->tag->setDefault('department', $menu->getDepartment());
             $this->tag->setDefault('module', $menu->getModule());
             $this->tag->setDefault('controller', $menu->getController());
             $this->tag->setDefault('action', $menu->getAction());
+            $this->tag->setDefault('department', $menu->getDepartment());
             $this->tag->setDefault('category', $menu->getCategory());
             $this->tag->setDefault('icon', $menu->getIcon());
         } catch (Exception $exc) {
@@ -101,11 +101,12 @@ class MenusController extends ControllerBase {
             $menu->setId($menu->autoincrement());
             $menu->setTitle($this->request->getPost('title'));
             $menu->setSlug($this->request->getPost('slug'));
-            $menu->setDepartment($this->request->getPost('department'));
             $menu->setModule($this->request->getPost('module'));
             $menu->setController($this->request->getPost('controller'));
             $menu->setAction($this->request->getPost('action'));
+            $menu->setDepartment($this->request->getPost('department'));
             $menu->setCategory($this->request->getPost('category'));
+
             $menu->setIcon($this->request->getPost('icon'));
 
             if (!$menu->create()) {
@@ -145,10 +146,10 @@ class MenusController extends ControllerBase {
             $menu->setId($this->request->getPost('id'));
             $menu->setTitle($this->request->getPost('title'));
             $menu->setSlug($this->request->getPost('slug'));
-            $menu->setDepartment($this->request->getPost('department'));
             $menu->setModule($this->request->getPost('module'));
             $menu->setController($this->request->getPost('controller'));
             $menu->setAction($this->request->getPost('action'));
+            $menu->setDepartment($this->request->getPost('department'));
             $menu->setCategory($this->request->getPost('category'));
             $menu->setIcon($this->request->getPost('icon'));
 

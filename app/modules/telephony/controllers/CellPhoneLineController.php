@@ -9,7 +9,7 @@
 
 namespace Telephony\Controllers;
 
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 use Telephony\Models\CellPhoneLine;
 
 class CellPhoneLineController extends ControllerBase {
@@ -42,7 +42,7 @@ class CellPhoneLineController extends ControllerBase {
                 $this->view->cellPhoneLines = CellPhoneLine::find($search);
                 $this->view->pesquisa = $this->request->getPost('cellPhoneLines');
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -81,7 +81,7 @@ class CellPhoneLineController extends ControllerBase {
             $this->tag->setDefault('tipo', $cellPhoneLine->getTipo());
             $this->tag->setDefault('descontaFolha', $cellPhoneLine->getDescontaFolha());
             $this->tag->setDefault('cceo', $cellPhoneLine->getCceo());
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('telephony/cell_phone_line');
         }
@@ -94,7 +94,7 @@ class CellPhoneLineController extends ControllerBase {
 
         try {
 
-            if (!$this->request->isPost()) {
+            if ($this->request->isPost()) {
                 throw new Exception('Acesso não permitido a essa action.');
             }
 
@@ -105,11 +105,7 @@ class CellPhoneLineController extends ControllerBase {
             $cellPhoneLine->setLinha($this->request->getPost('linha'));
             $cellPhoneLine->setName($this->request->getPost('name'));
             $cellPhoneLine->setTipo($this->request->getPost('tipo'));
-            if (is_null($this->request->getPost('descontaFolha'))) {
-                $cellPhoneLine->setDescontaFolha('N');
-            } else {
-                $cellPhoneLine->setDescontaFolha($this->request->getPost('descontaFolha'));
-            }
+            $cellPhoneLine->setDescontaFolha($this->request->getPost('descontaFolha'));
             $cellPhoneLine->setCceo($this->request->getPost('cceo'));
 
             if (!$cellPhoneLine->create()) {
@@ -121,7 +117,7 @@ class CellPhoneLineController extends ControllerBase {
             }
 
             $this->flash->success('Linha Celular gravada com sucesso!!!');
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
         }
         return $this->response->redirect('telephony/cell_phone_line');
@@ -146,20 +142,15 @@ class CellPhoneLineController extends ControllerBase {
                 throw new Exception('Linha Celular não encontrado!');
             }
 
-            $cellPhoneLine->setId($this->request->getPost('id'), 'int');
+            $cellPhoneLine->setId($this->request->getPost('id', 'int'));
             $cellPhoneLine->setCpf($this->request->getPost('cpf', 'alphanum'));
             $cellPhoneLine->setLinha($this->request->getPost('linha'));
             $cellPhoneLine->setName($this->request->getPost('name'));
             $cellPhoneLine->setTipo($this->request->getPost('tipo'));
-            if (is_null($this->request->getPost('descontaFolha'))) {
-                $cellPhoneLine->setDescontaFolha('N');
-            } else {
-                $cellPhoneLine->setDescontaFolha($this->request->getPost('descontaFolha'));
-            }
+            $cellPhoneLine->setDescontaFolha($this->request->getPost('descontaFolha'));
             $cellPhoneLine->setCceo($this->request->getPost('cceo'));
 
-            if (!$cellPhoneLine->update()) {
-
+            if (!$cellPhoneLine->save()) {
                 $msg = '';
                 foreach ($cellPhoneLine->getMessages() as $message) {
                     $msg .= $message . '<br />';
@@ -168,7 +159,7 @@ class CellPhoneLineController extends ControllerBase {
             }
 
             $this->flash->success('Linha Celular atualizada com sucesso!!!');
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
         }
         return $this->response->redirect('telephony/cell_phone_line');
@@ -206,7 +197,7 @@ class CellPhoneLineController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('telephony/cell_phone_line');
         }

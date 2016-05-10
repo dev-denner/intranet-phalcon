@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Modules;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class ModulesController extends ControllerBase {
 
@@ -32,7 +32,10 @@ class ModulesController extends ControllerBase {
             $this->view->modules = Modules::find();
             $this->view->pesquisa = '';
             if ($this->request->isPost()) {
-                $search = "UPPER(name) LIKE UPPER('%" . $this->request->getPost('modules', 'string') . "%')";
+                $modules = $this->request->getPost('modules', 'alphanum');
+                $search = "(UPPER(name) LIKE UPPER('%" . $modules . "%')
+                         (UPPER(slug) LIKE UPPER('%" . $modules . "%')
+                         (UPPER(description) LIKE UPPER('%" . $modules . "%'))";
                 $this->view->modules = Modules::find($search);
                 $this->view->pesquisa = $this->request->getPost('modules');
             }
@@ -69,6 +72,8 @@ class ModulesController extends ControllerBase {
 
             $this->tag->setDefault('id', $module->getId());
             $this->tag->setDefault('name', $module->getName());
+            $this->tag->setDefault('slug', $module->getSlug());
+            $this->tag->setDefault('description', $module->getDescription());
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/modules');
@@ -90,6 +95,8 @@ class ModulesController extends ControllerBase {
 
             $module->setId($module->autoincrement());
             $module->setName($this->request->getPost('name'));
+            $module->setSlug($this->request->getPost('slug'));
+            $module->setDescription($this->request->getPost('description'));
 
             if (!$module->create()) {
                 $msg = '';
@@ -127,6 +134,8 @@ class ModulesController extends ControllerBase {
 
             $module->setId($this->request->getPost('id'));
             $module->setName($this->request->getPost('name'));
+            $module->setSlug($this->request->getPost('slug'));
+            $module->setDescription($this->request->getPost('description'));
 
             if (!$module->update()) {
 

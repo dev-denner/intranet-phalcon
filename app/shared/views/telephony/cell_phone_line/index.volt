@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Linhas Celular TIM <small>Digite abaixo a linhas celular desejada e então clique no botão Buscar.</small></h2>
+        <h2>Cadastro de Linhas <small>Digite abaixo o cadastro de linha desejada e então clique no botão Buscar.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">
@@ -54,7 +54,7 @@
                         <th data-column-id="tipo">Tipo</th>
                         <th data-column-id="descontaFolha">Desc. em Folha?</th>
                         <th data-column-id="cceo">CC/EO</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,13 +64,17 @@
                         <td>{{ cellPhoneLine.cpf }}</td>
                         <td>{{ cellPhoneLine.linha }}</td>
                         <td>{{ cellPhoneLine.name }}</td>
-                        <td>{{ cellPhoneLine.tipo }}</td>
-                        <td>{{ cellPhoneLine.descontaFolha }}</td>
-                        <td>{{ cellPhoneLine.cceo }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('telephony/cell_phone_line/edit/'~cellPhoneLine.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('telephony/cell_phone_line/delete')}}', '{{cellPhoneLine.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
+                        <td>{{ cellPhoneLine.tipo }}
                         </td>
+                        <td>
+                            {% if cellPhoneLine.descontaFolha == "N" %}
+                            Não
+                            {% else %}
+                            Sim
+                            {% endif %}
+                        </td>
+                        <td>{{ cellPhoneLine.cceo }}</td>
+                        <td>{{ static_url('telephony/cell_phone_line')}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

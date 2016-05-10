@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Funcionarios;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class FuncionariosController extends ControllerBase {
 

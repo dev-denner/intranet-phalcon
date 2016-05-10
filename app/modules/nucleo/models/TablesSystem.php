@@ -2,9 +2,9 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\ModelBase;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 
 class TablesSystem extends ModelBase {
 

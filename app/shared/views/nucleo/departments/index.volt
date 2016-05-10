@@ -50,8 +50,8 @@
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="title">Título</th>
                         <th data-column-id="cc">CC</th>
-                        <th data-column-id="icon">Ícone</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="icon" data-formatter="icon" data-sortable="false" data-align='center'>Ícone</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,11 +60,8 @@
                         <td>{{ department.id }}</td>
                         <td>{{ department.title }}</td>
                         <td>{{ department.cc }}</td>
-                        <td class="text-center f-20"><span class='{{ department.icon }}'></span></td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/departments/edit/'~department.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/departments/delete')}}', '{{department.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ department.icon }}</td>
+                        <td>{{ static_url('nucleo/departments') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -9,7 +9,8 @@
 
 namespace Nucleo\Models\Protheus;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
+use Phalcon\Config as ObjectPhalcon;
 
 class Fornecedores extends ModelBase {
 
@@ -48,31 +49,45 @@ class Fornecedores extends ModelBase {
         ];
     }
 
-    public function getFornecedoresForSearch($fornecedor) {
-        $fornecedor = strtoupper($fornecedor);
+    /**
+     *
+     * @param type $search
+     * @return ObjectPhalcon
+     */
+    public function getFornecedores($search) {
 
-        $blq = "CASE sa2Msblql WHEN '1' THEN 'Sim' ELSE '' END";
+        $connection = $this->customConnection();
 
-        $fornecedores = $this->modelsManager->createBuilder()
-                ->columns(['TRIM(sa2Cod) codigo,
-                       TRIM(sa2Loja) loja,
-                       TRIM(sa2Nome) nome,
-                       TRIM(sa2Cgc) cgc,
-                       TRIM(sa2Uf) uf,
-                       TRIM(sa2Municipio) municipio,
-                       ' . $blq . ' blq'])
-                ->from(__NAMESPACE__ . '\Fornecedores')
-                ->where("sa2Sdel = ' '")
-                ->andwhere("sa2Cod LIKE 'F%'")
-                ->andWhere("(sa2Nome LIKE '%" . $fornecedor . "%'
-                          OR sa2Cod LIKE '%" . $fornecedor . "%'
-                          OR sa2Loja LIKE '%" . $fornecedor . "%'
-                          OR sa2Cgc LIKE '%" . $fornecedor . "%'
-                          OR sa2Uf LIKE '%" . $fornecedor . "%'
-                          OR sa2Municipio LIKE '%" . $fornecedor . "%')")
-                ->getQuery()
-                ->execute();
-        return $fornecedores->toArray(0);
+        if (!empty($search)) {
+            $search = "AND (SA2010.A2_NOME LIKE UPPER('%{$search}%')
+                         OR SA2010.A2_COD LIKE UPPER('%{$search}%')
+                         OR SA2010.A2_LOJA LIKE UPPER('%{$search}%')
+                         OR SA2010.A2_CGC LIKE UPPER('%{$search}%')
+                         OR SA2010.A2_EST LIKE UPPER('%{$search}%')
+                         OR SA2010.A2_MUN LIKE UPPER('%{$search}%'))";
+        }
+
+        $query = "
+            SELECT TRIM(SA2010.A2_COD) AS codigo,
+                   TRIM(SA2010.A2_LOJA) AS loja,
+                   TRIM(SA2010.A2_NOME) AS nome,
+                   TRIM(SA2010.A2_CGC) AS cgc,
+                   TRIM(SA2010.A2_EST) AS uf,
+                   TRIM(SA2010.A2_MUN) AS municipio,
+                   CASE SA2010.A2_MSBLQL
+                        WHEN '1' THEN 'Sim'
+                        ELSE ''
+                   END AS blq
+            FROM {$this->schema}.SA2010
+            WHERE SA2010.D_E_L_E_T_ = ' '
+              AND SA2010.A2_COD LIKE 'F%'
+              {$search}
+            ORDER BY SA2010.A2_COD";
+
+        $result = $connection->select($query);
+        $return = $connection->fetchAll($result);
+        $connection->bye();
+        return new ObjectPhalcon($return);
     }
 
     public function getQtdFornecedores() {

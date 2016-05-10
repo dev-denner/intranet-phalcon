@@ -1,6 +1,6 @@
 <?php
 
-namespace DevDenners\Library\Auth;
+namespace SysPhalcon\Library\Auth;
 
 class Exception extends \Phalcon\Exception {
 

@@ -1,4 +1,4 @@
-# Example API Phalcon Modules #
+# API Phalcon Modules #
 
 APP for application management in Phalcon PHP.
 

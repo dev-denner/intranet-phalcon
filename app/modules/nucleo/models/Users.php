@@ -9,14 +9,14 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 use Phalcon\Mvc\Model\Behavior\SoftDelete as SoftDelete;
 use Phalcon\Mvc\Model\Message as Message;
 use Phalcon\Validation as Validation;
 use Phalcon\Validation\Validator\Email as ValidatorEmail;
 use Phalcon\Validation\Validator\Uniqueness as Uniqueness;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 
 class Users extends ModelBase {
 
@@ -41,6 +41,12 @@ use beforeUpdate;
      * @var string
      */
     protected $name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $userName;
 
     /**
      *
@@ -123,11 +129,23 @@ use beforeUpdate;
     /**
      * Method to set the value of field name
      *
-     * @param string $cpf
+     * @param string $name
      * @return $this
      */
     public function setName($name) {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field userName
+     *
+     * @param string $userName
+     * @return $this
+     */
+    public function setUserName($userName) {
+        $this->userName = $userName;
 
         return $this;
     }
@@ -267,6 +285,15 @@ use beforeUpdate;
     }
 
     /**
+     * Returns the value of field userName
+     *
+     * @return string
+     */
+    public function getUserName() {
+        return $this->userName;
+    }
+
+    /**
      * Returns the value of field senha
      *
      * @return string
@@ -398,7 +425,7 @@ use beforeUpdate;
      * @return string
      */
     public function getSource() {
-        return 'USUARIO_N';
+        return 'USUARIO';
     }
 
     /**
@@ -412,6 +439,7 @@ use beforeUpdate;
             'ID_USUARIO' => 'id',
             'CD_CPF' => 'cpf',
             'DS_NOME' => 'name',
+            'DS_USERNAME' => 'userName',
             'DS_SENHA' => 'password',
             'FL_MUDASENHA' => 'mustChangePassword',
             'DS_EMAIL' => 'email',

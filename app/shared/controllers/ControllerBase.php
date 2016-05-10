@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace DevDenners\Controllers;
+namespace SysPhalcon\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\DI\FactoryDefault as Di;
@@ -58,9 +58,16 @@ class ControllerBase extends Controller {
         $this->breadcrumb($moduleName, $controllerName, $actionName);
         $this->view->breadcrumb = $this->bc;
 
-        $this->view->auth_identity = $this->auth_identity();
+
+        $auth_identity = $this->auth_identity();
+        $this->view->icon_identity = $auth_identity->sexo == 'F' ? 'female' : 'male';
+        $this->view->auth_identity = $auth_identity;
     }
 
+    /**
+     *
+     * @return ObjectPhalcon
+     */
     private function auth_identity() {
         $return = [];
         if (!empty($this->session->get('auth-identity'))) {
@@ -74,6 +81,23 @@ class ControllerBase extends Controller {
                 $return['codSituacao'] = $auth_identity->dadosERP->SITUACAO;
                 $return['cceo'] = $auth_identity->dadosERP->CCEO;
                 $return['codSecao'] = $auth_identity->dadosERP->CODSECAO;
+
+                $return['pessoa'] = $auth_identity->dadosERP->PESSOA;
+                $return['emailPessoal'] = $auth_identity->dadosERP->EMAILPESSOAL;
+                $return['cnpj'] = $auth_identity->dadosERP->CNPJ;
+                $return['situacao'] = $auth_identity->dadosERP->SITUACAO;
+                $return['dataDemissao'] = $auth_identity->dadosERP->DATADEMISSAO;
+                $return['motivoDemissao'] = $auth_identity->dadosERP->MOTIVODEMISSAO;
+                $return['ramal'] = $auth_identity->dadosERP->RAMAL;
+                $return['coligada'] = $auth_identity->dadosERP->COLIGADA;
+                $return['chapa'] = $auth_identity->dadosERP->CHAPA;
+                $return['funcao'] = $auth_identity->dadosERP->FUNCAO;
+                $return['secao'] = $auth_identity->dadosERP->SECAO;
+                $return['codTipoFuncionario'] = $auth_identity->dadosERP->CODTIPOFUNC;
+                $return['descSituacao'] = $auth_identity->dadosERP->DESCSITUACAO;
+                $return['dataNascimento'] = $auth_identity->dadosERP->DATANASCIMENTO;
+                $return['sexo'] = $auth_identity->dadosERP->SEXO;
+                $return['tipoFuncionario'] = $auth_identity->dadosERP->TIPOFUNC;
             }
             $return['userId'] = $auth_identity->userInfo->id;
             $return['userCpf'] = $auth_identity->userInfo->cpf;
@@ -83,23 +107,36 @@ class ControllerBase extends Controller {
         return new ObjectPhalcon($return);
     }
 
+    /**
+     *
+     * @param type $moduleName
+     * @param type $controllerName
+     * @param type $actionName
+     */
     private function breadcrumb($moduleName, $controllerName, $actionName) {
 
-        $this->bc = new Breadcrumb($this->url->getBaseUri(), 'pt');
-        if ($controllerName == 'index' && $actionName != 'index') {
-            $this->bc->append($moduleName, 'rigth', false);
+        $this->breadcrumbs->setTemplate(
+                '<li><a href="{{link}}">{{icon}}{{label}}</a></li>', // linked
+                '<li class="active">{{icon}}{{label}}</li>', // not linked
+                '<i class="fa fa-home"></i> ' // first icon
+        );
+
+        $this->breadcrumbs->setSeparator('');
+
+        if ($controllerName == 'index' && $actionName == 'index') {
+            $this->breadcrumbs->add($moduleName, null, ['linked' => false]);
         } else {
-            $this->bc->append($moduleName);
+            $this->breadcrumbs->add($moduleName, $moduleName);
         }
         if ($controllerName != 'index') {
             if ($actionName == 'index') {
-                $this->bc->append($controllerName, 'rigth', false);
+                $this->breadcrumbs->add($controllerName, null, ['linked' => false]);
             } else {
-                $this->bc->append($controllerName);
+                $this->breadcrumbs->add($controllerName, $controllerName);
             }
         }
         if ($actionName != 'index') {
-            $this->bc->append($actionName, 'rigth', false);
+            $this->breadcrumbs->add($actionName, null, ['linked' => false]);
         }
     }
 
@@ -131,9 +168,9 @@ class ControllerBase extends Controller {
                             $this->flash->error('Você não tem acesso a ' . $moduleCurrent . '/' . $controllerCurrent . '/' . $actionCurrent);
                             $this->response->redirect($moduleCurrent . '/' . $controllerCurrent . '/index');
                         } else {
-                            if ($this->access->isAllowed('public', 'intranet', 'index', 'index')) {
+                            if ($this->access->isAllowed('private', 'intranet', 'index', 'index')) {
                                 $this->flash->error('Você não tem acesso a ' . $moduleCurrent . '/' . $controllerCurrent);
-                                $this->response->redirect();
+                                return $this->response->redirect('/');
                             } else {
                                 throw new Exception('Sua sessão foi finalizada.');
                             }
@@ -149,309 +186,72 @@ class ControllerBase extends Controller {
 
     /**
      *
-     * @param array $actions
      * @return type
      */
-    public function _actions(array $actions = []) {
-
-        $options = [];
-
-        foreach ($actions as $key => $value) {
-            $options['action'][$key] = $this->actionDefault($key, $value);
+    protected function getAllModules() {
+        $dirs = scandir(APP_PATH . '/app/modules/');
+        $modules = [];
+        foreach ($dirs as $dir) {
+            if ($dir != '.' && $dir != '..')
+                $modules[] = $dir;
         }
-        return $options;
+        return $modules;
     }
 
     /**
      *
-     * @param type $from
-     * @param array $actions
+     * @param type $module
      * @return type
      */
-    private function actionDefault($from = '', array $actions = []) {
-
-        $action = $label = '';
-        $view = [
-            'type' => '',
-            'icon' => '',
-        ];
-
-        switch ($from) {
-            case 'view':
-                $action = 'view';
-                $label = 'Visualizar';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-eye',
-                ];
-                break;
-            case 'add':
-                $action = 'new';
-                $label = 'Incluir';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-plus-circle',
-                ];
-                break;
-            case 'edit':
-                $action = 'edit';
-                $label = 'Editar';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-pencil-square-o',
-                ];
-                break;
-            case 'delete':
-                $action = 'delete';
-                $label = 'Excluir';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-trash',
-                ];
-                break;
-            case 'search':
-                $action = 'search';
-                $label = 'Busca Avançada';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-search',
-                ];
-                break;
-            case 'print':
-                $action = 'print';
-                $label = 'Imprimir';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-print',
-                ];
-                break;
-            case 'excel':
-                $action = 'excel';
-                $label = 'Excel';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-file-excel-o',
-                ];
-                break;
-            case 'pdf':
-                $action = 'pdf';
-                $label = 'PDF';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-file-pdf-o',
-                ];
-                break;
-            case 'word':
-                $action = 'word';
-                $label = 'Word';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'fa fa-file-word-o',
-                ];
-                break;
-            default:
-                $action = '_';
-                $label = 'Default';
-                $view = [
-                    'type' => 'font',
-                    'icon' => 'glyphicon glyphicon-plus',
-                ];
-                break;
-        }
-
-        if (!empty($actions)) {
-
-            if (array_key_exists('action', $actions)) {
-                $action = $actions['id'];
-            }
-
-            if (array_key_exists('action', $actions)) {
-                $action = $actions['action'];
-            }
-
-            if (array_key_exists('label', $actions)) {
-                $label = $actions['label'];
-            }
-
-            if (array_key_exists('view', $actions)) {
-                $view = $actions['view'];
+    protected function getAllControllers($module) {
+        $files = scandir(APP_PATH . '/app/modules/' . $module . '/controllers');
+        $controllers = [];
+        foreach ($files as $file) {
+            if ($controller = $this->extractController($file)) {
+                $controllers[] = $controller;
             }
         }
-
-        return [
-            'action' => $action,
-            'label' => $label,
-            'view' => $view,
-        ];
+        return $controllers;
     }
 
     /**
      *
-     * @param type $data
-     * @param type $entity
+     * @param type $controller
      * @return type
      */
-    public function getFields($data, $entity) {
-
-        $typeForms = $entity->typeForms();
-        $typeForms = $typeForms['view'];
-        $return = [];
-
-
-        foreach ($data as $value) {
-            foreach ($typeForms as $key => $permission) {
-                if ($permission) {
-                    $return[$key] = $value->$key;
-                }
-            }
+    protected function getAllActs($controller) {
+        $class = $controller . 'Controller';
+        $functions = get_class_methods($class);
+        $actions = [];
+        foreach ($functions as $name) {
+            $actions[] = $this->extractAct($name);
         }
-        return $return;
+        return array_filter($actions);
     }
 
     /**
      *
-     * @param type $search
-     * @param type $entity
-     * @param type $par
-     * @return string
-     */
-    public function makeSearch($search, $entity, $par = false) {
-
-        $return = [];
-        $fields = $this->getHeader($entity);
-
-        $words = str_replace(' ', '%', $search);
-
-        $and = $par ? ' AND ' : '';
-
-        $return['conditions'] .= $and . '(';
-
-        foreach ($fields as $key => $value) {
-            $return['conditions'] .= ' UPPER([' . $key . ']) LIKE UPPER(:' . $key . 's:) OR ';
-            $return['bind'][$key . 's'] = "%$words%";
-        }
-
-        $return['conditions'] = substr($return['conditions'], 0, -3);
-        $return['conditions'] .= ') ';
-
-        return $return;
-    }
-
-    /**
-     *
-     * @param type $paramCriteria
-     * @param type $entity
-     */
-    public function setSearch($entity) {
-
-        $length = $this->session->get('datatable_length');
-        $filter = $this->session->get('datatable_filter');
-        $return = [];
-
-        if (!empty($filter)) {
-
-            $par = false;
-
-            if (!is_null($this->persistent->parameters)) {
-                $par = true;
-            }
-            $search = $this->makeSearch($filter, $entity, $par);
-            $parameters = $this->persistent->parameters;
-
-            if (!is_array($parameters)) {
-                $parameters = array();
-            }
-
-            if ($par) {
-                $return['conditions'] = $parameters['conditions'] . $search['conditions'];
-                $return['bind'] = array_merge($parameters['bind'], $search['bind']);
-            } else {
-                $return = $search;
-            }
-        } else {
-            $return = $this->persistent->parameters;
-        }
-
-        return $return;
-    }
-
-    /**
-     *
-     */
-    public function setSessionDataTable() {
-
-        $keyLength = array_key_exists('datatable_length', $_POST);
-
-        if ($keyLength !== false) {
-            $this->session->set('datatable_length', $_POST['datatable_length']);
-            unset($_POST['datatable_length']);
-        }
-
-        $keyFilter = array_key_exists('datatable_filter', $_POST);
-
-        if ($keyFilter !== false) {
-            $this->session->set('datatable_filter', $_POST['datatable_filter']);
-            unset($_POST['datatable_filter']);
-        }
-
-        $keyOrder = array_key_exists('datatable_order', $_POST);
-
-        if ($keyOrder !== false) {
-            $this->session->set('datatable_order', $_POST['datatable_order']);
-            unset($_POST['datatable_order']);
-        }
-    }
-
-    /**
-     *
-     * @param type $data
-     * @param type $type
-     * @param type $columns
-     * @return string
-     */
-    public function makeView($data, $type = '', $columns = 2) {
-
-        $render = '<div class="row">';
-        $grid = 'col-md-' . 12 / $columns;
-        $render .= "<dl class='$type $grid'>";
-
-        $count = count($data);
-        $i = 0;
-
-        foreach ($data as $key => $value) {
-
-            if ($i >= $count / $columns) {
-                $render .= "</dl><dl class='$type $grid'>";
-                $i = 0;
-            }
-
-            $render .= "<dt class='{$key}'>{$value['header']}:</dt>";
-            $render .= "<dd>{$value['data']}</dd>";
-
-            $i++;
-        }
-
-        $render .= '</dl>';
-        $render .= '</div>';
-
-        return $render;
-    }
-
-    /**
-     *
-     * @param type $header
+     * @param type $name
      * @return type
      */
-    public function getOrder($header) {
-
-        $return = '';
-        $keys = array_keys($header);
-
-        foreach ($keys as $value) {
-            $return .= $value . ', ';
+    private function extractAct($name) {
+        $action = explode('Action', $name);
+        if ((count($action) > 1)) {
+            return $action[0];
         }
+    }
 
-        return substr($return, 0, -2);
+    /**
+     *
+     * @param type $name
+     * @return boolean
+     */
+    private function extractController($name) {
+        $filename = explode('Controller.php', $name);
+        if (count($filename) > 1) {
+            return $filename[0];
+        }
+        return false;
     }
 
 }

@@ -9,7 +9,7 @@
 
 namespace Nucleo\Models\Protheus;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class ProdutosAdicionais extends ModelBase {
 

@@ -10,6 +10,7 @@
             <div class="card-body card-padding">
                 {{ form("nucleo/users/create", "method":"post", "autocomplete" : "off") }}
 
+                {{ hidden_field("name", 'required': 'required') }}
                 <div class="form-group fg-float">
                     <div class="fg-line">
                         {{ text_field('cpf', 'class': 'form-control', 'required': 'required', 'maxlength': 14, 'onblur': 'getInfoUser(this);') }}
@@ -26,22 +27,6 @@
                 </div>
                 <br />
 
-                <div class="form-group fg-float">
-                    <div class="fg-line">
-                        {{ password_field('password', 'class': 'form-control', 'required': 'required') }}
-                        <label class="fg-label">Senha</label>
-                    </div>
-                </div>
-                <br />
-
-                <div class="checkbox">
-                    <label>
-                        {{ check_field('mustChangePassword', 'value':'S') }}
-                        <i class="input-helper"></i>
-                        Trocar senha na próxima vez que logar?
-                    </label>
-                </div>
-
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-sm m-t-10 waves-effect">Inserir</button>
                 </div>
@@ -54,45 +39,42 @@
                         <div class="col-lg-6">
 
                             <dl>
-                                <dt>Empresa:</dt>
+                                <dt>Empresa :</dt>
                                 <dd class="m-b-5 text-info data-EMPRESA"></dd>
-                                <dt>Nome:</dt>
+                                <dt>Nome :</dt>
                                 <dd class="m-b-5 text-info data-NOME"></dd>
-                                <dt>Situação:</dt>
+                                <dt>Situação :</dt>
                                 <dd class="m-b-5 text-info data-situacao"></dd>
-                                <dt>CPF:</dt>
+                                <dt>CPF :</dt>
                                 <dd class="m-b-5 text-info data-CPF"></dd>
-                                <dt>E-mail:</dt>
+                                <dt>E-mail :</dt>
                                 <dd class="m-b-5 text-info data-EMAIL"></dd>
-                                <dt>Data Admissão:</dt>
+                                <dt>Data Admissão :</dt>
                                 <dd class="m-b-5 text-info data-DATAADMISSAO"></dd>
                             </dl>
                         </div>
                         <div class="col-lg-6">
                             <dl>
-                                <dt>Pessoa:</dt>
+                                <dt>Pessoa :</dt>
                                 <dd class="m-b-5 text-info data-PESSOA"></dd>
-                                <dt>Seção:</dt>
+                                <dt>Seção :</dt>
                                 <dd class="m-b-5 text-info data-CODSECAO"></dd>
-                                <dt>CC / EO:</dt>
+                                <dt>CC / EO :</dt>
                                 <dd class="m-b-5 text-info data-CCEO"></dd>
-                                <dt>CNPJ:</dt>
+                                <dt>CNPJ :</dt>
                                 <dd class="m-b-5 text-info data-CNPJ"></dd>
-                                <dt>Ramal:</dt>
+                                <dt>Ramal :</dt>
                                 <dd class="m-b-5 text-info data-ramal"></dd>
-                                <dt>Data Demissão:</dt>
+                                <dt>Data Demissão :</dt>
                                 <dd class="m-b-5 text-info data-DATADEMISSAO"></dd>
-                                <dt>Motivo Demissão:</dt>
+                                <dt>Motivo Demissão :</dt>
                                 <dd class="m-b-5 text-info data-MOTIVODEMISSAO"></dd>
                             </dl>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
         {{ end_form() }}
     </div>
-
 </div>

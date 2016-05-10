@@ -51,7 +51,7 @@
                         <th width="60" data-column-id="name">Nome</th>
                         <th width="10" data-column-id="status">Status</th>
                         <th width="10" data-column-id="isPublic">Público?</th>
-                        <th width="20">Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,10 +61,7 @@
                         <td>{{ group.name }}</td>
                         <td>{{ group.status }}</td>
                         <td>{{ group.isPublic }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/groups/edit/'~group.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/groups/delete')}}', '{{group.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/groups') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

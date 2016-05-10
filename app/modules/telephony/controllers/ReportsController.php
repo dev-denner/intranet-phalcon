@@ -9,8 +9,9 @@
 
 namespace Telephony\Controllers;
 
-use DevDenners\Controllers\ControllerBase;
-use Telephony\Models\Statement;
+use SysPhalcon\Controllers\ControllerBase;
+use SysPhalcon\Plugins\Tools;
+use Telephony\Models\Reports;
 
 class ReportsController extends ControllerBase {
 
@@ -30,40 +31,50 @@ class ReportsController extends ControllerBase {
                 $competencia = str_replace('20', '', $this->request->getPost('mes', 'string'));
 
                 if ($this->request->getPost('valor')) {
-                    $valor = str_replace(',', '.', str_replace('.', '', $this->request->getPost('valor', 'float')));
+                    $valor = $this->filter->sanitize(str_replace(',', '.', str_replace('.', '', $this->request->getPost('valor'))), 'float');
                 }
 
-                $statement = new \Telephony\Models\Statement();
+                $reports = new Reports();
 
                 switch ($relatorios) {
                     case 1:
-                        $dados = $statement->getRateioDescFolha($competencia);
+                        $dados = $reports->getRateioDescFolha($competencia);
+                        $fileName = 'Rateio Celular Folha Pagto';
                         break;
                     case 2:
-                        $dados = $statement->getRateioNF($competencia);
+                        $dados = $reports->getRateioNF($competencia);
+                        $fileName = 'Rateio Celular NF';
                         break;
                     case 3:
-                        $competencia = str_replace('/', '', $this->request->getPost('relatorios', 'int'));
-                        $dados = $statement->getRateioTotvs($competencia, $valor);
+                        $competencia = implode('', array_reverse(explode('/', $this->request->getPost('mes', 'string'))));
+                        $dados = $reports->getRateioTotvs($competencia, $valor);
+                        $fileName = 'Rateio NF ERP';
                         break;
                     case 4:
-                        $dados = $statement->getRateioEmails($competencia, $valor);
+                        $dados = $reports->getRateioEmails($competencia, $valor);
+                        $fileName = 'Rateio NF E-mails';
                         break;
                     case 5:
-                        $competencia = str_replace('/', '', $this->request->getPost('relatorios', 'int'));
-                        $dados = $statement->getRateioCorporativo($competencia, $valor);
+                        $competencia = implode('', array_reverse(explode('/', $this->request->getPost('mes', 'string'))));
+                        $dados = $reports->getRateioCorporativo($competencia, $valor);
+                        $fileName = 'Rateio NF Matriz';
                         break;
                     default:
-                        $dados = $statement->getRateioDescFolha($competencia);
+                        $dados = $reports->getRateioDescFolha($competencia);
+                        $fileName = 'Rateio Celular Folha Pagto';
                         break;
                 }
 
-                foreach ($dados as $key => $value) {
-                    dump($key);
-                    dump($value);
-                }
+                $tools = new Tools();
+
+                $options = [
+                    'download' => true,
+                    'fileName' => $fileName,
+                ];
+
+                return $tools->writeXLS($dados, $options);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }

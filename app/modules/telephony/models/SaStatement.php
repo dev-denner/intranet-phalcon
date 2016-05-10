@@ -9,7 +9,7 @@
 
 namespace Telephony\Models;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class SaStatement extends ModelBase {
 

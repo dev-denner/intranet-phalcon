@@ -13,103 +13,108 @@
         {{ hidden_field("id", 'required': 'required') }}
         <div class="row">
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['userId',
-                                \Nucleo\Models\Users::find(),
-                                'using' => ['id', 'email'],
+                                \Nucleo\Models\Users::find(['order' => 'name']),
+                                'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Usuário (Escolha um Usuário ou um Grupo)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Usuário (Escolha um Usuário ou um Grupo)</label>
                     </div>
                 </div>
                 <br />
             </div>
 
             <div class="col-lg-5">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(),
+                                \Nucleo\Models\Groups::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Grupo (Escolha um Usuário ou um Grupo)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Grupo (Escolha um Usuário ou um Grupo)</label>
                     </div>
                 </div>
                 <br />
             </div>
 
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['module',
-                                \Nucleo\Models\Modules::find(),
+                                \Nucleo\Models\Modules::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Módulos (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Módulos (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
             </div>
 
             <div class="col-lg-5">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['controller',
-                                \Nucleo\Models\Controllers::find(),
+                                \Nucleo\Models\Controllers::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Controller (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Controller (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
             </div>
 
             <div class="col-lg-5 col-lg-offset-1">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['action',
-                                \Nucleo\Models\Actions::find(),
+                                \Nucleo\Models\Actions::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Ação (Escolha uma opção)',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Ação (Escolha uma opção)</label>
                     </div>
                 </div>
                 <br />
@@ -129,6 +134,7 @@
                             ]);
                             ?>
                         </div>
+                        <label class="fg-label">Permissão de Acesso</label>
                     </div>
                 </div>
                 <br />

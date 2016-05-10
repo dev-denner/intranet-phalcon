@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Acesso a Linha <small>Digite abaixo o acesso a linha desejado e então clique no botão Buscar.</small></h2>
+        <h2>Acessos Exclusivos CPF x Linhas <small>Digite abaixo o acesso exclusivo cpf x linha desejado e então clique no botão Buscar.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">
@@ -50,7 +50,7 @@
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="cpf">CPF</th>
                         <th data-column-id="linha">Linha</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,10 +59,7 @@
                         <td>{{ access_line.id }}</td>
                         <td>{{ access_line.cpf }}</td>
                         <td>{{ access_line.linha }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('telephony/access_line/edit/'~access_line.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('telephony/access_line/delete')}}', '{{access_line.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('telephony/access_line')}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

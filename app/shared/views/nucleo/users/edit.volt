@@ -11,6 +11,7 @@
                 {{ form("nucleo/users/save", "method":"post", "autocomplete" : "off") }}
 
                 {{ hidden_field("id", 'required': 'required') }}
+                {{ hidden_field("name", 'required': 'required') }}
                 <div class="form-group fg-float">
                     <div class="fg-line">
                         {{ text_field('cpf', 'class': 'form-control', 'required': 'required', 'maxlength': 14, 'onblur': 'getInfoUser(this);') }}
@@ -23,6 +24,14 @@
                     <div class="fg-line">
                         {{ email_field('email', 'class': 'form-control', 'required': 'required') }}
                         <label class="fg-label">E-mail</label>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ text_field('userName', 'class': 'form-control', 'readonly': 'readonly') }}
+                        <label class="fg-label">User Name</label>
                     </div>
                 </div>
                 <br />
@@ -69,35 +78,35 @@
                         <div class="col-lg-6">
 
                             <dl>
-                                <dt>Empresa:</dt>
+                                <dt>Empresa :</dt>
                                 <dd class="m-b-5 text-info data-EMPRESA">{{ info_user['EMPRESA'] }}</dd>
-                                <dt>Nome:</dt>
+                                <dt>Nome :</dt>
                                 <dd class="m-b-5 text-info data-NOME">{{ info_user['NOME'] }}</dd>
-                                <dt>Situação:</dt>
+                                <dt>Situação :</dt>
                                 <dd class="m-b-5 text-info data-SITUACAO">{{ info_user['SITUACAO'] }}</dd>
-                                <dt>CPF:</dt>
+                                <dt>CPF :</dt>
                                 <dd class="m-b-5 text-info data-CPF">{{ info_user['CPF'] }}</dd>
-                                <dt>E-mail:</dt>
+                                <dt>E-mail :</dt>
                                 <dd class="m-b-5 text-info data-EMAIL">{{ info_user['EMAIL'] }}</dd>
-                                <dt>Data Admissão:</dt>
+                                <dt>Data Admissão :</dt>
                                 <dd class="m-b-5 text-info data-DATAADMISSAO">{{ info_user['DATAADMISSAO'] }}</dd>
                             </dl>
                         </div>
                         <div class="col-lg-6">
                             <dl>
-                                <dt>Pessoa:</dt>
+                                <dt>Pessoa :</dt>
                                 <dd class="m-b-5 text-info data-PESSOA">{{ info_user['PESSOA'] }}</dd>
-                                <dt>Seção:</dt>
+                                <dt>Seção :</dt>
                                 <dd class="m-b-5 text-info data-CODSECAO">{{ info_user['CODSECAO'] }}</dd>
-                                <dt>CC / EO:</dt>
+                                <dt>CC / EO :</dt>
                                 <dd class="m-b-5 text-info data-CCEO">{{ info_user['CCEO'] }}</dd>
-                                <dt>CNPJ:</dt>
+                                <dt>CNPJ :</dt>
                                 <dd class="m-b-5 text-info data-CNPJ">{{ info_user['CNPJ'] }}</dd>
-                                <dt>Ramal:</dt>
+                                <dt>Ramal :</dt>
                                 <dd class="m-b-5 text-info data-RAMAL">{{ info_user['RAMAL'] }}</dd>
-                                <dt>Data Demissão:</dt>
+                                <dt>Data Demissão :</dt>
                                 <dd class="m-b-5 text-info data-DATADEMISSAO">{{ info_user['DATADEMISSAO'] }}</dd>
-                                <dt>Motivo Demissão:</dt>
+                                <dt>Motivo Demissão :</dt>
                                 <dd class="m-b-5 text-info data-MOTIVODEMISSAO">{{ info_user['MOTIVODEMISSAO'] }}</dd>
                             </dl>
                         </div>

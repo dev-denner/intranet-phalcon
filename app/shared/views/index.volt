@@ -23,12 +23,21 @@
 
         {{ assets.outputCss('headerCss')}}
 
-        <script src="{{ static_url('assets/vendors/bower_components/jquery/dist/jquery.min.js') }}"></script>
-        <script src="{{ static_url('assets/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-
-        {{ assets.outputJs('headerJs')}}
-
     </head>
+
+    <div id="overlay">
+        <div class="loading text-center">
+            <div class="circle">
+                <div class="preloader pls-blue">
+                    <svg class="pl-circular" viewBox="25 25 50 50">
+                    <circle class="plc-path" cx="50" cy="50" r="20"></circle>
+                    </svg>
+                </div>
+            </div>
+            <p class="f-18">Carregando...</p>
+        </div>
+
+    </div>
 
     {{ content() }}
 
@@ -36,7 +45,7 @@
     <!--[if lt IE 9]>
         <div class="ie-warning">
             <h1 class="c-white">Warning!!</h1>
-            <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+            <p>Você está usando uma versão desatualizada do Internet Explorer, faça o upgrade <br/> a qualquer um dos seguintes navegadores da Web para acessar este site.</p>
             <div class="iew-container">
                 <ul class="iew-download">
                     <li>
@@ -71,12 +80,15 @@
                     </li>
                 </ul>
             </div>
-            <p>Sorry for the inconvenience!</p>
+            <p>Desculpe pela inconveniência!</p>
         </div>
     <![endif]-->
 
     <!-- Javascript Libraries -->
 
+    <script src="{{ static_url('assets/vendors/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ static_url('assets/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    {{ assets.outputJs('headerJs')}}
     <script src="{{ static_url('assets/vendors/bower_components/moment/min/moment.min.js') }}"></script>
     <script src="{{ static_url('assets/vendors/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
     <script src="{{ static_url('assets/vendors/bower_components/simpleWeather/jquery.simpleWeather.min.js') }}"></script>
@@ -94,15 +106,5 @@
     <script src="{{ static_url('assets/js/functions.js') }}"></script>
     <script src="{{ static_url('assets/js/main.min.js') }}"></script>
     {{ assets.outputJs('footerJs') }}
-
-    <div id="overlay">
-        <div class="loading text-center">
-            <figure>
-                <img src="{{ static_url('assets/img/cubo-empresas.gif') }}" class="img-responsive img-circle" alt="Cubo MPE" title="Carregando..." />
-            </figure>
-            <p class="c-black f-12">Carregando dados. <br />Aguarde...</p>
-        </div>
-
-    </div>
 </body>
 </html>

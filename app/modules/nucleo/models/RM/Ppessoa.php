@@ -9,7 +9,7 @@
 
 namespace Nucleo\Models\RM;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class Ppessoa extends ModelBase {
 
@@ -19,6 +19,7 @@ class Ppessoa extends ModelBase {
     protected $ppSexo;
     protected $ppCpf;
     protected $ppEmail;
+    protected $ppDataNascimento;
 
     public function initialize() {
 
@@ -43,6 +44,7 @@ class Ppessoa extends ModelBase {
             'SEXO' => 'ppSexo',
             'CPF' => 'ppCpf',
             'EMAIL' => 'ppEmail',
+            'DTNASCIMENTO' => 'ppDataNascimento',
         ];
     }
 

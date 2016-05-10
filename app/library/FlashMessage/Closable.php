@@ -6,27 +6,28 @@
  * and open the template in the editor.
  */
 
-namespace DevDenners\Library\FlashMessage;
+namespace SysPhalcon\Library\FlashMessage;
 
 /**
  * Description of Closable
  *
  * @author denner.fernandes
  */
-class Closable extends \DevDenners\Library\FlashMessage\Session {
+class Closable extends \SysPhalcon\Library\FlashMessage\Session {
 
-  public function __construct($cssClasses = null) {
-    if (is_array($cssClasses)) {
-      $cssClasses = array_map(function ($cssClass) {
-        return $cssClass . ' fade in';
-      }, $cssClasses);
+    public function __construct($cssClasses = null) {
+
+        if (is_array($cssClasses)) {
+            $cssClasses = array_map(function ($cssClass) {
+                return $cssClass . ' fade in';
+            }, $cssClasses);
+        }
+        parent::__construct($cssClasses);
     }
-    parent::__construct($cssClasses);
-  }
 
-  public function message($type, $message) {
-    $button = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-    parent::message($type, $button . $message);
-  }
+    public function message($type, $message) {
+        $button = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        parent::message($type, $button . $message);
+    }
 
 }

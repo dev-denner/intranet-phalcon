@@ -4,7 +4,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="card">
             <div class="card-header">
-                <h2>Acesso a Linha <small>Insira os dados para criar um novo acesso a linha.</small></h2>
+                <h2>Acessos Exclusivos CPF x Linhas <small>Insira os dados para criar um novo acesso exclusivo cpf x linha.</small></h2>
             </div>
 
             <div class="card-body card-padding">
@@ -14,14 +14,15 @@
                     <div class="fg-line">
                         <div class="select">
                             <?php
-                            echo $this->tag->select(['cpf',
+                            echo $this->tag->select([
+                                'cpf',
                                 $cpfs,
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
-                                'required' => 'required']
-                            );
+                                'required' => 'required'
+                            ]);
                             ?>
                             <label class="fg-label">Quem deve visualizar a linha</label>
                         </div>
@@ -33,14 +34,15 @@
                     <div class="fg-line">
                         <div class="select">
                             <?php
-                            echo $this->tag->select(['linha',
+                            echo $this->tag->select([
+                                'linha',
                                 $linhas,
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control',
-                                'required' => 'required']
-                            );
+                                'required' => 'required'
+                            ]);
                             ?>
                             <label class="fg-label">Linha</label>
                         </div>

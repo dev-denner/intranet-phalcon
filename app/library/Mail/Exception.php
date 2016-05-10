@@ -1,6 +1,6 @@
 <?php
 
-namespace DevDenners\Library\Mail;
+namespace SysPhalcon\Library\Mail;
 
 class Exception extends \Phalcon\Exception {
 

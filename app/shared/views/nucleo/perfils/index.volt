@@ -10,39 +10,41 @@
         <div class="row">
             {{ form('nucleo/perfils', 'role': 'form', 'method': 'post', 'autocomplete': 'off', 'onsubmit': 'overlay(true)') }}
             <div class="col-sm-3">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['userId',
-                                \Nucleo\Models\Users::find(),
+                                \Nucleo\Models\Users::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Todos os Usuários',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Todos os Usuários</label>
                     </div>
                 </div>
                 <br />
             </div>
             <div class="col-sm-3">
-                <div class="form-group">
+                <div class="form-group fg-float">
                     <div class="fg-line">
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(),
+                                \Nucleo\Models\Groups::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
-                                'emptyText' => 'Todos os Grupos',
+                                'emptyText' => '',
                                 'emptyValue' => '',
                                 'class' => 'form-control']
                             );
                             ?>
                         </div>
+                        <label class="fg-label">Todos os Grupos</label>
                     </div>
                 </div>
                 <br />
@@ -72,7 +74,7 @@
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
-            {% if perfils is not empty %}
+            {% if perfils is not empt %}
             <table class="table table-striped table-vmiddle datatable">
                 <thead>
                     <tr>
@@ -83,7 +85,7 @@
                         <th data-column-id="controller">Controlador</th>
                         <th data-column-id="action">Ação</th>
                         <th data-column-id="permission">Tem Permissão?</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +98,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if perfil.users is true %}
+                            {% if perfil.groups is true %}
                             {{ perfil.groups.name }}
                             {% endif %}
                         </td>
@@ -104,10 +106,7 @@
                         <td>{{ perfil.controllers.title }}</td>
                         <td>{{ perfil.actions.title }}</td>
                         <td>{{ perfil.permission }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/perfils/edit/'~perfil.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/perfils/delete')}}', '{{perfil.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/perfils') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

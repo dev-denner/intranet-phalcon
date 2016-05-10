@@ -9,7 +9,7 @@
 
 namespace Intranet\Controllers;
 
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class IndexController extends ControllerBase {
 

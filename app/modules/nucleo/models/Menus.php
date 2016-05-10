@@ -9,9 +9,9 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\ModelBase;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Message as Message;
 
 class Menus extends ModelBase {
@@ -148,6 +148,9 @@ use beforeUpdate;
      */
     public function setDepartment($department) {
 
+        if (empty($department)) {
+            $department = null;
+        }
         $this->department = $department;
 
         return $this;
@@ -160,7 +163,11 @@ use beforeUpdate;
      * @return $this
      */
     public function setModule($module) {
-        $this->module = $module;
+        if (empty($module)) {
+            $this->module = null;
+        } else {
+            $this->module = $module;
+        }
 
         return $this;
     }
@@ -196,6 +203,10 @@ use beforeUpdate;
      * @return $this
      */
     public function setCategory($category) {
+
+        if (empty($category)) {
+            $category = null;
+        }
         $this->category = $category;
 
         return $this;
@@ -409,10 +420,11 @@ use beforeUpdate;
         $this->setSchema('NUCLEO');
 
         $this->belongsTo('department', __NAMESPACE__ . '\Departments', 'id', ['alias' => 'Departments']);
+        $this->belongsTo('category', __NAMESPACE__ . '\Categories', 'id', ['alias' => 'Categories']);
         $this->belongsTo('module', __NAMESPACE__ . '\Modules', 'id', ['alias' => 'Modules']);
         $this->belongsTo('controller', __NAMESPACE__ . '\Controllers', 'id', ['alias' => 'Controllers']);
         $this->belongsTo('action', __NAMESPACE__ . '\Actions', 'id', ['alias' => 'Actions']);
-        $this->belongsTo('category', __NAMESPACE__ . '\Categories', 'id', ['alias' => 'Categories']);
+
 
 
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([

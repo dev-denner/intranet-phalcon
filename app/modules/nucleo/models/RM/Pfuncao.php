@@ -9,7 +9,7 @@
 
 namespace Nucleo\Models\RM;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class Pfuncao extends ModelBase {
 

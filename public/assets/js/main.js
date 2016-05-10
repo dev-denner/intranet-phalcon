@@ -1,48 +1,19 @@
-// @koala-prepend "datatable/datatable.js"
-// @koala-prepend "tablecloth/jquery.metadata.js"
-// @koala-prepend "tablecloth/jquery.tablecloth.js"
-// @koala-prepend "tablecloth/jquery.tablesorter.min.js"
+// @koala-prepend "bootgrid/jquery.bootgrid.min.js"
+// @koala-prepend "bootgrid/jquery.bootgrid.fa.min.js"
 // @koala-prepend "jquery-ui.min.js"
+// @koala-prepend "mask.js"
+// @koala-prepend "isotope-2.2.2.js"
+// @koala-prepend "monthPicker.js"
+// @koala-prepend "summernote/summernote.min.js"
+// @koala-prepend "summernote/lang/summernote-pt-BR.js"
+// @koala-prepend "price-format.2.0.min.js"
 
 $(document).ready(function () {
-    $('#overlay').css('display', 'none');
 
-    $('.datatable').dataTable({
-        "aLengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
-        "language": {
-            "sEmptyTable": "Nenhum registro encontrado",
-            "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-            "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sInfoThousands": ".",
-            "sLengthMenu": "_MENU_ resultados por página",
-            "sLoadingRecords": "Carregando...",
-            "sProcessing": "Processando...",
-            "sZeroRecords": "Nenhum registro encontrado",
-            "sSearch": "Pesquisar",
-            "oPaginate": {
-                "sNext": "Próximo",
-                "sPrevious": "Anterior",
-                "sFirst": "Primeiro",
-                "sLast": "Último"
-            },
-            "oAria": {
-                "sSortAscending": ": Ordenar colunas de forma ascendente",
-                "sSortDescending": ": Ordenar colunas de forma descendente"
-            }
-        },
-        "iDisplayLength": 100
-    });
-    $(".datatable").tablecloth({
-        theme: "stats",
-        bordered: true,
-        condensed: true,
-        striped: true,
-        sortable: true,
-        clean: true,
-        cleanElements: "th td",
-        customClass: "table table-hover"
+    $('.tooltips').tooltip();
+
+    $('textarea').summernote({
+        lang: 'pt-BR'
     });
 
     $('.datepicker').datepicker({
@@ -61,35 +32,64 @@ $(document).ready(function () {
         monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
         monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
     });
-
-    $.fn.monthYearPicker = function (options) {
-        options = $.extend({
-            dateFormat: "mm/yy",
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            showAnim: "",
-            closeText: 'OK',
-            currentText: 'Este Mês',
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        }, options);
-        function hideDaysFromCalendar() {
-            var thisCalendar = $(this);
-            $('.ui-datepicker-calendar').detach();
-            // Also fix the click event on the Done button.
-            $('.ui-datepicker-close').unbind("click").click(function () {
-                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-                thisCalendar.datepicker('setDate', new Date(year, month, 1));
-            });
+    $('.datepicker').mask("99/99/9999");
+    $('.monthPicker').MonthPicker({
+        ShowIcon: false,
+        option: 'Animation',
+        i18n: {
+            year: 'Ano',
+            prevYear: 'Ano Anterior',
+            nextYear: 'Próximo Ano',
+            next12Years: 'Pular 12 Anos Acima',
+            prev12Years: 'Pular 12 Anos Atrás',
+            nextLabel: 'Próximo',
+            prevLabel: 'Anterior',
+            buttonText: 'Escolha o mês',
+            jumpYears: 'Pular Anos',
+            backTo: 'Voltar para',
+            months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
         }
-        $(this).datepicker(options).focus(hideDaysFromCalendar);
-    }
-    $('.monthPicker').monthYearPicker();
+    });
+    $('.monthPicker').mask("99/9999");
+    $('.grid-isotope').isotope({
+        itemSelector: '.grid-item',
+        masonry: {
+            columnWidth: '.grid-item'
+        }
+    });
+    $(".datatable").bootgrid({
+        caseSensitive: false,
+        searchSettings: {
+            delay: 100,
+        },
+        rowCount: [10, 25, 50, 100, 500, -1],
+        multiSort: true,
+        labels: {
+            all: "Todos",
+            infos: "Exibindo {{ctx.start}} até {{ctx.end}} de {{ctx.total}} registros",
+            loading: "Carregando...",
+            noResults: "Nenhum resultado encontrado!",
+            refresh: "Recarregar",
+            search: "Busca"
+        },
+        formatters: {
+            commands: function (column, row) {
+                return '<button type="button" class="btn waves-effect bgm-amber tooltips" onclick="editItem(\'' + row.commands + '/edit/\', ' + row.id + ')" title="Editar" data-row-id=' + row.id + '"><span class="zmdi zmdi-edit"></span></button> ' +
+                        '<button type="button" class="btn waves-effect bgm-red tooltips" onclick="deleteItem(\'' + row.commands + '/delete/\', ' + row.id + ')" title="Deletar" data-row-id="' + row.id + '"><span class="zmdi zmdi-delete"></span></button>';
+            },
+            icon: function (column, row) {
+                return '<span class="f-20"><i class="' + row.icon + '"></i></span>';
+            }
+        }
+    });
+
+    $('.formatMoney').priceFormat({
+        prefix: 'R$ ',
+        centsSeparator: ',',
+        thousandsSeparator: '.'
+    });
+
+    overlay(false);
 
 });
 
@@ -134,7 +134,6 @@ var deleteItem = function (url, id) {
                             swal("Errors", returned, "error");
                         }
                     });
-
                 } else {
                     $('#errors').html(returned);
                 }
@@ -146,4 +145,8 @@ var deleteItem = function (url, id) {
             swal("Cancelado", "Registro a salvo :-)", "error");
         }
     });
+}
+
+var editItem = function (url, id) {
+    window.location.href = url + id;
 }

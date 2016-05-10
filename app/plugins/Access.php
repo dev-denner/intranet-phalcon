@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Plugins;
+namespace SysPhalcon\Plugins;
 
 use Phalcon\Mvc\User\Component;
 use Nucleo\Models\Perfils;
@@ -47,7 +47,7 @@ class Access extends Component {
     /**
      *
      * @param type $filePath
-     * @return \DevDenners\Plugins\Access
+     * @return \SysPhalcon\Plugins\Access
      */
     private function setFilePath($filePath) {
         if (empty($filePath)) {
@@ -65,7 +65,7 @@ class Access extends Component {
 
     /**
      *
-     * @return \DevDenners\Plugins\Access
+     * @return \SysPhalcon\Plugins\Access
      */
     private function setPublicResources() {
 
@@ -74,7 +74,7 @@ class Access extends Component {
         foreach ($groups as $group) {
             $perfils = $group->perfils;
             foreach ($perfils as $perfil) {
-                $this->publicResources[$perfil->modules->name][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->permission;
+                $this->publicResources[$perfil->modules->slug][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->permission;
             }
         }
         return $this;
@@ -82,7 +82,7 @@ class Access extends Component {
 
     /**
      *
-     * @return \DevDenners\Plugins\Access
+     * @return \SysPhalcon\Plugins\Access
      */
     private function setPrivateResources() {
         $userInfo = $this->auth->getIdentity();

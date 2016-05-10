@@ -1,43 +1,34 @@
 {
     "name": "denners777/api-phalcon",
-    "description": "API de projetos PHP da empresa MPE",
-    "version": "1.0.0",
+    "description": "APP for application management in Phalcon PHP. Database: Oracle. Integrated with Whoops.",
+    "version": "2.0.0",
     "require": {
         "php": ">=5.6",
         "ext-phalcon": ">=2.0",
         "aymanrb/php-unstructured-text-parser": "dev-master",
+        "ilya/belt": "~2",
         "filp/whoops": "*",
-        "mpdf/mpdf": "6.*",
-        "knplabs/knp-snappy": "*",
-        "h4cc/wkhtmltopdf-amd64": "0.12.x",
-        "h4cc/wkhtmltoimage-amd64": "0.12.x",
-        "ghunti/highcharts-php": "~3.0",
-        "noherczeg/breadcrumb": "2.x",
-        "ovr/phalcony": "~0.2",
+        "mpdf/mpdf": "dev-master",
         "phalcon/incubator": "2.*",
-        "phpoffice/phpexcel": "*",
-        "phpoffice/phpword": "*",
-        "samayo/bulletproof": "2.0.*",
+        "phpoffice/phpexcel": "dev-master",
+        "phpoffice/phpword": "dev-master",
         "swiftmailer/swiftmailer": "^5.4",
-        "whoops/soap": "*",
-        "aws/aws-php-sns-message-validator": "*",
-        "doctrine/cache": "*",
-        "duncan3dc/fork-helper": "*",
-        "aerospike/aerospike-client-php": "*",
-        "dompdf/dompdf": "*"
+        "respect/validation": "dev-master",
+        "phalcongelist/breadcrumbs": "^1.2"
     },
     "require-dev": {
         "symfony/debug": "*",
-        "symfony/var-dumper": "*"
+        "symfony/var-dumper": "*",
+        "phpspec/phpspec": "~2.0"
     },
     "authors": [{
             "name": "Denner Fernandes",
             "email": "denners777@hotmail.com",
-            "homepage": "http://devdenner.esy.es/",
+            "homepage": "https://github.com/denners777/",
             "role": "Developer"
         }],
     "keywords": ["phalcon", "framework", "api", "app"],
     "type": "app",
     "license": "MIT",
-    "homepage": "http://devdenner.esy.es"
+    "homepage": "https://github.com/denners777/API-Phalcon"
 }

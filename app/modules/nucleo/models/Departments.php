@@ -9,9 +9,9 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\ModelBase;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 
 class Departments extends ModelBase {
 
@@ -272,6 +272,8 @@ use beforeUpdate;
         $this->setSchema('NUCLEO');
 
         $this->hasMany('id', __NAMESPACE__ . '\Menus', 'department', array('alias' => 'Menus'));
+        $this->hasMany('id', __NAMESPACE__ . '\CategoriesDocuments', 'department', array('alias' => 'CategoriesDocuments'));
+
 
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
             'field' => 'sdel',

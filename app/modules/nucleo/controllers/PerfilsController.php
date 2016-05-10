@@ -10,7 +10,7 @@
 namespace Nucleo\Controllers;
 
 use Nucleo\Models\Perfils;
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 
 class PerfilsController extends ControllerBase {
 
@@ -18,7 +18,7 @@ class PerfilsController extends ControllerBase {
      * initialize
      */
     public function initialize() {
-        $this->tag->setTitle(' Perfis ');
+        $this->tag->setTitle('Perfis');
         parent::initialize();
 
         $this->entity = new Perfils();

@@ -1,6 +1,6 @@
 <?php
 
-namespace DevDenners\Models;
+namespace SysPhalcon\Models;
 
 use Phalcon\Db\RawValue;
 

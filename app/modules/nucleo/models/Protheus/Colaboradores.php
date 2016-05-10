@@ -9,7 +9,7 @@
 
 namespace Nucleo\Models\Protheus;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class Colaboradores extends ModelBase {
 
@@ -63,23 +63,7 @@ class Colaboradores extends ModelBase {
     }
 
     public function getDadosFuncionario($cpf) {
-        $empresas = "CASE szhEmpresa
-                  WHEN '01' THEN 'MPE'
-                  WHEN '02' THEN 'EBE'
-                  WHEN '03' THEN 'MPE SERVIÇOS'
-                  WHEN '04' THEN 'GEMON'
-                  WHEN 'D1' THEN 'AAT'
-                  WHEN 'D2' THEN 'GEMON'
-                  WHEN 'D3' THEN 'IRLA'
-                  WHEN 'D4' THEN 'MPE PAINEIS'
-                  WHEN 'D5' THEN 'SOAHGRO'
-                  WHEN 'D6' THEN 'TEIA'
-                  WHEN 'D7' THEN 'VALENÇA'
-                  WHEN 'D8' THEN 'FW GEMON'
-                  WHEN 'D9' THEN 'CANARI'
-                  WHEN 'DA' THEN 'AGROMOM'
-                  ELSE szhEmpresa
-                END";
+        $empresas = $this->getNameEmpresas();
         $dadosFunc = $this->modelsManager->createBuilder()
                 ->columns([$empresas . ' empresa,
                        TRIM(szhNome) nome,
@@ -104,23 +88,7 @@ class Colaboradores extends ModelBase {
     }
 
     public function getEmpresas() {
-        $empresas = "CASE szhEmpresa
-                  WHEN '01' THEN 'MPE MONTAGENS'
-                  WHEN '02' THEN 'EBE'
-                  WHEN '03' THEN 'MPE ENGENHARIA'
-                  WHEN '04' THEN 'GEMON'
-                  WHEN 'D1' THEN 'AAT'
-                  WHEN 'D2' THEN 'GEMON'
-                  WHEN 'D3' THEN 'IRLA'
-                  WHEN 'D4' THEN 'MPE PAINEIS'
-                  WHEN 'D5' THEN 'SOAHGRO'
-                  WHEN 'D6' THEN 'TEIA'
-                  WHEN 'D7' THEN 'VALENÇA'
-                  WHEN 'D8' THEN 'FW GEMON'
-                  WHEN 'D9' THEN 'CANARI'
-                  WHEN 'DA' THEN 'AGROMOM'
-                  ELSE szhEmpresa
-                END";
+        $empresas = $this->getNameEmpresas();
         $empresa = $this->modelsManager->createBuilder()
                 ->columns(['DISTINCT TRIM(szhEmpresa) id, ' . $empresas . ' empresa'])
                 ->from(__NAMESPACE__ . '\Colaboradores')
@@ -139,23 +107,7 @@ class Colaboradores extends ModelBase {
     }
 
     public function validaDadosFuncionario($cpf, $empresa, $dataAdmissao) {
-        $empresas = "CASE szhEmpresa
-                  WHEN '01' THEN 'MPE'
-                  WHEN '02' THEN 'EBE'
-                  WHEN '03' THEN 'MPE SERVIÇOS'
-                  WHEN '04' THEN 'GEMON'
-                  WHEN 'D1' THEN 'AAT'
-                  WHEN 'D2' THEN 'GEMON'
-                  WHEN 'D3' THEN 'IRLA'
-                  WHEN 'D4' THEN 'MPE PAINEIS'
-                  WHEN 'D5' THEN 'SOAHGRO'
-                  WHEN 'D6' THEN 'TEIA'
-                  WHEN 'D7' THEN 'VALENÇA'
-                  WHEN 'D8' THEN 'FW GEMON'
-                  WHEN 'D9' THEN 'CANARI'
-                  WHEN 'DA' THEN 'AGROMOM'
-                  ELSE szhEmpresa
-                END";
+        $empresas = $this->getNameEmpresas();
         $dadosFunc = $this->modelsManager->createBuilder()
                 ->columns([$empresas . ' empresa,
                        TRIM(szhNome) nome,
@@ -179,6 +131,26 @@ class Colaboradores extends ModelBase {
                 ->execute();
 
         return $dadosFunc->toArray(0)[0];
+    }
+
+    private function getNameEmpresas() {
+        return "CASE szhEmpresa
+                  WHEN '01' THEN 'MPE MONTAGENS'
+                  WHEN '02' THEN 'EBE'
+                  WHEN '03' THEN 'MPE ENGENHARIA'
+                  WHEN '04' THEN 'GEMON'
+                  WHEN 'D1' THEN 'AAT'
+                  WHEN 'D2' THEN 'GEMON'
+                  WHEN 'D3' THEN 'IRLA'
+                  WHEN 'D4' THEN 'MPE PAINEIS'
+                  WHEN 'D5' THEN 'SOAHGRO'
+                  WHEN 'D6' THEN 'TEIA'
+                  WHEN 'D7' THEN 'VALENÇA'
+                  WHEN 'D8' THEN 'FW GEMON'
+                  WHEN 'D9' THEN 'CANARI'
+                  WHEN 'DA' THEN 'AGROMOM'
+                  ELSE szhEmpresa
+                END";
     }
 
 }

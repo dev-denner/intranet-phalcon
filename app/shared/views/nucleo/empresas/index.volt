@@ -54,7 +54,7 @@
                         <th data-column-id="nomeFantasia">Nome Fantasia</th>
                         <th data-column-id="codProtheus">Cod. Protheus</th>
                         <th data-column-id="lojaProtheus">Loja</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,10 +67,7 @@
                         <td>{{ empresa.nomeFantasia }}</td>
                         <td>{{ empresa.codProtheus }}</td>
                         <td>{{ empresa.lojaProtheus }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/empresas/edit/'~empresa.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/empresas/delete')}}', '{{empresa.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/empresas') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -9,7 +9,8 @@
 
 namespace Nucleo\Models\Protheus;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
+use Phalcon\Config as ObjectPhalcon;
 
 class ProdutosDescricao extends ModelBase {
 
@@ -51,32 +52,46 @@ class ProdutosDescricao extends ModelBase {
 
     /**
      *
-     * @param type $prod
-     * @return type
+     * @param type $search
+     * @return ObjectPhalcon
      */
-    public function getProdutosForSearch($prod) {
+    public function getProdutos($search) {
 
-        $produtos = $this->modelsManager->createBuilder()
-                ->columns(['TRIM(sb1Cod) codigo,
-                            TRIM(sb1Desc) descProd,
-                            TRIM(sb5Ceme) descProdComp,
-                            TRIM(sb1Grupo) grupo,
-                            TRIM(sbmDesc) descGrupo,
-                            TRIM(sb1Um) um,
-                            TRIM(sb1Posipi) ncm'])
-                ->from(__NAMESPACE__ . '\ProdutosDescricao')
-                ->innerJoin(__NAMESPACE__ . '\ProdutosAdicionais', "sb5Cod = sb1Cod AND sb5Sdel = ' '")
-                ->innerJoin(__NAMESPACE__ . '\ProdutosGrupos', "sbmGrupo = sb1Grupo AND sbmSdel = ' '")
-                ->where("sb1Sdel = ' ' AND sb1Msblql = '2' AND sb1Grupo NOT IN('3701', '4201', '4202')")
-                ->andWhere("UPPER(sb1Desc) LIKE UPPER('%" . $prod . "%')
-                         OR UPPER(sbmDesc) LIKE UPPER('%" . $prod . "%')
-                         OR UPPER(sb5Ceme) LIKE UPPER('%" . $prod . "%')
-                         OR UPPER(sb1Grupo) LIKE UPPER('%" . $prod . "%')
-                         OR UPPER(sb1Cod) LIKE UPPER('%" . $prod . "%')")
-                ->orderBy('sb1Cod')
-                ->getQuery()
-                ->execute();
-        return $produtos->toArray(0);
+        $connection = $this->customConnection();
+
+        if (!empty($search)) {
+            $search = "AND (UPPER(SB1010.B1_DESC) LIKE UPPER('%{$search}%')
+                         OR UPPER(SBM010.BM_DESC) LIKE UPPER('%{$search}%')
+                         OR UPPER(SB5010.B5_CEME) LIKE UPPER('%{$search}%')
+                         OR UPPER(SB1010.B1_GRUPO) LIKE UPPER('%{$search}%')
+                         OR UPPER(SB1010.B1_COD) LIKE UPPER('%{$search}%'))";
+        }
+
+        $query = "
+            SELECT TRIM(SB1010.B1_COD) codigo,
+                   TRIM(SB1010.B1_DESC) descricao,
+                   TRIM(SB5010.B5_CEME) descricao_completa,
+                   TRIM(SB1010.B1_GRUPO) grupo,
+                   TRIM(SBM010.BM_DESC) descricao_grupo,
+                   TRIM(SB1010.B1_UM) un,
+                   TRIM(SB1010.B1_POSIPI) ncm
+            FROM {$this->schema}.SB1010
+            INNER JOIN {$this->schema}.SB5010
+                    ON SB5010.B5_COD = SB1010.B1_COD
+                    AND SB5010.D_E_L_E_T_ = ' '
+            INNER JOIN {$this->schema}.SBM010
+                    ON SBM010.BM_GRUPO = SB1010.B1_GRUPO
+                    AND SBM010.D_E_L_E_T_ = ' '
+            WHERE SB1010.D_E_L_E_T_ = ' '
+               AND SB1010.B1_MSBLQL = '2'
+               AND SB1010.B1_GRUPO NOT IN ('3701', '4201', '4202')
+                {$search}
+            ORDER BY SB1010.B1_COD";
+
+        $result = $connection->select($query);
+        $return = $connection->fetchAll($result);
+        $connection->bye();
+        return new ObjectPhalcon($return);
     }
 
     /**

@@ -6,12 +6,12 @@
  * @link        https://github.com/denners777/API-Phalcon
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
-use DevDenners\Library\Auth\Auth as Auth;
-use DevDenners\Library\Mail\Mail as Mail;
-use DevDenners\Library\FlashMessage\Closable as Closable;
-use DevDenners\Plugins\Access as Access;
-use DevDenners\Plugins\Elements as Elements;
-use DevDenners\Plugins\NotFound as NotFound;
+use SysPhalcon\Library\Auth\Auth as Auth;
+use SysPhalcon\Library\Mail\Mail as Mail;
+use SysPhalcon\Library\FlashMessage\Closable as Closable;
+use SysPhalcon\Plugins\Access as Access;
+use SysPhalcon\Plugins\Elements as Elements;
+use SysPhalcon\Plugins\NotFound as NotFound;
 use Phalcon\Assets\Manager as AssetsManager;
 use Phalcon\Crypt as Crypt;
 use Phalcon\Cache\Frontend\Data as CacheFront;
@@ -39,6 +39,11 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt;
 use Phalcon\Session\Adapter\Files as Session;
 use Phalcon\Security as Security;
+use SysPhalcon\Plugins\DbListener;
+use Respect\Validation\Validator as Validator;
+use Phalcon\Filter;
+use Phalcon\Translate\Adapter\NativeArray as Translator;
+use Phalcon\Breadcrumbs;
 
 /**
  *
@@ -87,6 +92,10 @@ class Bootstrap {
             'assets',
             'auth',
             'access',
+            'validator',
+            'filter',
+            'translate',
+            'breadcrumbs',
         ];
 
         try {
@@ -105,7 +114,7 @@ class Bootstrap {
             $application->setDI($this->_di);
 
             return $application->handle()->getContent();
-        } catch (\Phalcon\Exception $e) {
+        } catch (\Exception $e) {
             echo '<pre>', $e->getMessage(), $e->getFile(), $e->getLine(), $e->getCode();
             echo nl2br(htmlentities($e->getTraceAsString())), '</pre>';
         } catch (\PDOException $e) {
@@ -141,12 +150,12 @@ class Bootstrap {
         $loader = new Loader();
 
         $loader->registerNamespaces([
-            'DevDenners\Controllers' => __DIR__ . '/../shared/controllers',
-            'DevDenners\Models' => __DIR__ . '/../shared/models',
-            'DevDenners\Library' => __DIR__ . '/../library',
-            'DevDenners\Forms' => __DIR__ . '/../forms',
-            'DevDenners\Plugins' => __DIR__ . '/../plugins',
-            'DevDenners\Helpers' => __DIR__ . '/../helpers',
+            'SysPhalcon\Controllers' => __DIR__ . '/../shared/controllers',
+            'SysPhalcon\Models' => __DIR__ . '/../shared/models',
+            'SysPhalcon\Library' => __DIR__ . '/../library',
+            'SysPhalcon\Forms' => __DIR__ . '/../forms',
+            'SysPhalcon\Plugins' => __DIR__ . '/../plugins',
+            'SysPhalcon\Helpers' => __DIR__ . '/../helpers',
             //models
             'Intranet\Models' => APP_PATH . '/app/modules/intranet/models',
             'Nucleo\Models' => APP_PATH . '/app/modules/nucleo/models',
@@ -184,9 +193,9 @@ class Bootstrap {
             error_reporting(-1);
         }
 
-        set_error_handler(['\DevDenners\Plugins\Error', 'normal']);
-        set_exception_handler(['DevDenners\Plugins\Error', 'exception']);
-        register_shutdown_function(['DevDenners\Plugins\Error', 'shutdown']);
+        set_error_handler(['\SysPhalcon\Plugins\Error', 'normal']);
+        set_exception_handler(['SysPhalcon\Plugins\Error', 'exception']);
+        register_shutdown_function(['SysPhalcon\Plugins\Error', 'shutdown']);
     }
 
     /**
@@ -299,12 +308,9 @@ class Bootstrap {
 
                 if ($environment) {
                     $eventsManager = new EventsManager();
+                    $dbListener = new DbListener();
 
-                    $eventsManager->attach($key, function($event, $connection) use($logger) {
-                        if ($event->getType() == 'beforeQuery') {
-                            $logger->log($connection->getSQLStatement(), Logger::INFO);
-                        }
-                    });
+                    $eventsManager->attach($key, $dbListener);
                 }
 
                 $params = [
@@ -314,12 +320,16 @@ class Bootstrap {
                     'dbname' => $value->dbname,
                     'schema' => $value->schema,
                     'charset' => $value->charset,
-                    'options' => [PDO::ATTR_CASE => PDO::CASE_UPPER, PDO::ATTR_PERSISTENT => TRUE,],
+                    'options' => [
+                        PDO::ATTR_PERSISTENT => TRUE,
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING
+                    ],
                 ];
 
                 switch ($value->adapter) {
                     case 'Oracle':
                         $conn = new Oracle($params);
+                        $params['options'][PDO::ATTR_CASE] = PDO::CASE_UPPER;
                         break;
                     case 'Mysql':
                         $conn = new Mysql($params);
@@ -428,6 +438,7 @@ class Bootstrap {
                         'compiledPath' => $config->volt->path,
                         'compiledExtension' => $config->volt->extension,
                         'compiledSeparator' => $config->volt->separator,
+                        'compileAlways' => (bool) $config->volt->compileAlways,
                         'stat' => (bool) $config->volt->stat,
                     ]
             );
@@ -532,6 +543,28 @@ class Bootstrap {
      *
      * @param type $options
      */
+    protected function initValidator($options = []) {
+
+        $this->_di->setShared('validator', function() {
+            return new Validator();
+        });
+    }
+
+    /**
+     *
+     * @param type $options
+     */
+    protected function initFilter($options = []) {
+
+        $this->_di->setShared('filter', function() {
+            return new Filter();
+        });
+    }
+
+    /**
+     *
+     * @param type $options
+     */
     protected function initRouter($options = []) {
 
         $this->_di->setShared('router', function () {
@@ -543,6 +576,76 @@ class Bootstrap {
             $router->removeExtraSlashes(true);
 
             return $router;
+        });
+    }
+
+    protected function initTranslate($options = []) {
+
+        $messages = [
+            'nucleo' => 'Núcleo',
+            'intranet' => 'Intranet',
+            'telephony' => 'Telefonia',
+            //controlles
+            'index' => 'Índice',
+            'categories' => 'Categorias',
+            'consultas' => 'Consultas',
+            'actions' => 'Ações',
+            'controllers' => 'Controladores',
+            'departments' => 'Departamentos',
+            'empresas' => 'Empresas',
+            'funcionarios' => 'Funcionários',
+            'groups' => 'Grupos',
+            'users_groups' => 'Usuários x Grupos',
+            'menus' => 'Menus',
+            'modules' => 'Módulos',
+            'perfils' => 'Perfis',
+            'users' => 'Usuários',
+            'documents' => 'Documentos',
+            //actions
+            'fornecedores' => 'Fornecedores',
+            'produtosServicos' => 'Produtos e Serviços',
+            'centroCustos' => 'Centros de Custos',
+            'requisitoMinimo' => 'Requisitos Mínimos',
+            'naturezaFinanceira' => 'Naturezas Financeiras',
+            'tes' => 'TES - Tipos de Entradas e Saídas',
+            'secao' => 'Seções',
+            'categories_documents' => 'Categorias de Documentos',
+            'reports' => 'Relatórios',
+            'access_line' => 'Acessos Exclusivos CPF x Linhas',
+            'contaCelularAdmin' => 'Extrato Geral de Conta',
+            'cell_phone_line' => 'Cadastro de Linhas',
+            'importTelephony' => 'Importar Extrato de Conta',
+            'profile' => 'Perfil',
+            'new' => 'Novo',
+            'edit' => 'Editar',
+            'comercialDocs' => 'Comercial',
+            'contabilidadeFiscalDocs' => 'Contabilidade e Fiscal',
+            'gestaoPessoasDocs' => 'Gestão de Pessoas (RH/DP)',
+            'financeiroDocs' => 'Financeiro',
+            'juridicoDocs' => 'Jurídico',
+            'sgiDocs' => 'SGI',
+            'suprimentosDocs' => 'Suprimentos',
+            'ticDocs' => 'TIC e Processos',
+            'comercialCats' => 'Comercial',
+            'contabilidadeFiscalCats' => 'Contabilidade e Fiscal',
+            'gestaoPessoasCats' => 'Gestão de Pessoas (RH/DP)',
+            'financeiroCats' => 'Financeiro',
+            'juridicoCats' => 'Jurídico',
+            'sgiCats' => 'SGI',
+            'suprimentosCats' => 'Suprimentos',
+            'ticCats' => 'TIC e Processos',
+            'clientes' => 'Clientes',
+        ];
+
+        $this->_di->setShared('translate', function() use ($messages) {
+            return new Translator(['content' => $messages]);
+        });
+    }
+
+    protected function initBreadcrumbs($options = []) {
+
+        $this->_di->setShared('breadcrumbs', function() {
+            return new Breadcrumbs;
         });
     }
 
@@ -639,13 +742,13 @@ class Bootstrap {
         $router->add('/reset-password/{code}/{email}', [
             'namespace' => 'Nucleo\Controllers',
             'module' => 'nucleo',
-            'controller' => 'users',
+            'controller' => 'session',
             'action' => 'resetPassword'
         ]);
         $router->add('/change-password', [
             'namespace' => 'Nucleo\Controllers',
             'module' => 'nucleo',
-            'controller' => 'users',
+            'controller' => 'session',
             'action' => 'changePassword'
         ]);
         $router->add('/login', [

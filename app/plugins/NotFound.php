@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Plugins;
+namespace SysPhalcon\Plugins;
 
 use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;

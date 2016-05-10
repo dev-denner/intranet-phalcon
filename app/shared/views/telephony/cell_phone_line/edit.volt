@@ -4,7 +4,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="card">
             <div class="card-header">
-                <h2>Linhas Celular TIM <small>Insira os dados para atualizar a linha.</small></h2>
+                <h2>Cadastro de Linhas <small>Insira os dados para atualizar o cadastro de linha.</small></h2>
             </div>
 
             <div class="card-body card-padding">
@@ -29,9 +29,6 @@
                                     'Terceiro' => 'Terceiro',
                                     'Outro' => 'Outro',
                                 ],
-                                'useEmpty' => true,
-                                'emptyText' => '',
-                                'emptyValue' => '',
                                 'class' => 'form-control',
                                 'required' => 'required']
                             );

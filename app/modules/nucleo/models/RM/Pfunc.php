@@ -9,7 +9,7 @@
 
 namespace Nucleo\Models\RM;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 
 class Pfunc extends ModelBase {
 
@@ -67,13 +67,15 @@ class Pfunc extends ModelBase {
                                 pfChapa chapa,
                                 pfNome nome,
                                 ppCpf cpf,
-                                ppEmail email,
+                                ppEmail emailPessoal,
                                 TO_CHAR(pfDataAdmissao, \'DD/MM/YYYY\') dataAdmissao,
                                 fuNome funcao,
                                 psDescricao secao,
                                 pfCodSecao codSecao,
-                                UPPER(siDescricao) situacao,
+                                UPPER(siDescricao) descSituacao,
                                 pfCodTipo codTipoFunc,
+                                TO_CHAR(ppDataNascimento, \'DD/MM/YYYY\') dataNascimento,
+                                ppSexo sexo,
                                 UPPER(tiDescricao) tipoFunc'])
                 ->from(__NAMESPACE__ . '\Pfunc')
                 ->innerJoin(__NAMESPACE__ . '\Ppessoa', 'ppCodigo = pfCodPessoa')

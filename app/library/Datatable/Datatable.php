@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Library\DataTable;
+namespace SysPhalcon\Library\DataTable;
 
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Paginator\AdapterInterface;
@@ -150,7 +150,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $filter
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setFilter($filter) {
         $this->filter = $filter;
@@ -160,7 +160,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $data
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setData($data) {
         $this->data = $data;
@@ -170,7 +170,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $order
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setOrder($order) {
         if (is_array($order)) {
@@ -186,7 +186,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $action
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setAction($action) {
         if (is_array($action)) {
@@ -202,7 +202,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $pagination
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setPagination($pagination) {
 
@@ -219,7 +219,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $header
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setHearder($header) {
 
@@ -230,7 +230,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $url
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setUrl($url) {
         $this->url = $url;
@@ -240,7 +240,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param array $length
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setLength(array $length) {
 
@@ -264,7 +264,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $title
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setTitle($title) {
         $this->title = $title;
@@ -274,7 +274,7 @@ class Datatable extends \Phalcon\Mvc\User\Plugin {
     /**
      *
      * @param type $subTitle
-     * @return \DevDenners\Library\DataTable\Datatable
+     * @return \SysPhalcon\Library\DataTable\Datatable
      */
     public function setSubTitle($subTitle) {
         $this->subTitle = $subTitle;

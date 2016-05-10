@@ -42,7 +42,7 @@
                 <br />
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-sm m-t-10 waves-effect">Inserir</button>
+                    <button type="submit" class="btn btn-primary btn-sm m-t-10 waves-effect">Atualizar</button>
                 </div>
             </div>
 

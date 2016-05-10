@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Controllers;
+namespace SysPhalcon\Controllers;
 
 class Exception extends \Phalcon\Exception {
 

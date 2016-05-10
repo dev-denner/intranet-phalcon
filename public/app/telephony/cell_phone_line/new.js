@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#tipo').on('change', function () {
 
-        $('#name, #cceo').val('');
+        $('#name, #cceo, #cpf').val('');
 
         if ($('#tipo').val() != 'Colaborador') {
             $('#name, #cceo').removeAttr('readonly');
@@ -31,24 +31,24 @@ var getInfoUser = function () {
             url: '/nucleo/users/infoUser',
             data: {cpf: cpf}
         }).success(function (returned) {
-
-            if (typeof returned == 'string') {
-                $('.errors > p').html('Não foi possível identificar a origem dos dados desse usuário.<br>');
-            } else {
-                setTimeout(function () {
-                    $('#name').val(returned.NOME);
-                    $('#name').trigger('focus');
-                }, 300);
-                setTimeout(function () {
-                    $('#cceo').val(returned.CCEO);
-                    $('#cceo').trigger('focus');
-                }, 300);
-
-
-            }
+            $('#tipo').val('Colaborador');
+            setTimeout(function () {
+                $('#name').val(returned.NOME);
+                $('#name').trigger('focus');
+            }, 300);
+            setTimeout(function () {
+                $('#cceo').val(returned.CCEO);
+                $('#cceo').trigger('focus');
+            }, 400);
         }).fail(function (returned) {
-            console.log(returned);
-            $('.errors > p').html('Não foi possível identificar a origem dos dados desse usuário.<br>');
+            if ($('#tipo').val() == 'Colaborador') {
+                $('.errors > p').html('Não foi possível identificar a origem dos dados desse usuário.<br>');
+            }
         });
     }
+}
+
+var validaAccessLine = function () {
+
+    return false;
 }

@@ -9,9 +9,9 @@
 
 namespace Nucleo\Models;
 
-use DevDenners\Models\ModelBase;
-use DevDenners\Models\beforeCreate;
-use DevDenners\Models\beforeUpdate;
+use SysPhalcon\Models\ModelBase;
+use SysPhalcon\Models\beforeCreate;
+use SysPhalcon\Models\beforeUpdate;
 
 class Modules extends ModelBase {
 
@@ -30,6 +30,18 @@ use beforeUpdate;
      * @var string
      */
     protected $name;
+
+    /**
+     *
+     * @var string
+     */
+    protected $slug;
+
+    /**
+     *
+     * @var string
+     */
+    protected $description;
 
     /**
      *
@@ -81,6 +93,30 @@ use beforeUpdate;
      */
     public function setName($name) {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field slug
+     *
+     * @param string $slug
+     * @return $this
+     */
+    public function setSlug($slug) {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field description
+     *
+     * @param string $description
+     * @return $this
+     */
+    public function setDescription($description) {
+        $this->description = $description;
 
         return $this;
     }
@@ -164,6 +200,24 @@ use beforeUpdate;
     }
 
     /**
+     * Returns the value of field slug
+     *
+     * @return string
+     */
+    public function getSlug() {
+        return $this->slug;
+    }
+
+    /**
+     * Returns the value of field description
+     *
+     * @return string
+     */
+    public function getDescription() {
+        return $this->description;
+    }
+
+    /**
      * Returns the value of field sdel
      *
      * @return string
@@ -228,7 +282,7 @@ use beforeUpdate;
      * @return string
      */
     public function getSource() {
-        return 'MODULO_N';
+        return 'MODULO';
     }
 
     /**
@@ -241,6 +295,8 @@ use beforeUpdate;
         return array(
             'ID_MODULO' => 'id',
             'DS_NOME' => 'name',
+            'DS_SLUG' => 'slug',
+            'DS_DESCRICAO' => 'description',
             'SDEL' => 'sdel',
             'CREATEBY' => 'createBy',
             'CREATEIN' => 'createIn',

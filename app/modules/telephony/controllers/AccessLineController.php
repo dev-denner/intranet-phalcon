@@ -9,7 +9,7 @@
 
 namespace Telephony\Controllers;
 
-use DevDenners\Controllers\ControllerBase;
+use SysPhalcon\Controllers\ControllerBase;
 use Telephony\Models\AccessLine;
 use Telephony\Models\CellPhoneLine;
 
@@ -48,16 +48,17 @@ class AccessLineController extends ControllerBase {
      */
     public function newAction() {
         $cpf = CellPhoneLine::find(['columns' => 'distinct cpf, name', 'order' => '2']);
-        $linha = CellPhoneLine::find(['columns' => 'distinct linha']);
+        $linha = CellPhoneLine::find(['columns' => 'distinct linha, name']);
 
         $cpfs = $linhas = [];
 
         foreach ($cpf->toArray(0) as $value) {
-            $cpfs[$value['CPF']] = $value['NAME'];
+            if (!is_null($value['CPF']))
+                $cpfs[$value['CPF']] = $value['NAME'] . ' - ' . $value['CPF'];
         }
 
         foreach ($linha->toArray(0) as $value) {
-            $linhas[$value['LINHA']] = $value['LINHA'];
+            $linhas[$value['LINHA']] = $value['NAME'] . ' - ' . $value['LINHA'];
         }
 
         $this->view->cpfs = $cpfs;
@@ -158,7 +159,7 @@ class AccessLineController extends ControllerBase {
                 throw new Exception('Acesso a Linha não encontrada!');
             }
 
-            $accessLine->setId($this->request->getPost('id'), 'int');
+            $accessLine->setId($this->request->getPost('id', 'int'));
             $accessLine->setCpf($this->request->getPost('cpf', 'alphanum'));
             $accessLine->setLinha($this->request->getPost('linha'));
 

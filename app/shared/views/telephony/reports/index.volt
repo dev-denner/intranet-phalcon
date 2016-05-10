@@ -6,7 +6,7 @@
     </div>
     <div class="card-body card-padding">
         <div class="row">
-            {{ form('telephony/reports', 'role': 'form', 'method': 'post', 'autocomplete': 'off', 'onsubmit': 'overlay(true)') }}
+            {{ form('telephony/reports', 'role': 'form', 'method': 'post', 'autocomplete': 'off', 'target': '_new') }}
             <div class="col-sm-4">
                 <div class="input-group fg-float">
                     <span class="input-group-addon"><i class="zmdi zmdi-keyboard"></i></span>
@@ -19,7 +19,7 @@
                                     2 => 'Rateio Celular NF',
                                     3 => 'Rateio NF ERP',
                                     4 => 'Rateio NF E-mails',
-                                    5 => 'Rateio NF Corporativo',
+                                    5 => 'Rateio NF Matriz',
                                 ],
                                 'useEmpty' => true,
                                 'emptyText' => '',
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <div class="fg-float">
                     <div class="fg-line">
                         {{ text_field("mes", "class" : "form-control fg-input monthPicker", 'required': 'required') }}
@@ -45,17 +45,20 @@
                 <div class="input-group fg-float">
                     <span class="input-group-addon"><i class="zmdi zmdi-money"></i></span>
                     <div class="fg-line">
-                        {{ text_field("valor", "class" : "form-control fg-input", 'disabled': 'disabled') }}
+                        {{ text_field("valor", "class" : "form-control fg-input formatMoney", 'disabled': 'disabled') }}
                         <label class="fg-label">valor</label>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <button type="submit" class="btn btn-primary btn-sm m-t-5 waves-effect">Buscar</button>
+
+                {% if link is not empty %}
+                {{ link_to(link, 'Baixar', 'class': 'btn btn-success p-5 waves-effect') }}
+                {% endif %}
             </div>
 
             {{ end_form() }}
         </div>
     </div>
 </div>
-

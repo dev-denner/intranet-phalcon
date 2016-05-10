@@ -12,7 +12,7 @@
  * @author denner.fernandes
  */
 
-namespace DevDenners\Library\Forms;
+namespace SysPhalcon\Library\Forms;
 
 use Phalcon\Tag,
     Phalcon\Forms\Element,
@@ -21,48 +21,48 @@ use Phalcon\Tag,
 
 class Button extends Element implements ElementInterface {
 
-  protected $_icon;
-  protected $_name;
+    protected $_icon;
+    protected $_name;
 
-  public function __construct($name, $attributes = NULL, $icon = NULL) {
-    $this->_icon = $icon;
-    $this->_name = $name;
+    public function __construct($name, $attributes = NULL, $icon = NULL) {
+        $this->_icon = $icon;
+        $this->_name = $name;
 
-    if (!$attributes) {
-      $attributes = [];
+        if (!$attributes) {
+            $attributes = [];
+        }
+
+        if (!isset($attributes['type'])) {
+            $attributes['type'] = 'submit';
+        }
+
+        parent::__construct($name, $attributes);
     }
 
-    if (!isset($attributes['type'])) {
-      $attributes['type'] = 'submit';
+    public function getIcon() {
+        return $this->_icon;
     }
 
-    parent::__construct($name, $attributes);
-  }
+    public function setIcon($icon) {
+        $this->_icon = $icon;
 
-  public function getIcon() {
-    return $this->_icon;
-  }
+        return $this;
+    }
 
-  public function setIcon($icon) {
-    $this->_icon = $icon;
+    public function render($attributes = NULL, $icon = NULL) {
+        $icon = $icon ? : $this->_icon;
 
-    return $this;
-  }
+        $render = Tag::tagHtml('i', ['class' => 'pull-right']);
+        $render .= '&nbsp;';
+        $render .= Tag::tagHtmlClose('i');
+        $render .= Tag::tagHtml('button', $this->prepareAttributes($attributes), FALSE, TRUE);
+        $render .= $this->_name;
+        $render .= Tag::tagHtml('i', ['class' => $icon]);
+        $render .= Tag::tagHtmlClose('i');
+        $render .= Tag::tagHtmlClose('button');
 
-  public function render($attributes = NULL, $icon = NULL) {
-    $icon = $icon ? : $this->_icon;
 
-    $render = Tag::tagHtml('i', ['class' => 'pull-right']);
-    $render .= '&nbsp;';
-    $render .= Tag::tagHtmlClose('i');
-    $render .= Tag::tagHtml('button', $this->prepareAttributes($attributes), FALSE, TRUE);
-    $render .= $this->_name;
-    $render .= Tag::tagHtml('i', ['class' => $icon]);
-    $render .= Tag::tagHtmlClose('i');
-    $render .= Tag::tagHtmlClose('button');
-    
-    
-    return $render;
-  }
+        return $render;
+    }
 
 }

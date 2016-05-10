@@ -7,13 +7,14 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace DevDenners\Library\Auth;
+namespace SysPhalcon\Library\Auth;
 
 use Phalcon\Mvc\User\Component;
-use DevDenners\Library\Auth\Exception;
+use SysPhalcon\Library\Auth\Exception;
+use Nucleo\Models\Mysql\RememberTokens;
+use Nucleo\Models\Mysql\SuccessLogins;
+use Nucleo\Models\Mysql\FailedLogins;
 use Nucleo\Models\Users;
-use Nucleo\Models\Tokens;
-use Nucleo\Models\Logins;
 use Nucleo\Models\UsersGroups;
 use Nucleo\Models\Perfils;
 use Nucleo\Models\RM\Pfunc;
@@ -22,15 +23,10 @@ use Nucleo\Models\Protheus\Colaboradores;
 class Auth extends Component {
 
     /**
+     * Checks the user credentials
      *
-     */
-    public function initialize() {
-
-    }
-
-    /**
-     *
-     * @param type $credentials
+     * @param array $credentials
+     * @return boolean
      * @throws Exception
      */
     public function check($credentials) {
@@ -38,19 +34,21 @@ class Auth extends Component {
         $cpf = str_replace('-', '', $credentials['cpf']);
         $user = Users::findFirstByCpf($cpf);
 
+        $userName = explode('@', $user->email)[0];
+
         if ($user == false) {
-            //$this->registerUserThrottling(null, 'F');
+            $this->registerUserThrottling($cpf);
             throw new Exception('CPF não encontrado no sistema!!!');
         }
 
         if (!$this->security->checkHash($credentials['password'], $user->password)) {
-            //$this->registerUserThrottling($user->id, 'T');
+            $this->registerUserThrottling($userName);
             $this->security->hash(rand());
             throw new Exception('Senha não confere ao cadastro!!! Se necessario clique no link \'ESQUECEU A SENHA?\' abaixo do painel de login.');
         }
 
         $this->checkUserFlags($user);
-        //$this->saveSuccessLogin($user);
+        $this->saveSuccessLogin($userName);
 
         if (isset($credentials['rememberMe'])) {
             $this->createRememberEnvironment($user);
@@ -60,54 +58,48 @@ class Auth extends Component {
     }
 
     /**
+     * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Users $user
+     * @param \Nucleo\Models\Users $user
      * @throws Exception
      */
-    public function saveSuccessLogin(Users $user) {
+    public function saveSuccessLogin($userName) {
+        $successLogin = new SuccessLogins();
+        $successLogin->usersName = $userName;
+        $successLogin->ipAddress = $this->request->getClientAddress();
+        $successLogin->userAgent = $this->request->getUserAgent();
 
-        $logins = new Logins();
-        $logins->SetId($logins->autoincrement());
-        $logins->setUserId($user->id);
-        $logins->setIpAddress($this->request->getClientAddress());
-        $logins->setUserAgent($this->request->getUserAgent());
-        $logins->setAttempted(time());
-        $logins->setType('S');
-
-        if (!$logins->save()) {
-            $messages = $logins->getMessages();
+        if (!$successLogin->save()) {
+            $messages = $successLogin->getMessages();
             throw new Exception($messages[0]);
         }
     }
 
     /**
+     * Implements login throttling
+     * Reduces the effectiveness of brute force attacks
      *
-     * @param type $userId
-     * @param type $type
+     * @param int $userName
      */
-    public function registerUserThrottling($userId, $type) {
+    public function registerUserThrottling($userName) {
+        $failedLogin = new FailedLogins();
+        $failedLogin->usersName = $userName;
+        $failedLogin->ipAddress = $this->request->getClientAddress();
+        $failedLogin->attempted = time();
+        $failedLogin->save();
 
-        $logins = new Logins();
-        $logins->SetId($logins->autoincrement());
-        $logins->setUserId($userId);
-        $logins->setIpAddress($this->request->getClientAddress());
-        $logins->setUserAgent($this->request->getUserAgent());
-        $logins->setAttempted(time());
-        $logins->setType($type);
-
-        $logins->save();
-
-        $attempts = Logins::count([
-                    "ipAddress = ?0 AND attempted BETWEEN ?1 - 50 AND ?1 AND (type = ?2 OR type = ?3)",
+        $attempts = FailedLogins::count([
+                    'ipAddress = ?0 AND attempted >= ?1',
                     'bind' => [
                         $this->request->getClientAddress(),
-                        time() - 3600 * 6,
-                        'T', 'F'
-        ]]);
+                        time() - 3600 * 6
+                    ]
+        ]);
 
         switch ($attempts) {
             case 1:
             case 2:
+                // no delay
                 break;
             case 3:
             case 4:
@@ -120,22 +112,23 @@ class Auth extends Component {
     }
 
     /**
+     * Creates the remember me environment settings the related cookies and generating tokens
      *
-     * @param Users $user
+     * @param \Nucleo\Models\Users $user
      */
     public function createRememberEnvironment(Users $user) {
         $userAgent = $this->request->getUserAgent();
         $token = md5($user->email . $user->password . $userAgent);
 
-        $tokens = new Tokens();
-        $tokens->setId($tokens->autoincrement());
-        $tokens->setUsersId($user->id);
-        $tokens->setToken($token);
-        $tokens->setUserAgent($userAgent);
+        $userName = explode('@', $user->email)[0];
 
-        if ($tokens->save() != false) {
+        $remember = new RememberTokens();
+        $remember->usersName = $userName;
+        $remember->token = $token;
+        $remember->userAgent = $userAgent;
+
+        if ($remember->save() != false) {
             $expire = time() + 86400 * 8;
-
             $this->cookies->set('RMU', $user->id, $expire);
             $this->cookies->set('RMT', $token, $expire);
         }
@@ -150,8 +143,9 @@ class Auth extends Component {
     }
 
     /**
+     * Logs on using the information in the cookies
      *
-     * @return type
+     * @return \Phalcon\Http\Response
      */
     public function loginWithRememberMe() {
         $userId = $this->cookies->get('RMU')->getValue();
@@ -166,18 +160,29 @@ class Auth extends Component {
 
             if ($cookieToken == $token) {
 
-                $remember = Tokens::findFirst([
-                            'usersId = ?0 AND token = ?1',
-                            'bind' => [
-                                $user->id,
-                                $token
-                ]]);
-                if ($remember) {
-                    $this->checkUserFlags($user);
-                    $this->authUserById($user->getId());
-                    $this->saveSuccessLogin($user);
+                $userName = explode('@', $user->email)[0];
 
-                    return $this->response->redirect('index');
+                $remember = RememberTokens::findFirst(array(
+                            'usersName = ?0 AND token = ?1',
+                            'bind' => [$userName, $token]
+                ));
+
+                if ($remember) {
+
+                    // Check if the cookie has not expired
+                    if ((time() - (86400 * 8)) < $remember->createdAt) {
+
+                        // Check if the user was flagged
+                        $this->checkUserFlags($user);
+
+                        // Register identity
+                        $this->authUserById($user->id);
+
+                        // Register the successful login
+                        $this->saveSuccessLogin($userName);
+
+                        return $this->response->redirect();
+                    }
                 }
             }
         }
@@ -185,7 +190,7 @@ class Auth extends Component {
         $this->cookies->get('RMU')->delete();
         $this->cookies->get('RMT')->delete();
 
-        return $this->response->redirect('nucleo/login');
+        return $this->response->redirect('login');
     }
 
     /**
@@ -254,6 +259,15 @@ class Auth extends Component {
         $colaboradores = new Colaboradores();
         $colaborador = $colaboradores->getDadosFuncionario($user->cpf);
 
+        $funcionarios = new Pfunc();
+        $funcionario = $funcionarios->getDadosFuncionario($user->cpf);
+
+        $infoColaborador = [];
+
+        if ($funcionario) {
+            $infoColaborador = array_merge($colaborador, $funcionario);
+        }
+
         $profile = [];
         $userGroups = UsersGroups::find('userId = ' . $user->id);
 
@@ -262,7 +276,7 @@ class Auth extends Component {
                 $perfils = Perfils::find('groupId = ' . $userGroup->groupId);
                 if (count($perfils) > 0) {
                     foreach ($perfils as $perfil) {
-                        $profile[$perfil->modules->name][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->permission;
+                        $profile[$perfil->modules->slug][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->permission;
                     }
                 }
             }
@@ -270,13 +284,13 @@ class Auth extends Component {
         $perfils = Perfils::find('userId = ' . $user->id);
         if (count($perfils) > 0) {
             foreach ($perfils as $perfil) {
-                $profile[$perfil->modules->name][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->actions->permission;
+                $profile[$perfil->modules->slug][$perfil->controllers->slug][$perfil->actions->slug] = $perfil->actions->permission;
             }
         }
 
         $this->session->set('auth-identity', [
             'userInfo' => $userInfo,
-            'dadosERP' => $colaborador,
+            'dadosERP' => $infoColaborador,
             'profile' => $profile
         ]);
     }
@@ -288,11 +302,10 @@ class Auth extends Component {
      */
     public function getUser() {
         $identity = $this->session->get('auth-identity');
-        if (isset($identity['id'])) {
-
-            $user = Users::findFirstById($identity['id']);
+        if (isset($identity['userInfo']['id'])) {
+            $user = Users::findFirstById($identity['userInfo']['id']);
             if ($user == false) {
-                throw new Exception('The user does not exist');
+                throw new Exception('Este usuário não existe');
             }
 
             return $user;

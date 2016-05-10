@@ -79,7 +79,7 @@
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="userId">Usuário</th>
                         <th data-column-id="groupId">Grupo</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -88,10 +88,7 @@
                         <td>{{ users_group.id }}</td>
                         <td>{{ users_group.users.email }}</td>
                         <td>{{ users_group.groups.name }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/users_groups/edit/'~users_group.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/users_groups/delete')}}', '{{users_group.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/users_groups') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

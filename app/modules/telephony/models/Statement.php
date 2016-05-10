@@ -9,8 +9,9 @@
 
 namespace Telephony\Models;
 
-use DevDenners\Models\ModelBase;
+use SysPhalcon\Models\ModelBase;
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
+use Phalcon\Config as ObjectPhalcon;
 
 class Statement extends ModelBase {
 
@@ -542,7 +543,21 @@ class Statement extends ModelBase {
         ];
     }
 
-    public function importExternalTable() {
+    public function importExternalTable($nameFile = null) {
+
+        if (is_null($nameFile)) {
+            throw new Exception('Nome do arquivo ausente.');
+        }
+
+        $saStatement = new \Telephony\Models\SaStatement();
+
+        $sqlLocation = "ALTER TABLE SA_EXTRATO LOCATION (ETL: 'FAT{$nameFile}.TXT')";
+
+        $location = new Resultset(null, $saStatement, $saStatement->getReadConnection()->query($sqlLocation));
+
+        if (!$location) {
+            throw new Exception('Erro ao alterar location da tabela EXTRATO.');
+        }
 
         $statement = new \Telephony\Models\Statement();
 
@@ -578,59 +593,39 @@ FROM SA_EXTRATO)';
         return $count->toArray(0)[0]['M'];
     }
 
-    public function getRateioDescFolha($comp = NULL) {
+    public function getTotal($linhas, $mes) {
 
-        $query = "
-             SELECT CASE ZH.ZH_EMPRESA
-                        WHEN '01' THEN 'MPE'
-                        WHEN '02' THEN 'EBE'
-                        WHEN '03' THEN 'MPE SERVIÇOS'
-                        WHEN '04' THEN 'GEMON'
-                        WHEN 'D1' THEN 'AAT'
-                        WHEN 'D2' THEN 'GEMON'
-                        WHEN 'D3' THEN 'IRLA'
-                        WHEN 'D4' THEN 'MPE PAINEIS'
-                        WHEN 'D5' THEN 'SOAHGRO'
-                        WHEN 'D6' THEN 'TEIA'
-                        WHEN 'D7' THEN 'VALENÇA'
-                        WHEN 'D8' THEN 'FW GEMON'
-                        WHEN 'D9' THEN 'CANARI'
-                        WHEN 'DA' THEN 'AGROMOM'
-                        ELSE ZH.ZH_EMPRESA END || ' - ' || ZH.ZH_EMPRESA AS EMPRESA,
-                    TRIM(ZH.ZH_NOME) NOME, EX.MESREF,EX.NUMACS,
-                    LC.CPF AS CPF,
-                    CASE
-                      WHEN LC.CCEO IS NULL THEN ZH.ZH_CCEO
-                      ELSE LC.CCEO
-                    END AS ZH_CCEO,
-                    CASE LC.DESC_FOLHA
-                        WHEN '0' THEN 'N'
-                        ELSE LC.DESC_FOLHA
-                    END AS DESC_FOLHA,
-                    REPLACE(TO_CHAR(SUM(EX.VALOR)), '.', ',') AS VALOR
-             FROM (SELECT MESREF, NUMACS, VALOR
-                   FROM EXTRATO
-                   WHERE NUMACS IS NOT NULL) EX
-             LEFT JOIN LINHA_CELULAR LC
-                    ON LC.LINHA = EX.NUMACS
-             LEFT JOIN PRODUCAO_9ZGXI5.SZH010@PROTHEUSPROD ZH
-                    ON D_E_L_E_T_ = ' '
-                   AND TRIM(ZH.ZH_CPF) = REPLACE(REPLACE(TRIM(LC.CPF), '.'), '-')
-             WHERE 1 = 1 AND EX.MESREF = '$comp'
-             GROUP BY ZH.ZH_EMPRESA, ZH.ZH_NOME, EX.MESREF, EX.NUMACS,
-                      LC.CPF, ZH.ZH_CCEO, LC.DESC_FOLHA, LC.CCEO
-             ORDER BY ZH.ZH_EMPRESA, ZH.ZH_NOME";
+        $connection = $this->customConnection('telefoniaDb');
 
+        $query = "SELECT SUM(VALOR) valor FROM EXTRATO
+                WHERE NUMACS = '{$linhas}' AND MESREF = '{$mes}'";
 
-        $statement = new \Telephony\Models\Statement();
+        $result = $connection->select($query);
+        $return = $connection->fetchObject($result);
+        $connection->bye();
+        return $return;
+    }
 
-        $return = new Resultset(null, $statement, $statement->getReadConnection()->query($query));
+    public function getReportByLine($linha, $mes) {
 
-        if ($return == true) {
-            return $return;
-        } else {
-            throw new \Telephony\Controllers\Exception('Erro no relatório de Rateio para Desconto em Folha.');
-        }
+        $connection = $this->customConnection('telefoniaDb');
+
+        $query = "SELECT MESREF, NUMACS, DATA, HORA, ORIGEM, NUMCHAM, TIPO, DURACAO, VALOR FROM EXTRATO
+                WHERE OPERLD IS NOT NULL
+                AND NUMACS = '{$linha}' AND MESREF = '{$mes}'
+                    UNION ALL
+                 SELECT MESREF, NUMACS, DATA, HORA, PLANO, NUMCHAM, TPSERV, DURACAO, VALOR FROM EXTRATO
+                WHERE OPERLD IS NULL
+                AND NUMACS = '{$linha}' AND MESREF = '{$mes}'
+                    UNION ALL
+                SELECT 'TOTAL', '', '', '', '', '', '', '', SUM(VALOR) FROM EXTRATO
+                WHERE NUMACS = '{$linha}' AND MESREF = '{$mes}'
+                ";
+        $result = $connection->select($query);
+        $return = $connection->fetchAll($result);
+        $connection->bye();
+
+        return new ObjectPhalcon($return);
     }
 
 }

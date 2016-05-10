@@ -58,7 +58,7 @@
                         <th data-column-id="cargo">Cargo</th>
                         <th data-column-id="email">E-mail</th>
                         <th data-column-id="cc">CC</th>
-                        <th width='20'>Comandos</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +75,7 @@
                         <td>{{ funcionario.cargo }}</td>
                         <td>{{ funcionario.email }}</td>
                         <td>{{ funcionario.cc }}</td>
-                        <td style="white-space: nowrap">
-                            {{ link_to('nucleo/funcionarios/edit/'~funcionario.id, '<i class="zmdi zmdi-edit"></i>', 'class': 'btn btn-warning btn-sm m-t-5 waves-effect') }}
-                            <button type="button" class="btn btn-danger btn-sm m-t-5 waves-effect" onclick="deleteItem('{{ static_url('nucleo/funcionarios/delete')}}', '{{funcionario.id}}')"><i class="zmdi zmdi-close-circle"></i></button>
-                        </td>
+                        <td>{{ static_url('nucleo/funcionarios') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
