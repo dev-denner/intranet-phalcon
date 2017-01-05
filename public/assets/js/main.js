@@ -1,62 +1,18 @@
-// @koala-prepend "bootgrid/jquery.bootgrid.min.js"
-// @koala-prepend "bootgrid/jquery.bootgrid.fa.min.js"
-// @koala-prepend "jquery-ui.min.js"
-// @koala-prepend "mask.js"
-// @koala-prepend "isotope-2.2.2.js"
-// @koala-prepend "monthPicker.js"
-// @koala-prepend "summernote/summernote.min.js"
-// @koala-prepend "summernote/lang/summernote-pt-BR.js"
-// @koala-prepend "price-format.2.0.min.js"
+// @koala-prepend "mascaras.js"
+// @koala-prepend "formatos.js"
+
 
 $(document).ready(function () {
 
     $('.tooltips').tooltip();
 
-    $('textarea').summernote({
-        lang: 'pt-BR'
-    });
-
-    $('.datepicker').datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "c-40:c+10",
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        showButtonPanel: true,
-        closeText: 'OK',
-        currentText: 'Hoje',
-        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-    });
-    $('.datepicker').mask("99/99/9999");
-    $('.monthPicker').MonthPicker({
-        ShowIcon: false,
-        option: 'Animation',
-        i18n: {
-            year: 'Ano',
-            prevYear: 'Ano Anterior',
-            nextYear: 'Próximo Ano',
-            next12Years: 'Pular 12 Anos Acima',
-            prev12Years: 'Pular 12 Anos Atrás',
-            nextLabel: 'Próximo',
-            prevLabel: 'Anterior',
-            buttonText: 'Escolha o mês',
-            jumpYears: 'Pular Anos',
-            backTo: 'Voltar para',
-            months: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-        }
-    });
-    $('.monthPicker').mask("99/9999");
     $('.grid-isotope').isotope({
         itemSelector: '.grid-item',
         masonry: {
             columnWidth: '.grid-item'
         }
     });
+
     $(".datatable").bootgrid({
         caseSensitive: false,
         searchSettings: {
@@ -77,16 +33,82 @@ $(document).ready(function () {
                 return '<button type="button" class="btn waves-effect bgm-amber tooltips" onclick="editItem(\'' + row.commands + '/edit/\', ' + row.id + ')" title="Editar" data-row-id=' + row.id + '"><span class="zmdi zmdi-edit"></span></button> ' +
                         '<button type="button" class="btn waves-effect bgm-red tooltips" onclick="deleteItem(\'' + row.commands + '/delete/\', ' + row.id + ')" title="Deletar" data-row-id="' + row.id + '"><span class="zmdi zmdi-delete"></span></button>';
             },
+            commands2: function (column, row) {
+
+                var edit = '<button type="button" class="btn waves-effect bgm-amber tooltips" onclick="editItem(\'' + row.commands + '/edit/\', ' + row.sequence + ')" title="Editar" data-row-id=' + row.sequence + '"><span class="zmdi zmdi-edit"></span></button> ';
+                var view = '<a href="/downloads/coleta_rescisao/' + row.sequence + '/' + row.sequence + '.pdf" class="btn waves-effect bgm-cyan tooltips" title="Visualizar" target="_new"><span class="glyphicon glyphicon-eye-open"></span></a> ';
+                var send = '<button type="button" class="btn waves-effect bgm-green tooltips" onclick="enviarRequisicao(\'' + row.sequence + '\')" title="Enviar"><span class="glyphicon glyphicon-send"></span></button>';
+                if (row.status.trim() == 'Aberto') {
+                    return edit + send;
+                } else {
+                    return view;
+                }
+            },
+            commands3: function (column, row) {
+
+                var close = '<button type="button" class="btn waves-effect bgm-green tooltips" onclick="editItem(\'' + row.commands + '/close/\', ' + row.id + ')" title="Encerrar"><span class="zmdi zmdi-close"></span></button>';
+                var del = '<button type="button" class="btn waves-effect bgm-red tooltips" onclick="deleteItem(\'' + row.commands + '/delete/\', ' + row.id + ')" title="Deletar" data-row-id="' + row.id + '"><span class="zmdi zmdi-delete"></span></button>';
+
+                if (row.status.trim() == 'Aberto') {
+                    return close + del;
+                } else {
+                    return del;
+                }
+
+
+            },
             icon: function (column, row) {
                 return '<span class="f-20"><i class="' + row.icon + '"></i></span>';
+            },
+            linkOtrs: function (column, row) {
+                var elements = row.Chamado.split('|');
+                return '<a href="http://otrs.grupompe.com.br/otrs/index.pl?Action=AgentTicketZoom;TicketID=' + elements[0] + '" target="_new">' + elements[1] + '</a>';
+            },
+            link: function (column, row) {
+                var elements = row.link.split('|');
+                return '<a href="' + elements[0] + '" target="_new">' + elements[1] + '</a>';
             }
         }
     });
 
-    $('.formatMoney').priceFormat({
-        prefix: 'R$ ',
-        centsSeparator: ',',
-        thousandsSeparator: '.'
+    $('.datatable2').dataTable({
+        "aLengthMenu": [[10, 25, 50, 75, 100, -1], [10, 25, 50, 75, 100, "All"]],
+        "iDisplayLength": 100
+    });
+
+    $(".datatable2").tablecloth({
+        theme: "stats",
+        bordered: true,
+        condensed: true,
+        striped: true,
+        sortable: true,
+        clean: true,
+        cleanElements: "th td",
+        customClass: "table table-hover"
+    });
+
+
+
+    $('.lc-block.valid-block li[data-block]').bind('click', function () {
+        var inputs = $(this).parents('.lc-block').find('input:not(input[type=hidden])').val();
+        if (inputs != '') {
+            $(this).parents('.lc-block').find('button[type=submit]').addClass("pulse");
+            setTimeout(function () {
+                $(".pulse").removeClass("pulse");
+            }, 9999);
+            return false;
+        }
+    });
+
+    $(".fileUpload").fileinput({
+        language: "pt-BR",
+        previewFileType: "any",
+        allowedFileTypes: ["jpg", "jpeg", "png", "gif", "pdf", "doc", "docx", "txt", "zip", "rar", "gz", "tgz"],
+        previewClass: "bg-default",
+        showUpload: false,
+        maxFileSize: 15360,
+        maxFilePreviewSize: 15360,
+        overwriteInitial: false,
     });
 
     overlay(false);
@@ -148,5 +170,6 @@ var deleteItem = function (url, id) {
 }
 
 var editItem = function (url, id) {
+    overlay(true);
     window.location.href = url + id;
 }

@@ -32,11 +32,14 @@ class ControllersController extends ControllerBase {
             $this->view->controllers = Controllers::find();
             $this->view->pesquisa = '';
             if ($this->request->isPost()) {
-                $search = "(UPPER(title) LIKE UPPER('%" . $this->request->getPost('controllers', 'string') . "%') OR UPPER(slug) LIKE UPPER('%" . $this->request->getPost('controllers', 'string') . "%'))";
+                $post = $this->request->getPost('controllers', 'string');
+                $search = "(UPPER(title) LIKE UPPER('%" . $post . "%')
+                         OR UPPER(slug) LIKE UPPER('%" . $post . "%')
+                         OR UPPER(description) LIKE UPPER('%" . $post . "%'))";
                 $this->view->controllers = Controllers::find($search);
                 $this->view->pesquisa = $this->request->getPost('controllers');
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -70,6 +73,7 @@ class ControllersController extends ControllerBase {
             $this->tag->setDefault('id', $controller->getId());
             $this->tag->setDefault('title', $controller->getTitle());
             $this->tag->setDefault('slug', $controller->getSlug());
+            $this->tag->setDefault('description', $controller->getDescription());
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/controllers');
@@ -92,6 +96,7 @@ class ControllersController extends ControllerBase {
             $controller->setId($controller->autoincrement());
             $controller->setTitle($this->request->getPost('title'));
             $controller->setSlug($this->request->getPost('slug'));
+            $controller->setDescription($this->request->getPost('description'));
 
             if (!$controller->create()) {
                 $msg = '';
@@ -130,6 +135,7 @@ class ControllersController extends ControllerBase {
             $controller->setId($this->request->getPost('id'));
             $controller->setTitle($this->request->getPost('title'));
             $controller->setSlug($this->request->getPost('slug'));
+            $controller->setDescription($this->request->getPost('description'));
 
             if (!$controller->update()) {
 

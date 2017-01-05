@@ -57,7 +57,7 @@ class CategoriesController extends ControllerBase {
             } else {
                 $id = $this->filter->sanitize($idDepartment, 'alphanum');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -65,7 +65,7 @@ class CategoriesController extends ControllerBase {
     public function comercialCatsAction() {
         try {
             $this->view->idDepartment = 2;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -74,7 +74,7 @@ class CategoriesController extends ControllerBase {
     public function contabilidadeFiscalCatsAction() {
         try {
             $this->view->idDepartment = 3;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -83,7 +83,7 @@ class CategoriesController extends ControllerBase {
     public function gestaoPessoasCatsAction() {
         try {
             $this->view->idDepartment = 4;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -92,7 +92,7 @@ class CategoriesController extends ControllerBase {
     public function financeiroCatsAction() {
         try {
             $this->view->idDepartment = 5;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -101,7 +101,7 @@ class CategoriesController extends ControllerBase {
     public function juridicoCatsAction() {
         try {
             $this->view->idDepartment = 6;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -110,7 +110,7 @@ class CategoriesController extends ControllerBase {
     public function sgiCatsAction() {
         try {
             $this->view->idDepartment = 7;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -119,7 +119,7 @@ class CategoriesController extends ControllerBase {
     public function suprimentosCatsAction() {
         try {
             $this->view->idDepartment = 8;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');
@@ -128,7 +128,7 @@ class CategoriesController extends ControllerBase {
     public function ticCatsAction() {
         try {
             $this->view->idDepartment = 9;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/categories/index');

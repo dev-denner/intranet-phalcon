@@ -100,4 +100,12 @@ class DocumentsController extends ControllerBase {
         $this->view->pick('intranet/documents/index');
     }
 
+    public function gestaoPessoasPortalRhAction() {
+        try {
+            $this->view->departaments = Departments::findById(4);
+        } catch (Exception $exc) {
+            $this->flash->error($e->getMessage());
+        }
+    }
+
 }

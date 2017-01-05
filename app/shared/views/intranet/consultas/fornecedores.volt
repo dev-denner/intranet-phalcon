@@ -47,13 +47,13 @@
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
-            <table class="table table-striped table-vmiddle datatable">
+            <table class="table table-striped table-vmiddle datatable2">
                 <thead>
                     <tr>
                         <th data-column-id="CODIGO">CÓDIGO</th>
                         <th data-column-id="LOJA">LOJA</th>
                         <th data-column-id="NOME">NOME</th>
-                        <th data-column-id="CGC">CNPJ</th>
+                        <th data-column-id="CNPJ">CNPJ</th>
                         <th data-column-id="UF">UF</th>
                         <th data-column-id="MUNICIPIO">MUNICÍPIO</th>
                         <th data-column-id="BLQ">BLQ</th>
@@ -65,7 +65,7 @@
                         <td>{{ fornecedor.CODIGO }}</td>
                         <td>{{ fornecedor.LOJA }}</td>
                         <td>{{ fornecedor.NOME }}</td>
-                        <td>{{ fornecedor.CGC }}</td>
+                        <td>{{ fornecedor.CNPJ }}</td>
                         <td>{{ fornecedor.UF }}</td>
                         <td>{{ fornecedor.MUNICIPIO }}</td>
                         <td>{{ fornecedor.BLQ }}</td>

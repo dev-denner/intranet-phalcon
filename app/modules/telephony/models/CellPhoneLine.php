@@ -320,7 +320,6 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('TELEFONIA');
         $this->setConnectionService('telefoniaDb');
 
         $this->addBehavior(new SoftDelete([
@@ -351,10 +350,10 @@ use beforeUpdate;
             'DESC_FOLHA' => 'descontaFolha',
             'CCEO' => 'cceo',
             'SDEL' => 'sdel',
-            'DATAINCLUSO' => 'createIn',
             'USUARIO' => 'createBy',
-            'UPDATEBY' => 'updateIn',
-            'UPDATEIN' => 'updateBy',
+            'DATAINCLUSO' => 'createIn',
+            'UPDATEBY' => 'updateBy',
+            'UPDATEIN' => 'updateIn',
         ];
     }
 

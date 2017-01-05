@@ -7,14 +7,36 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <style type="text/css">
             /* CLIENT-SPECIFIC STYLES */
-            body, table, td, a{-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
-            table, td{mso-table-lspace: 0pt; mso-table-rspace: 0pt;} /* Remove spacing between tables in Outlook 2007 and up */
-            img{-ms-interpolation-mode: bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+            body, table, td, a{
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+            /* Prevent WebKit and Windows mobile changing default text sizes */
+            table, td{
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+            }
+            /* Remove spacing between tables in Outlook 2007 and up */
+            img{
+                -ms-interpolation-mode: bicubic;
+            }
+            /* Allow smoother rendering of resized image in Internet Explorer */
 
             /* RESET STYLES */
-            img{border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none;}
-            table{border-collapse: collapse !important;}
-            body{height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important;}
+            img{
+                border: 0;
+                height: auto;
+                line-height: 100%;
+                outline: none; text-decoration: none;
+            }
+            table{
+                border-collapse: collapse !important;
+            }
+            body{
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
 
             /* iOS BLUE LINKS */
             a[x-apple-data-detectors] {
@@ -108,7 +130,9 @@
                 text-align: justify;
             }
             /* ANDROID CENTER FIX */
-            div[style*="margin: 16px 0;"] { margin: 0 !important; }
+            div[style*="margin: 16px 0;"] {
+                margin: 0 !important;
+            }
         </style>
     </head>
     <body style="margin: 0 !important; padding: 0 !important;">

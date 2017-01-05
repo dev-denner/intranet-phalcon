@@ -17,8 +17,12 @@ and open the template in the editor.
         .actions{
             .pull-left;
         }
+        .dropdown-menu.pull-right {
+            right: inherit;
+        }
     }
 }
+
 .bootgrid-table{
     thead{
         tr{
@@ -45,6 +49,15 @@ and open the template in the editor.
                 &[data-column-id=commands]{
                     width: 5%;
                 }
+
+                >.column-header-anchor{
+                    >.icon {
+                        top: 2;
+                        right: 0;
+                        font-size: 12px;
+                    }
+                }
+
             }
         }
     }
@@ -82,12 +95,16 @@ and open the template in the editor.
                 }
             }
             > a, > span{
-                width: 30px;
-                height: 30px;
-                line-height: 28px;
-                font-size: 11px;
                 background-color: #eaf3d9;
 
+            }
+        }
+        > .active{
+            > a, > span{
+                z-index: 2;
+                &:hover, &:focus{
+                    z-index: 2;
+                }
             }
         }
     }

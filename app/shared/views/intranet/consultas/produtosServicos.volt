@@ -50,10 +50,10 @@
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
-            <table class="table table-striped table-vmiddle datatable">
+            <table class="table table-striped table-vmiddle datatable2">
                 <thead>
                     <tr>
-                        <th data-column-id="CODIGO" data-type="numeric">CÓDIGO</th>
+                        <th data-column-id="CODIGO">CÓDIGO</th>
                         <th data-column-id="DESCRICAO">DESCRIÇÃO</th>
                         <th data-column-id="DESCRICAO_COMPLETA">DESCRIÇÃO COMPLETA</th>
                         <th data-column-id="DESCRICAO_GRUPO">GRUPO</th>

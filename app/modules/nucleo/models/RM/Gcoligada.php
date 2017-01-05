@@ -40,4 +40,23 @@ class Gcoligada extends ModelBase {
         ];
     }
 
+    public function getColigada($search = '') {
+
+        if (!empty($search)) {
+            $search = "AND (UPPER(NOMEFANTASIA) LIKE UPPER('%{$search}%')
+                         OR UPPER(CGC) LIKE UPPER('%{$search}%'))";
+        }
+
+        $query = "SELECT CODCOLIGADA,
+                         NOME,
+                         CGC
+                  FROM RM.GCOLIGADA
+                  WHERE CODCOLIGADA <> 0
+                    {$search}
+                  ORDER BY 1";
+
+        $connection = $this->customSimpleQuery('rmDb');
+        return $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
+    }
+
 }

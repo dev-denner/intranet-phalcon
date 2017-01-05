@@ -1,3 +1,12 @@
+<style type="text/css">
+    body{
+        background-image: url('{{ static_url() }}assets/img/logos/empresas/{{ logo }}.png');
+        background-repeat: no-repeat;
+        background-position: 97% 99%;
+        background-blend-mode: soft-light;
+    }
+</style>
+
 <body>
     <header id="header" class="clearfix" data-current-skin="green">
         <ul class="header-inner">
@@ -23,7 +32,7 @@
                             <label for="tw-switch" class="ts-helper"></label>
                         </div>
                     </li>
-                    <li class="" id="chat-trigger" data-trigger="#chat" title="Aplicativos Externos">
+                    <li class="chat-trigger" id="chat-trigger" data-trigger="#chat" title="Aplicativos Externos">
                         <a href=""><i class="tm-icon zmdi zmdi-view-comfy"></i></a>
                     </li>
                 </ul>
@@ -76,7 +85,7 @@
                 <h6 class="m-l-10 text-muted">Aplicativos via Web</h6>
 
                 <!-- WEBMAIL -->
-                <a class="lv-item" href="https://webmail2.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="https://webmail2.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/zimbra.png') }}" alt="">
@@ -90,7 +99,7 @@
                 <!-- WEBMAIL -->
 
                 <!-- ECM -->
-                <a class="lv-item" href="http://ecm.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="http://ecm.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/totvs.png') }}" alt="">
@@ -104,7 +113,7 @@
                 <!-- /ECM -->
 
                 <!-- PORTAL RH -->
-                <a class="lv-item" href="http://portalrh.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="http://portalrh.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/totvs.png') }}" alt="">
@@ -118,7 +127,7 @@
                 <!-- /PORTAL RH -->
 
                 <!-- PROTHEUS WEB -->
-                <a class="lv-item" href="http://mpe.totvs.com.br:8088/" target="_new">
+                <a class="lv-item" href="http://mpe.totvs.com.br:8088/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/totvs.png') }}" alt="">
@@ -132,7 +141,7 @@
                 <!-- /PROTHEUS WEB -->
 
                 <!-- BI -->
-                <a class="lv-item" href="http://bi.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="http://bi.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/microstrategy.png') }}" alt="">
@@ -146,7 +155,7 @@
                 <!-- /BI -->
 
                 <!-- OTRS -->
-                <a class="lv-item" href="http://otrs.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="http://otrs.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/otrs.png') }}" alt="">
@@ -160,7 +169,7 @@
                 <!-- /OTRS -->
 
                 <!-- GESTOR -->
-                <a class="lv-item" href="https://www.grupompe.com.br/gestor" target="_new">
+                <a class="lv-item" href="https://www.grupompe.com.br/gestor" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/siscorp.png') }}" alt="">
@@ -174,7 +183,7 @@
                 <!-- /GESTOR -->
 
                 <!-- MPEBOX -->
-                <a class="lv-item" href="http://mpebox.grupompe.com.br/" target="_new">
+                <a class="lv-item" href="http://mpebox.grupompe.com.br/" target="_blank">
                     <div class="media">
                         <div class="pull-left p-relative">
                             <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/owncloud.png') }}" alt="">
@@ -186,6 +195,20 @@
                     </div>
                 </a>
                 <!-- /MPEBOX -->
+
+                <!-- SPARK -->
+                <a class="lv-item" href="http://chat.grupompe.com.br/" target="_blank">
+                    <div class="media">
+                        <div class="pull-left p-relative">
+                            <img class="lv-img-sm" src="{{ static_url('assets/img/logos/apps/spark.png') }}" alt="">
+                        </div>
+                        <div class="media-body">
+                            <div class="lv-title">Spark Web</div>
+                            <small class="lv-small">Chat online</small>
+                        </div>
+                    </div>
+                </a>
+                <!-- /SPARK -->
 
                 <h6 class="m-l-10 text-muted">Aplicativos via Terminal Services</h6>
 
@@ -223,7 +246,7 @@
 
         <section id="content">
             <div class="container">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb hidden-print">
                     {{ breadcrumbs.output() }}
                 </ol>
                 {{ flash.output() }}
@@ -237,5 +260,4 @@
 <!-- <br /> Make with <strong>Phalcon</strong> <em>v. <?php echo Phalcon\Version::get(); ?></em>-->
         </p>
     </footer>
-
-    <script src="{{ static_url('assets/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.min.js') }}"></script>
+    <script src="{{ static_url('assets/vendors/bower_components/bootstrap-sweetalert/dist/sweetalert.min.js') }}"></script>

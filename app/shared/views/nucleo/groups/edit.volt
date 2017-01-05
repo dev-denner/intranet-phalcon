@@ -13,7 +13,7 @@
                 {{ hidden_field("id", 'required': 'required') }}
                 <div class="form-group fg-float">
                     <div class="fg-line">
-                        {{ text_field("name", "class" : "form-control fg-input", 'required': 'required') }}
+                        {{ text_field("title", "class" : "form-control fg-input", 'required': 'required') }}
                         <label class="fg-label">Nome do grupo</label>
                     </div>
                 </div>
@@ -41,19 +41,19 @@
                         Grupo Público?
                     </label>
                     <label class="radio radio-inline m-r-20">
-                        {% if isPublic is 'S' %}
-                        {{ radio_field('isPublic', 'value': 'S', 'checked': 'checked') }}
+                        {% if type is 'S' %}
+                        {{ radio_field('type', 'value': 'S', 'checked': 'checked') }}
                         {% else %}
-                        {{ radio_field('isPublic', 'value': 'S') }}
+                        {{ radio_field('type', 'value': 'S') }}
                         {% endif %}
                         <i class="input-helper"></i>
                         SIM
                     </label>
                     <label class="radio radio-inline m-r-20">
-                        {% if isPublic is 'N' %}
-                        {{ radio_field('isPublic', 'value': 'N', 'checked': 'checked') }}
+                        {% if type is 'N' %}
+                        {{ radio_field('type', 'value': 'N', 'checked': 'checked') }}
                         {% else %}
-                        {{ radio_field('isPublic', 'value': 'N') }}
+                        {{ radio_field('type', 'value': 'N') }}
                         {% endif %}
                         <i class="input-helper"></i>
                         Não

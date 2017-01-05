@@ -213,21 +213,53 @@ class UsersController extends ControllerBase {
     public function infoUserAction($cpf = null) {
         try {
 
-            if (is_null($cpf)) {
-                $cpf = $this->request->getPost('cpf', 'alphanum');
-            }
             $colaborador = new Colaboradores();
             $return = $colaborador->getDadosFuncionario($cpf);
 
-            if ($this->request->isAjax()) {
-                $this->view->disable();
-                if (is_null($return)) {
-                    echo 'Não encontrado';
-                } else {
-                    echo json_encode($return);
-                }
+            return $return;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
+    public function infoUserAjaxAction() {
+        try {
+
+            if (!$this->request->isAjax()) {
+                throw new Exception('Acesso não permitido a essa action.');
+            }
+
+            $this->view->disable();
+            $aux = explode('@', $this->request->getPost('search'));
+            if (isset($aux[1])) {
+                $search = $this->request->getPost('search', 'email');
             } else {
-                return $return;
+                $search = $this->request->getPost('search', 'alphanum');
+            }
+            $all = $this->request->getPost('all');
+
+            if (empty($search)) {
+                return false;
+            }
+
+            $colaborador = new Colaboradores();
+
+            if (is_null($all)) {
+                $return = $colaborador->getColaboradorByCpf($search);
+            } else {
+                if (!isset($aux[1])) {
+                    $return = $colaborador->getColaborador($search);
+                } else {
+                    $return = $colaborador->getColaboradorByEmail($search);
+                }
+            }
+
+            if (is_null($return)) {
+                echo 'Não encontrado';
+                return false;
+            } else {
+                echo json_encode($return);
+                return true;
             }
         } catch (Exception $exc) {
             echo $exc->getMessage();

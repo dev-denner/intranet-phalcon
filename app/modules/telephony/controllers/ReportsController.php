@@ -13,14 +13,17 @@ use SysPhalcon\Controllers\ControllerBase;
 use SysPhalcon\Plugins\Tools;
 use Telephony\Models\Reports;
 
-class ReportsController extends ControllerBase {
+class ReportsController extends ControllerBase
+{
 
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle('Relatórios');
         parent::initialize();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
 
         try {
             $this->assets->collection('footerJs')->addJs('app/telephony/reports/index.js');

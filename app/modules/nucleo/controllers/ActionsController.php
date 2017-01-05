@@ -32,11 +32,14 @@ class ActionsController extends ControllerBase {
             $this->view->actions = Actions::find();
             $this->view->pesquisa = '';
             if ($this->request->isPost()) {
-                $search = "(UPPER(title) LIKE UPPER('%" . $this->request->getPost('actions', 'string') . "%') OR UPPER(slug) LIKE UPPER('%" . $this->request->getPost('actions', 'string') . "%'))";
+                $post = $this->request->getPost('actions', 'string');
+                $search = "(UPPER(title) LIKE UPPER('%" . $post . "%')
+                         OR UPPER(slug) LIKE UPPER('%" . $post . "%')
+                         OR UPPER(description) LIKE UPPER('%" . $post . "%'))";
                 $this->view->actions = Actions::find($search);
                 $this->view->pesquisa = $this->request->getPost('actions');
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -70,7 +73,8 @@ class ActionsController extends ControllerBase {
             $this->tag->setDefault('id', $action->getId());
             $this->tag->setDefault('title', $action->getTitle());
             $this->tag->setDefault('slug', $action->getSlug());
-        } catch (Exception $exc) {
+            $this->tag->setDefault('description', $action->getDescription());
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/actions');
         }
@@ -92,6 +96,7 @@ class ActionsController extends ControllerBase {
             $action->setId($action->autoincrement());
             $action->setTitle($this->request->getPost('title'));
             $action->setSlug($this->request->getPost('slug'));
+            $action->setDescription($this->request->getPost('description'));
 
             if (!$action->create()) {
                 $msg = '';
@@ -102,7 +107,7 @@ class ActionsController extends ControllerBase {
             }
 
             $this->flash->success('Ação gravada com sucesso!!!');
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
         }
         return $this->response->redirect('nucleo/actions');
@@ -124,12 +129,13 @@ class ActionsController extends ControllerBase {
 
             $action = Actions::findFirstByid($id);
             if (!$action) {
-                throw new Exception('Ação não encontrado!');
+                throw new \Exception('Ação não encontrado!');
             }
 
             $action->setId($this->request->getPost('id'));
             $action->setTitle($this->request->getPost('title'));
             $action->setSlug($this->request->getPost('slug'));
+            $action->setDescription($this->request->getPost('description'));
 
             if (!$action->update()) {
 
@@ -137,11 +143,11 @@ class ActionsController extends ControllerBase {
                 foreach ($action->getMessages() as $message) {
                     $msg .= $message . '<br />';
                 }
-                throw new Exception($msg);
+                throw new \Exception($msg);
             }
 
             $this->flash->success('Ação atualizada com sucesso!!!');
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
         }
         return $this->response->redirect('nucleo/actions');
@@ -156,7 +162,7 @@ class ActionsController extends ControllerBase {
 
         try {
             if (!$this->request->isPost()) {
-                throw new Exception('Acesso não permitido a essa action.');
+                throw new \Exception('Acesso não permitido a essa action.');
             }
 
             if ($this->request->isAjax()) {
@@ -167,7 +173,7 @@ class ActionsController extends ControllerBase {
 
             $action = Actions::findFirstByid($id);
             if (!$action) {
-                throw new Exception('Ação não encontrada!');
+                throw new \Exception('Ação não encontrada!');
             }
 
             if (!$action->delete()) {
@@ -176,10 +182,10 @@ class ActionsController extends ControllerBase {
                 foreach ($action->getMessages() as $message) {
                     $msg .= $message . '<br />';
                 }
-                throw new Exception($msg);
+                throw new \Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/actions');
         }

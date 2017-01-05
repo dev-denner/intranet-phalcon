@@ -52,6 +52,18 @@ use beforeUpdate;
 
     /**
      *
+     * @var string
+     */
+    protected $type;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $position;
+
+    /**
+     *
      * @var integer
      */
     protected $controller;
@@ -411,21 +423,53 @@ use beforeUpdate;
     }
 
     /**
+     *
+     * @return type
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getPosition() {
+        return $this->position;
+    }
+
+    /**
+     *
+     * @param type $type
+     * @return \Nucleo\Models\Menus
+     */
+    public function setType($type) {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     *
+     * @param type $position
+     * @return \Nucleo\Models\Menus
+     */
+    public function setPosition($position) {
+        $this->position = $position;
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize() {
 
         parent::initialize();
 
-        $this->setSchema('NUCLEO');
-
         $this->belongsTo('department', __NAMESPACE__ . '\Departments', 'id', ['alias' => 'Departments']);
         $this->belongsTo('category', __NAMESPACE__ . '\Categories', 'id', ['alias' => 'Categories']);
         $this->belongsTo('module', __NAMESPACE__ . '\Modules', 'id', ['alias' => 'Modules']);
         $this->belongsTo('controller', __NAMESPACE__ . '\Controllers', 'id', ['alias' => 'Controllers']);
         $this->belongsTo('action', __NAMESPACE__ . '\Actions', 'id', ['alias' => 'Actions']);
-
-
 
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
             'field' => 'sdel',
@@ -459,6 +503,8 @@ use beforeUpdate;
             'CD_ACAO' => 'action',
             'CD_CATEGORIA' => 'category',
             'DS_ICONE' => 'icon',
+            'CD_TIPO' => 'type',
+            'NO_POSICAO' => 'position',
             'SDEL' => 'sdel',
             'CREATEBY' => 'createBy',
             'CREATEIN' => 'createIn',

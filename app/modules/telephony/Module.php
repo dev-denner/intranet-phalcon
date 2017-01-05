@@ -11,9 +11,6 @@ namespace Telephony;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
-use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Engine\Volt;
-use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Mvc\Dispatcher;
 
@@ -69,7 +66,6 @@ class Module implements ModuleDefinitionInterface {
      */
     public function registerServices(DiInterface $di) {
 
-        return $di;
     }
 
 }

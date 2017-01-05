@@ -405,12 +405,7 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('NUCLEO');
-
-        $this->hasMany('id', __NAMESPACE__ . '\Logins', 'userId', ['alias' => 'Logins',]);
-        $this->hasMany('id', __NAMESPACE__ . '\Notifications', 'userId', ['alias' => 'Notifications']);
         $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'user', ['alias' => 'Perfils']);
-        $this->hasMany('id', __NAMESPACE__ . '\Tokens', 'usersId', ['alias' => 'Tokens']);
         $this->hasMany('id', __NAMESPACE__ . '\UsersGroups', 'userId', ['alias' => 'UsersGroups']);
 
         $this->addBehavior(new SoftDelete([
@@ -425,7 +420,7 @@ use beforeUpdate;
      * @return string
      */
     public function getSource() {
-        return 'USUARIO';
+        return 'USUARIO_INT';
     }
 
     /**

@@ -1,6 +1,7 @@
 <div class="block-header">
     <h2>{{ auth_identity.nome }} <small>{{ auth_identity.funcao }}</small></h2>
 </div>
+
 <div class="card" id="profile-main">
     <div class="pm-overview c-overflow">
         <div class="pmo-pic">

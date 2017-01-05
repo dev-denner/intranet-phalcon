@@ -4,7 +4,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="card">
             <div class="card-header">
-                <h2>Acessos Exclusivos CPF x Linhas <small>Insira os dados para atualizar o acesso exclusivo cpf x linha.</small></h2>
+                <h2>Acessos Exclusivos a Linhas <small>Insira os dados para atualizar o acesso exclusivo cpf x linha.</small></h2>
             </div>
 
             <div class="card-body card-padding">

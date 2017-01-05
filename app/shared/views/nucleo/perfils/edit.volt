@@ -8,7 +8,7 @@
     </div>
 
     <div class="card-body card-padding">
-        {{ form("nucleo/perfils/save", "method":"post", "autocomplete" : "off") }}
+        {{ form("nucleo/perfils/save", "method":"post", "autocomplete" : "off", 'onsubmit': 'overlay(true)') }}
 
         {{ hidden_field("id", 'required': 'required') }}
         <div class="row">
@@ -39,8 +39,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(['order' => 'name']),
-                                'using' => ['id', 'name'],
+                                \Nucleo\Models\Groups::find(['order' => 'title']),
+                                'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',
@@ -60,8 +60,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['module',
-                                \Nucleo\Models\Modules::find(['order' => 'name']),
-                                'using' => ['id', 'name'],
+                                \Nucleo\Models\Modules::find(['order' => 'title']),
+                                'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',

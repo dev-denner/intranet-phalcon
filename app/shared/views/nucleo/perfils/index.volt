@@ -35,8 +35,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(['order' => 'name']),
-                                'using' => ['id', 'name'],
+                                \Nucleo\Models\Groups::find(['order' => 'title']),
+                                'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',
@@ -99,10 +99,10 @@
                         </td>
                         <td>
                             {% if perfil.groups is true %}
-                            {{ perfil.groups.name }}
+                            {{ perfil.groups.title }}
                             {% endif %}
                         </td>
-                        <td>{{ perfil.modules.name }}</td>
+                        <td>{{ perfil.modules.title }}</td>
                         <td>{{ perfil.controllers.title }}</td>
                         <td>{{ perfil.actions.title }}</td>
                         <td>{{ perfil.permission }}</td>

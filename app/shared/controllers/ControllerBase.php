@@ -9,13 +9,13 @@
 
 namespace SysPhalcon\Controllers;
 
+use Nucleo\Models\Mysql\Clicks;
 use Phalcon\Mvc\Controller;
-use Phalcon\DI\FactoryDefault as Di;
 use Phalcon\Mvc\Dispatcher as Dispatcher;
 use Phalcon\Config as ObjectPhalcon;
-use Noherczeg\Breadcrumb\Breadcrumb;
 
-class ControllerBase extends Controller {
+class ControllerBase extends Controller
+{
 
     /**
      *
@@ -27,21 +27,21 @@ class ControllerBase extends Controller {
      *
      * @var type
      */
-    protected $bc = '';
+    protected $entity;
 
     /**
      *
      * @var type
      */
-    protected $entity;
+    protected $auth_identity;
 
     /**
      *
      */
-    public function initialize() {
+    public function initialize()
+    {
 
-        $di = $this->di->get('config');
-        $this->uri = $di->application->baseUri;
+        $this->uri = $this->url->getBaseUri();
 
         $this->tag->prependTitle('Intranet :: ');
         $this->tag->appendTitle(' :: Grupo MPE');
@@ -55,22 +55,26 @@ class ControllerBase extends Controller {
         $this->view->setTemplateBefore('main');
         $this->view->titleLogo = 'Grupo MPE';
 
-        $this->breadcrumb($moduleName, $controllerName, $actionName);
-        $this->view->breadcrumb = $this->bc;
 
+        $this->auth_identity = $this->auth_identity();
 
-        $auth_identity = $this->auth_identity();
-        $this->view->icon_identity = $auth_identity->sexo == 'F' ? 'female' : 'male';
-        $this->view->auth_identity = $auth_identity;
+        $this->breadcrumb($moduleName, $controllerName, $actionName); //componente
+        if ($this->session->has('auth-identity')) {
+            $this->view->icon_identity = $this->auth_identity->sexo == 'F' ? 'female' : 'male'; //componente
+            $this->view->auth_identity = $this->auth_identity; //componente
+            $this->view->logo = $this->auth_identity->empresa; //componente
+        }
+        $this->clicksPerPage($moduleName, $controllerName, $actionName);
     }
 
     /**
      *
      * @return ObjectPhalcon
      */
-    private function auth_identity() {
+    private function auth_identity()
+    {
         $return = [];
-        if (!empty($this->session->get('auth-identity'))) {
+        if ($this->session->has('auth-identity')) {
             $auth_identity = new ObjectPhalcon($this->session->get('auth-identity'));
             if (!empty($auth_identity->dadosERP)) {
                 $return['nome'] = ucwords(strtolower($auth_identity->dadosERP->NOME));
@@ -81,7 +85,6 @@ class ControllerBase extends Controller {
                 $return['codSituacao'] = $auth_identity->dadosERP->SITUACAO;
                 $return['cceo'] = $auth_identity->dadosERP->CCEO;
                 $return['codSecao'] = $auth_identity->dadosERP->CODSECAO;
-
                 $return['pessoa'] = $auth_identity->dadosERP->PESSOA;
                 $return['emailPessoal'] = $auth_identity->dadosERP->EMAILPESSOAL;
                 $return['cnpj'] = $auth_identity->dadosERP->CNPJ;
@@ -98,13 +101,29 @@ class ControllerBase extends Controller {
                 $return['dataNascimento'] = $auth_identity->dadosERP->DATANASCIMENTO;
                 $return['sexo'] = $auth_identity->dadosERP->SEXO;
                 $return['tipoFuncionario'] = $auth_identity->dadosERP->TIPOFUNC;
+                $return['contrato'] = $this->getContract($auth_identity->dadosERP->CCEO);
             }
             $return['userId'] = $auth_identity->userInfo->id;
             $return['userCpf'] = $auth_identity->userInfo->cpf;
             $return['email'] = $auth_identity->userInfo->email;
             $return['userName'] = $auth_identity->userInfo->userName;
         }
-        return new ObjectPhalcon($return);
+        return (object) $return;
+    }
+
+    /**
+     *
+     * @param type $contract
+     * @return type
+     */
+    private function getContract($contract)
+    {
+
+        if (substr($contract, 0, 1) == '1') {
+            return substr($contract, 0, 7);
+        } else {
+            return substr($contract, 0, 4);
+        }
     }
 
     /**
@@ -113,145 +132,208 @@ class ControllerBase extends Controller {
      * @param type $controllerName
      * @param type $actionName
      */
-    private function breadcrumb($moduleName, $controllerName, $actionName) {
-
-        $this->breadcrumbs->setTemplate(
-                '<li><a href="{{link}}">{{icon}}{{label}}</a></li>', // linked
-                '<li class="active">{{icon}}{{label}}</li>', // not linked
-                '<i class="fa fa-home"></i> ' // first icon
-        );
+    private function breadcrumb($moduleName, $controllerName, $actionName)
+    {
 
         $this->breadcrumbs->setSeparator('');
 
         if ($controllerName == 'index' && $actionName == 'index') {
             $this->breadcrumbs->add($moduleName, null, ['linked' => false]);
         } else {
-            $this->breadcrumbs->add($moduleName, $moduleName);
+            $this->breadcrumbs->add($moduleName, $this->uri . $moduleName);
         }
         if ($controllerName != 'index') {
             if ($actionName == 'index') {
                 $this->breadcrumbs->add($controllerName, null, ['linked' => false]);
             } else {
-                $this->breadcrumbs->add($controllerName, $controllerName);
+                $this->breadcrumbs->add($controllerName, $this->uri . $moduleName . '/' . $controllerName);
             }
         }
         if ($actionName != 'index') {
             $this->breadcrumbs->add($actionName, null, ['linked' => false]);
         }
+        $this->breadcrumbs->setTemplate(
+                  '<li><a href="{{link}}">{{icon}}{{label}}</a></li>', // linked
+                  '<li class="active">{{icon}}{{label}}</li>', // not linked
+                  '<i class="fa fa-home"></i> ' // first icon
+        );
     }
 
     /**
      *
      * @param Dispatcher $dispatcher
      */
-    public function beforeExecuteRoute(Dispatcher $dispatcher) {
+    public function beforeExecuteRoute(Dispatcher $dispatcher)
+    {
 
         try {
-
-            $identity = $this->auth->getIdentity();
-
             $moduleCurrent = $dispatcher->getModuleName();
             $controllerCurrent = $dispatcher->getControllerName();
             $actionCurrent = $dispatcher->getActionName();
 
-            if (is_null($identity)) {
+            if (!$this->session->has('auth')) {
+
                 if (!$this->access->isAllowed('public', $moduleCurrent, $controllerCurrent, $actionCurrent)) {
                     if ($moduleCurrent . $controllerCurrent . $actionCurrent == 'intranetindexindex') {
-                        return $this->response->redirect('login');
+                        $this->response->redirect('login/logout');
+                        return false;
                     }
-                    throw new Exception('Sua sessão foi finalizada.');
+                    throw new \Exception('Sua sessão foi finalizada.');
                 }
             } else {
                 if (!$this->access->isAllowed('public', $moduleCurrent, $controllerCurrent, $actionCurrent)) {
                     if (!$this->access->isAllowed('private', $moduleCurrent, $controllerCurrent, $actionCurrent)) {
                         if ($this->access->isAllowed('private', $moduleCurrent, $controllerCurrent, 'index')) {
                             $this->flash->error('Você não tem acesso a ' . $moduleCurrent . '/' . $controllerCurrent . '/' . $actionCurrent);
-                            $this->response->redirect($moduleCurrent . '/' . $controllerCurrent . '/index');
+                            $this->response->redirect('forbidden');
+                            return false;
                         } else {
                             if ($this->access->isAllowed('private', 'intranet', 'index', 'index')) {
                                 $this->flash->error('Você não tem acesso a ' . $moduleCurrent . '/' . $controllerCurrent);
-                                return $this->response->redirect('/');
+                                $this->response->redirect('forbidden');
+                                return false;
                             } else {
-                                throw new Exception('Sua sessão foi finalizada.');
+                                throw new \Exception('Sua sessão foi finalizada.');
                             }
                         }
                     }
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
-            $this->response->redirect('login');
+            $this->response->redirect('login/logout');
+            return false;
         }
+        return true;
     }
 
     /**
      *
+     * @param type $moduleName
+     * @param type $controllerName
+     * @param type $actionName
      * @return type
      */
-    protected function getAllModules() {
-        $dirs = scandir(APP_PATH . '/app/modules/');
-        $modules = [];
-        foreach ($dirs as $dir) {
-            if ($dir != '.' && $dir != '..')
-                $modules[] = $dir;
+    private function clicksPerPage($moduleName, $controllerName, $actionName)
+    {
+        $identity = $this->auth->getIdentity();
+
+        $click = new Clicks();
+        if (!is_null($identity)) {
+            $click->usersName = $identity['userInfo']['userName'];
+        } else {
+            $click->usersName = $this->request->getClientAddress();
         }
-        return $modules;
+        $click->uri = $moduleName . '/' . $controllerName . '/' . $actionName;
+        $click->dataAccess = date('Y-m-d h:i:s');
+        return $click->save();
     }
 
     /**
      *
-     * @param type $module
+     * @param type $object
+     */
+    protected function makeGetObject($object)
+    {
+
+        foreach ($object->toArray() as $key => $value) {
+
+            $name = 'get' . ucfirst($key);
+            $this->tag->setDefault($key, $object->$name());
+        }
+    }
+
+    /**
+     *
+     * @param type $request
+     * @param type $object
+     */
+    protected function makeSetObject($request, $object)
+    {
+
+        foreach ($request as $key => $value) {
+            $name = 'set' . ucfirst($key);
+            $object->$name($value);
+        }
+    }
+
+    protected function hidrateRequest($request)
+    {
+
+        $return = [];
+
+        foreach ($request as $key => $value) {
+            $return[$key] = $this->strToReal($value, '.', '');
+            $return[$key] = $this->strToReal($return[$key]);
+        }
+        return $return;
+    }
+
+    /**
+     *
+     * @param type $request
+     * @param type $search
+     * @param type $replace
      * @return type
      */
-    protected function getAllControllers($module) {
-        $files = scandir(APP_PATH . '/app/modules/' . $module . '/controllers');
-        $controllers = [];
-        foreach ($files as $file) {
-            if ($controller = $this->extractController($file)) {
-                $controllers[] = $controller;
-            }
-        }
-        return $controllers;
-    }
-
-    /**
-     *
-     * @param type $controller
-     * @return type
-     */
-    protected function getAllActs($controller) {
-        $class = $controller . 'Controller';
-        $functions = get_class_methods($class);
-        $actions = [];
-        foreach ($functions as $name) {
-            $actions[] = $this->extractAct($name);
-        }
-        return array_filter($actions);
-    }
-
-    /**
-     *
-     * @param type $name
-     * @return type
-     */
-    private function extractAct($name) {
-        $action = explode('Action', $name);
-        if ((count($action) > 1)) {
-            return $action[0];
+    protected function strToReal($value, $search = ',', $replace = '.')
+    {
+        if (!$this->isRealString($value)) {
+            return str_replace($search, $replace, $value);
+        } else {
+            return $value;
         }
     }
 
     /**
      *
-     * @param type $name
+     * @param type $string
      * @return boolean
      */
-    private function extractController($name) {
-        $filename = explode('Controller.php', $name);
-        if (count($filename) > 1) {
-            return $filename[0];
+    protected function isRealString($string = '')
+    {
+
+        if (empty($string)) {
+            return false;
+        }
+        $space = explode(' ', $string);
+        if (isset($space[1])) {
+            return true;
+        }
+        $dot = explode('.', $string);
+        if (isset($dot[1])) {
+            if (ereg('[^0-9]', substr($dot[0], -1, 1)) or ereg('[^0-9]', substr($dot[1], 0, 1))) {
+                return true;
+            }
         }
         return false;
+    }
+
+    /**
+     *
+     * @param type $messages
+     * @return string
+     */
+    protected function getMessage($messages)
+    {
+        $return = '';
+        foreach ($messages as $message) {
+            $return .= $message . '<br />';
+        }
+        return $return;
+    }
+
+    /**
+     *
+     * @param type $files
+     * @return type
+     */
+    protected function eraseFiles($files)
+    {
+        foreach ($files as $file) {
+            unlink($file);
+        }
+        return;
     }
 
 }

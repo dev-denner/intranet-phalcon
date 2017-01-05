@@ -33,8 +33,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['module',
-                                \Nucleo\Models\Modules::find(['order' => 'name']),
-                                'using' => ['id', 'name'],
+                                \Nucleo\Models\Modules::find(['order' => 'title']),
+                                'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
                                 'emptyValue' => '',
@@ -126,6 +126,35 @@
                             ?>
                         </div>
                         <label class="fg-label">Categoria</label>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="col-lg-5">
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        <div class="select">
+                            <?php
+                            echo $this->tag->select(['type',
+                                \Nucleo\Models\TablesSystem::find(["table = 'type_menu'", 'order' => 'value']),
+                                'using' => ['code', 'value'],
+                                'useEmpty' => true,
+                                'emptyText' => '',
+                                'emptyValue' => '',
+                                'class' => 'form-control']
+                            );
+                            ?>
+                        </div>
+                        <label class="fg-label">Tipo</label>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="col-lg-5 col-lg-offset-1">
+                <div class="form-group fg-float">
+                    <div class="fg-line">
+                        {{ numeric_field("position", "class" : "form-control fg-input") }}
+                        <label class="fg-label">Posição</label>
                     </div>
                 </div>
                 <br />

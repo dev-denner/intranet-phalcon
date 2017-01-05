@@ -12,7 +12,7 @@
 
                 <div class="form-group fg-float">
                     <div class="fg-line">
-                        {{ text_field("name", "class" : "form-control fg-input", 'required': 'required') }}
+                        {{ text_field("title", "class" : "form-control fg-input", 'required': 'required') }}
                         <label class="fg-label">Nome do grupo</label>
                     </div>
                 </div>
@@ -39,12 +39,12 @@
                         Grupo Público?
                     </label>
                     <label class="radio radio-inline m-r-20">
-                        {{ radio_field('isPublic', 'value': 'S') }}
+                        {{ radio_field('type', 'value': 'S') }}
                         <i class="input-helper"></i>
                         SIM
                     </label>
                     <label class="radio radio-inline m-r-20">
-                        {{ radio_field('isPublic', 'value': 'N', 'checked': 'checked') }}
+                        {{ radio_field('type', 'value': 'N', 'checked': 'checked') }}
                         <i class="input-helper"></i>
                         Não
                     </label>

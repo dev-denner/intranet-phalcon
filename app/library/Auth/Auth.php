@@ -64,6 +64,7 @@ class Auth extends Component {
      * @throws Exception
      */
     public function saveSuccessLogin($userName) {
+        $this->session->set('auth', true);
         $successLogin = new SuccessLogins();
         $successLogin->usersName = $userName;
         $successLogin->ipAddress = $this->request->getClientAddress();
@@ -89,11 +90,11 @@ class Auth extends Component {
         $failedLogin->save();
 
         $attempts = FailedLogins::count([
-                    'ipAddress = ?0 AND attempted >= ?1',
-                    'bind' => [
-                        $this->request->getClientAddress(),
-                        time() - 3600 * 6
-                    ]
+                      'ipAddress = ?0 AND attempted >= ?1',
+                      'bind' => [
+                          $this->request->getClientAddress(),
+                          time() - 3600 * 6
+                      ]
         ]);
 
         switch ($attempts) {
@@ -163,8 +164,8 @@ class Auth extends Component {
                 $userName = explode('@', $user->email)[0];
 
                 $remember = RememberTokens::findFirst(array(
-                            'usersName = ?0 AND token = ?1',
-                            'bind' => [$userName, $token]
+                              'usersName = ?0 AND token = ?1',
+                              'bind' => [$userName, $token]
                 ));
 
                 if ($remember) {
@@ -247,7 +248,7 @@ class Auth extends Component {
     public function authUserById($id) {
         $user = Users::findFirstById($id);
         if ($user == false) {
-            throw new Exception('The user does not exist');
+            throw new Exception('Este usuário não existe.');
         }
 
         $this->checkUserFlags($user);
@@ -260,7 +261,7 @@ class Auth extends Component {
         $colaborador = $colaboradores->getDadosFuncionario($user->cpf);
 
         $funcionarios = new Pfunc();
-        $funcionario = $funcionarios->getDadosFuncionario($user->cpf);
+        $funcionario = $funcionarios->getDadosFuncionario($colaborador['CPF'], $colaborador['CHAPA']);
 
         $infoColaborador = [];
 

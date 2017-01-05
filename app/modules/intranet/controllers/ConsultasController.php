@@ -18,6 +18,7 @@ use Nucleo\Models\Protheus\Tes;
 use Nucleo\Models\Protheus\RequisitoMinimo;
 use Nucleo\Models\Protheus\Clientes;
 use Nucleo\Models\RM\Psecao;
+use Intranet\Models\Processos;
 
 class ConsultasController extends ControllerBase {
 
@@ -53,7 +54,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -78,7 +79,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -96,7 +97,9 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
+        } catch (\PDOException $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -114,7 +117,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -132,7 +135,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -150,7 +153,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -168,7 +171,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -194,7 +197,23 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
+            $this->flash->error($e->getMessage());
+        }
+    }
+
+    public function processosAction() {
+
+        try {
+            $this->view->processos = Processos::find();
+            $this->view->pesquisa = '';
+            $this->view->export = true;
+            if ($this->request->isPost()) {
+                $search = "(UPPER(code) LIKE UPPER('%" . $this->request->getPost('processos', 'string') . "%') OR UPPER(description) LIKE UPPER('%" . $this->request->getPost('processos', 'string') . "%'))";
+                $this->view->processos = Processos::find($search);
+                $this->view->pesquisa = $this->request->getPost('processos');
+            }
+        } catch (\Exception $exc) {
             $this->flash->error($e->getMessage());
         }
     }

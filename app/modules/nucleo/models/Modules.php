@@ -29,13 +29,19 @@ use beforeUpdate;
      *
      * @var string
      */
-    protected $name;
+    protected $title;
 
     /**
      *
      * @var string
      */
     protected $slug;
+
+    /**
+     *
+     * @var string
+     */
+    protected $icon;
 
     /**
      *
@@ -86,13 +92,13 @@ use beforeUpdate;
     }
 
     /**
-     * Method to set the value of field name
+     * Method to set the value of field title
      *
-     * @param string $name
+     * @param string $title
      * @return $this
      */
-    public function setName($name) {
-        $this->name = $name;
+    public function setTitle($title) {
+        $this->title = $title;
 
         return $this;
     }
@@ -105,6 +111,18 @@ use beforeUpdate;
      */
     public function setSlug($slug) {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field icon
+     *
+     * @param string $icon
+     * @return $this
+     */
+    public function setIcon($icon) {
+        $this->icon = $icon;
 
         return $this;
     }
@@ -191,12 +209,12 @@ use beforeUpdate;
     }
 
     /**
-     * Returns the value of field name
+     * Returns the value of field title
      *
      * @return string
      */
-    public function getName() {
-        return $this->name;
+    public function getTitle() {
+        return $this->title;
     }
 
     /**
@@ -206,6 +224,15 @@ use beforeUpdate;
      */
     public function getSlug() {
         return $this->slug;
+    }
+
+    /**
+     * Returns the value of field icon
+     *
+     * @return string
+     */
+    public function getIcon() {
+        return $this->icon;
     }
 
     /**
@@ -268,7 +295,7 @@ use beforeUpdate;
     public function initialize() {
 
         parent::initialize();
-        $this->setSchema('NUCLEO');
+
         $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'module', ['alias' => 'Perfils']);
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
             'field' => 'sdel',
@@ -294,8 +321,9 @@ use beforeUpdate;
     public static function columnMap() {
         return array(
             'ID_MODULO' => 'id',
-            'DS_NOME' => 'name',
+            'DS_TITULO' => 'title',
             'DS_SLUG' => 'slug',
+            'DS_ICONE' => 'icon',
             'DS_DESCRICAO' => 'description',
             'SDEL' => 'sdel',
             'CREATEBY' => 'createBy',

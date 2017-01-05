@@ -219,7 +219,6 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('TELEFONIA');
         $this->setConnectionService('telefoniaDb');
 
         $this->addBehavior(new SoftDelete([

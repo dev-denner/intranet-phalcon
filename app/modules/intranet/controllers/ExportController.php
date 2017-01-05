@@ -19,16 +19,22 @@ use Nucleo\Models\Protheus\RequisitoMinimo;
 use Nucleo\Models\Protheus\Clientes;
 use Nucleo\Models\RM\Psecao;
 use Telephony\Models\Statement;
+use Catraca\Models\Movimentos;
+use Intranet\Models\Processos;
+use Otrs\Models\Chamados;
 use SysPhalcon\Plugins\Tools;
 
-class ExportController extends ControllerBase {
+class ExportController extends ControllerBase
+{
 
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle('Exportar Arquivos');
         parent::initialize();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
 
             $tools = new Tools();
@@ -71,11 +77,9 @@ class ExportController extends ControllerBase {
                     $options['fileName'] = 'TES (Tipos de Entrada e Saída)';
                     break;
                 case 'telefonia':
-
                     $aux = explode(' | ', $search);
                     $linhas = $aux[0];
                     $mes = str_replace('20', '', $aux[1]);
-
                     $object = new Statement();
                     $dados = $object->getReportByLine($linhas, $mes);
                     $options['fileName'] = 'Extrato de Conta Celular';
@@ -85,9 +89,29 @@ class ExportController extends ControllerBase {
                     $dados = $object->getClientes($search);
                     $options['fileName'] = 'Clientes';
                     break;
-                default:
-                    throw new Exception('Erro ao exportar: Objeto não definido.');
+                case 'catraca':
+                    $aux = explode('|', $search);
+                    $object = new Movimentos();
+                    $dados = $object->getReport($aux[0], $aux[1], $aux[2]);
+                    $options['fileName'] = 'Relatório Catraca';
                     break;
+                case 'processos':
+                    $object = new Processos();
+                    $aux = explode('|', $search);
+                    $dados = $object->getReport($aux[0], $aux[1]);
+                    $options['fileName'] = 'Processos';
+                    break;
+                case 'atendimento':
+                    $search = str_replace('&#39;', "'", str_replace('&#34;', '"', $search));
+                    $search = json_decode($search, true);
+                    $dados = Chamados::find(['conditions' => $search, 'order' => 'id']);
+                    $dados = $dados->toArray();
+
+                    $options['fileName'] = 'Relatório de Chamados';
+                    $options['toArray'] = false;
+                    break;
+                default:
+                    throw new \Exception('Erro ao exportar: Objeto não definido.');
             }
 
             $options['download'] = true;

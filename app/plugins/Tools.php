@@ -11,9 +11,10 @@ namespace SysPhalcon\Plugins;
 
 use Phalcon\Mvc\User\Plugin as Plugin;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\View;
-
-//include(APP_PATH . '/vendor/mpdf/mpdf/mpdf.php');
+use Phalcon\Http\Request;
+use CanGelis\PDF\PDF;
+use League\Flysystem\Adapter\Local as LeagueLocal;
+use iio\libmergepdf\Merger;
 
 class Tools extends Plugin {
 
@@ -25,12 +26,14 @@ class Tools extends Plugin {
      * @throws Exception
      */
     public function writePdf($dados = '', $options) {
-        if (empty($dados)) {
-            throw new Exception('HTML vazio. Uso incorreto do criador de PDF.');
-        }
 
-        $parameters['dados'] = $dados->toArray();
         $parameters['title'] = $options['fileName'];
+
+        if (isset($options['toArray']) && $options['toArray'] == false) {
+            $parameters['dados'] = $dados;
+        } else {
+            $parameters['dados'] = $dados->toArray();
+        }
 
         $html = $this->view->getRender('pdfTemplates', 'index', $parameters, function($view) {
             $view->setMainView('common/pdfTemplates/index');
@@ -42,6 +45,42 @@ class Tools extends Plugin {
         $mpdf->packTableData = true;
         $mpdf->WriteHTML($html);
         return $mpdf->Output();
+    }
+
+    /**
+     *
+     * @param type $html
+     * @param type $download
+     * @param type $options
+     * @return type
+     */
+    public function writePdf2($html, $download = true, $options = []) {
+
+        $pdf = new PDF('/usr/local/bin/wkhtmltopdf');
+
+        $pdf->loadHTML($html)->pageSize('A4')->orientation('Portrait');
+        if (!$download) {
+            $pdf->save($options['title'], new LeagueLocal($options['path']), true);
+        }
+
+        return $pdf->get();
+    }
+
+    /**
+     *
+     * @param type $files
+     * @param type $path
+     * @return type
+     */
+    public function mergePdf($files, $path) {
+
+        $m = new Merger();
+
+        foreach ($files as $file) {
+            $m->addFromFile($file);
+        }
+
+        return file_put_contents($path, $m->merge());
     }
 
     /**
@@ -63,9 +102,9 @@ class Tools extends Plugin {
 
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->getProperties()->setCreator($createBy)
-                ->setLastModifiedBy($createBy)
-                ->setTitle($fileName)
-                ->setCategory('Arquivos Exportados');
+                  ->setLastModifiedBy($createBy)
+                  ->setTitle($fileName)
+                  ->setCategory('Arquivos Exportados');
         $objPHPExcel->getActiveSheet()->setTitle($fileName);
 
         $alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -190,6 +229,123 @@ class Tools extends Plugin {
         }
 
         return $return;
+    }
+
+    /**
+     *
+     * @param Request $uploadedFiles
+     * @param int $limit
+     * @param string $path
+     * @param boolean $rebuild
+     * @return array
+     */
+    public function uploadedFiles(Request $uploadedFiles, $limit = '', $path = APP_PATH . '/public/temp/', $rebuild = false) {
+
+        $return = [];
+        $msg = '';
+
+        foreach ($uploadedFiles as $attach) {
+
+            $this->verifyErrorsOnUpload($attach);
+            $this->verifySizeOnUpload($attach, $limit);
+
+            $file = $path . $attach->getName();
+
+            if ($attach->moveTo($file)) {
+                $return[] = [
+                    'file' => $file,
+                    'name' => $attach->getName(),
+                    'type' => $attach->getType(),
+                    'size' => $attach->getSize(),
+                ];
+            } else {
+                $msg .= 'Falha ao anexar o arquivo ' . $attach->getName() . '.<br />';
+            }
+
+            if ($rebuild) {
+                $this->pdfRecreate($file);
+            }
+        }
+        if (!empty($msg)) {
+            $return['error'] = $msg;
+        }
+        return $return;
+    }
+
+    private function pdfRecreate($pdf) {
+
+        rename($pdf, strtolower($pdf));
+        rename($pdf, str_replace('.pdf', '_.pdf', $pdf));
+
+        $pdfileArray = array(strtolower($pdf));
+        $pdfileArray = array(str_replace('.pdf', '_.pdf', $pdf));
+        $outputName = $pdf;
+        $cmd = "gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=$outputName ";
+
+        foreach ($pdfileArray as $pdfile) {
+            $cmd .= $pdfile . " ";
+        }
+
+        shell_exec($cmd);
+
+        unlink(str_replace('.pdf', '_.pdf', $pdf));
+    }
+
+    /**
+     *
+     * @param type $attach
+     * @return boolean
+     * @throws \Exception
+     */
+    private function verifyErrorsOnUpload($attach) {
+
+        switch ($attach->getError()) {
+            case 0:
+                return true;
+            case 1:
+                throw new \Exception('O arquivo no upload é maior do que o limite do PHP');
+            case 2:
+                throw new \Exception('O arquivo ultrapassa o limite de tamanho especifiado no HTML');
+            case 3:
+                throw new \Exception('O upload do arquivo foi feito parcialmente');
+            case 4:
+                throw new \Exception('Não foi feito o upload do arquivo');
+            default:
+                throw new \Exception('Erro desconhecido');
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param type $attach
+     * @param type $limit
+     * @return boolean
+     * @throws \Exception
+     */
+    private function verifySizeOnUpload($attach, $limit) {
+        if (empty($limit)) {
+            $limit = 1024 * 1024 * 15;
+        }
+        if ($limit < $attach->getSize()) {
+            $limit = $limit / 1024 / 1024;
+            throw new \Exception("O arquivo enviado é muito grande. Limite de arquivo: {$limit}MB");
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param type $params
+     * @param type $folder
+     * @param type $template
+     * @return type
+     */
+    public function getTemplate($params, $folder = 'emailTemplates', $template = 'index') {
+
+        return $this->view->getRender($folder, $template, $params, function($view) use ($folder, $template) {
+                      $view->setMainView('common/' . $folder . '/' . $template);
+                  });
     }
 
 }

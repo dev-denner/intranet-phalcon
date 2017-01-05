@@ -50,6 +50,7 @@
                         <th data-column-id="id" data-type="numeric">ID</th>
                         <th data-column-id="title">Título</th>
                         <th data-column-id="slug">Slug</th>
+                        <th data-column-id="description">Descrição</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
@@ -59,6 +60,7 @@
                         <td>{{ action.id }}</td>
                         <td>{{ action.title }}</td>
                         <td>{{ action.slug }}</td>
+                        <td>{{ action.description }}</td>
                         <td>{{ static_url('nucleo/actions')}}</td>
                     </tr>
                     {% endfor %}

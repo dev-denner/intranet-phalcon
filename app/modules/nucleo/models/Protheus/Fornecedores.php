@@ -71,7 +71,7 @@ class Fornecedores extends ModelBase {
             SELECT TRIM(SA2010.A2_COD) AS codigo,
                    TRIM(SA2010.A2_LOJA) AS loja,
                    TRIM(SA2010.A2_NOME) AS nome,
-                   TRIM(SA2010.A2_CGC) AS cgc,
+                   TRIM(SA2010.A2_CGC) AS cnpj,
                    TRIM(SA2010.A2_EST) AS uf,
                    TRIM(SA2010.A2_MUN) AS municipio,
                    CASE SA2010.A2_MSBLQL

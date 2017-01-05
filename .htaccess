@@ -1,15 +1,20 @@
 <IfModule mod_rewrite.c>
-	RewriteEngine on
-	RewriteRule  ^$ public/    [L]
-	RewriteRule  (.*) public/$1 [L]
+    RewriteEngine on
+    RewriteRule  ^$ public/    [L]
+    RewriteRule  (.*) public/$1 [L]
 </IfModule>
 
 
 <IfModule mod_php5.c>
-php_value post_max_size 10M
-php_value upload_max_filesize 10M
-php_value memory_limit 512M
-php_value max_execution_time 600
-php_value max_input_time 600
-php_value session.gc_maxlifetime 1200
+    php_value post_max_size 50M
+    php_value upload_max_filesize 10M
+    php_value memory_limit 1024M
+    php_value max_execution_time 600
+    php_value max_input_time 600
+    php_value session.gc_maxlifetime 1200
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
 </IfModule>

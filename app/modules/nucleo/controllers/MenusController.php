@@ -79,6 +79,8 @@ class MenusController extends ControllerBase {
             $this->tag->setDefault('department', $menu->getDepartment());
             $this->tag->setDefault('category', $menu->getCategory());
             $this->tag->setDefault('icon', $menu->getIcon());
+            $this->tag->setDefault('type', $menu->getType());
+            $this->tag->setDefault('position', $menu->getPosition());
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/menus');
@@ -106,8 +108,9 @@ class MenusController extends ControllerBase {
             $menu->setAction($this->request->getPost('action'));
             $menu->setDepartment($this->request->getPost('department'));
             $menu->setCategory($this->request->getPost('category'));
-
             $menu->setIcon($this->request->getPost('icon'));
+            $menu->setType($this->request->getPost('type'));
+            $menu->setPosition($this->request->getPost('position'));
 
             if (!$menu->create()) {
                 $msg = '';
@@ -152,6 +155,8 @@ class MenusController extends ControllerBase {
             $menu->setDepartment($this->request->getPost('department'));
             $menu->setCategory($this->request->getPost('category'));
             $menu->setIcon($this->request->getPost('icon'));
+            $menu->setType($this->request->getPost('type'));
+            $menu->setPosition($this->request->getPost('position'));
 
             if (!$menu->update()) {
 

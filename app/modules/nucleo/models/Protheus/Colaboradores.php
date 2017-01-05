@@ -13,20 +13,21 @@ use SysPhalcon\Models\ModelBase;
 
 class Colaboradores extends ModelBase {
 
-    protected $szhEmpresa;
-    protected $szhNome;
-    protected $szhPessoa;
-    protected $szhCpf;
-    protected $szhCnpj;
-    protected $szhEmail;
-    protected $szhDataAdmissao;
-    protected $szhSituacao;
-    protected $szhCCEO;
-    protected $szhSecao;
-    protected $szhDataDemissao;
-    protected $szhMotivoDemissao;
-    protected $szhRamal;
-    protected $szhSdel;
+    public $szhEmpresa;
+    public $szhNome;
+    public $szhChapa;
+    public $szhPessoa;
+    public $szhCpf;
+    public $szhCnpj;
+    public $szhEmail;
+    public $szhDataAdmissao;
+    public $szhSituacao;
+    public $szhCCEO;
+    public $szhSecao;
+    public $szhDataDemissao;
+    public $szhMotivoDemissao;
+    public $szhRamal;
+    public $szhSdel;
 
     public function initialize() {
 
@@ -36,7 +37,8 @@ class Colaboradores extends ModelBase {
         $this->setConnectionService('protheusDb');
         $this->setReadConnectionService('protheusDb');
 
-        $this->belongsTo('szhEmail', __NAMESPACE__ . '\Zimbra', 'szgEmail', ['alias' => 'Zimbra',]);
+        $this->belongsTo('szhCpf', __NAMESPACE__ . '\Zimbra', 'szgCpf', ['alias' => 'Zimbra',]);
+        $this->hasMany('SUBSTR(szhCpf, 1, 6)', '\Catraca\Models\Movimentos', 'SUBSTR(TRIM(id), 14, 6)', ['alias' => 'Colaboradores',]);
     }
 
     public function getSource() {
@@ -47,6 +49,7 @@ class Colaboradores extends ModelBase {
         return [
             'ZH_EMPRESA' => 'szhEmpresa',
             'ZH_NOME' => 'szhNome',
+            'ZH_CHAPA' => 'szhChapa',
             'ZH_PESSOA' => 'szhPessoa',
             'ZH_CPF' => 'szhCpf',
             'ZH_CNPJ' => 'szhCnpj',
@@ -62,15 +65,72 @@ class Colaboradores extends ModelBase {
         ];
     }
 
+    public function getColaborador($search = '') {
+
+        if (empty($search)) {
+            throw new \Exception('Erro parametro vazio.');
+        }
+
+        $connection = $this->customSimpleQuery('db');
+
+        $query = "SELECT * FROM VW_COLABORADOR_PROTHEUS WHERE CPF = ?";
+        $protheus = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$search]);
+
+        $query = "SELECT * FROM VW_COLABORADOR_RM WHERE CPF = ? AND CHAPA = ?";
+        $rm = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$search, $protheus['CHAPA']]);
+        return array_merge($protheus, $rm);
+    }
+
+    public function getColaboradorByCpf($cpf = '') {
+
+        if (empty($cpf)) {
+            throw new \Exception('Erro cpf vazio.');
+        }
+
+        $connection = $this->customSimpleQuery('db');
+
+        $query = "SELECT TRIM(ZG.ZG_EMAIL) EMAIL, TRIM(ZH.ZH_CPF) CPF
+                  FROM PRODUCAO_9ZGXI5.SZH010@PROTHEUSPROD ZH
+                  LEFT JOIN PRODUCAO_9ZGXI5.SZG010@PROTHEUSPROD ZG
+                        ON ZG.D_E_L_E_T_ = ' '
+                       AND ZG.ZG_CPF = ZH.ZH_CPF
+                       AND TRIM(ZG.ZG_STATUS) = 'ACTIVE'
+                  WHERE ZH.D_E_L_E_T_ = ' '
+                    AND TRIM(ZH.ZH_CPF) = ?";
+        return $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$cpf]);
+    }
+
+    public function getColaboradorByEmail($search = '') {
+
+        if (empty($search)) {
+            throw new \Exception('Erro search vazio.');
+        }
+
+        $connection = $this->customSimpleQuery('db');
+
+        $query = "SELECT * FROM VW_COLABORADOR_PROTHEUS WHERE EMAIL = ?";
+        $protheus = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$search]);
+
+        if(!$protheus){
+            return false;
+        }
+        
+        $query = "SELECT * FROM VW_COLABORADOR_RM WHERE CPF = ? AND CHAPA = ?";
+        $rm = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$protheus['CPF'], $protheus['CHAPA']]);
+        return array_merge($protheus, $rm);
+    }
+
     public function getDadosFuncionario($cpf) {
         $empresas = $this->getNameEmpresas();
         $dadosFunc = $this->modelsManager->createBuilder()
-                ->columns([$empresas . ' empresa,
+                  ->columns([$empresas . ' empresa,
+                       TRIM(szhEmpresa) codEmpresa,
                        TRIM(szhNome) nome,
-                       szhPessoa pessoa,
+                       TRIM(szhChapa) chapa,
+                       TRIM(szhPessoa) pessoa,
                        TRIM(szhCpf) cpf,
                        TRIM(szhCnpj) cnpj,
-                       TRIM(szhEmail) email,
+                       TRIM(szgEmail) email,
                        TO_CHAR(TO_DATE(szhDataAdmissao, \'YYYYMMDD\'), \'DD/MM/YYYY\') dataAdmissao,
                        UPPER(szhSituacao) situacao,
                        TRIM(szhCCEO) cceo,
@@ -78,11 +138,12 @@ class Colaboradores extends ModelBase {
                        TRIM(szhDataDemissao) dataDemissao,
                        TRIM(szhMotivoDemissao) motivoDemissao,
                        TRIM(szhRamal) ramal'])
-                ->from(__NAMESPACE__ . '\Colaboradores')
-                ->where("szhSdel = ' '")
-                ->andWhere('TRIM(szhCpf) = :cpf:', ['cpf' => $cpf])
-                ->getQuery()
-                ->execute();
+                  ->from(__NAMESPACE__ . '\Colaboradores')
+                  ->leftJoin(__NAMESPACE__ . '\Zimbra', "TRIM(szgCpf) = TRIM(szhCpf)")
+                  ->where("szhSdel = ' '")
+                  ->andWhere('TRIM(szhCpf) = :cpf:', ['cpf' => $cpf])
+                  ->getQuery()
+                  ->execute();
 
         return $dadosFunc->toArray(0)[0];
     }
@@ -90,12 +151,12 @@ class Colaboradores extends ModelBase {
     public function getEmpresas() {
         $empresas = $this->getNameEmpresas();
         $empresa = $this->modelsManager->createBuilder()
-                ->columns(['DISTINCT TRIM(szhEmpresa) id, ' . $empresas . ' empresa'])
-                ->from(__NAMESPACE__ . '\Colaboradores')
-                ->where("szhSdel = ' '")
-                ->orderBy(2)
-                ->getQuery()
-                ->execute();
+                  ->columns(['DISTINCT TRIM(szhEmpresa) id, ' . $empresas . ' empresa'])
+                  ->from(__NAMESPACE__ . '\Colaboradores')
+                  ->where("szhSdel = ' '")
+                  ->orderBy(2)
+                  ->getQuery()
+                  ->execute();
 
         $return = [];
 
@@ -108,11 +169,13 @@ class Colaboradores extends ModelBase {
 
     public function validaDadosFuncionario($cpf, $empresa, $dataAdmissao) {
         $empresas = $this->getNameEmpresas();
+
         $dadosFunc = $this->modelsManager->createBuilder()
-                ->columns([$empresas . ' empresa,
+                  ->columns([$empresas . ' empresa,
                        TRIM(szhNome) nome,
-                       szhPessoa pessoa,
-                       TRIM(szhCpf) cpf,
+                       TRIM(szhChapa) chapa,
+                       TRIM(szhPessoa) pessoa,
+                       TRIM(szgCpf) cpf,
                        TRIM(szhCnpj) cnpj,
                        TRIM(szhEmail) email,
                        TO_CHAR(TO_DATE(szhDataAdmissao, \'YYYYMMDD\'), \'DD/MM/YYYY\') dataAdmissao,
@@ -122,33 +185,33 @@ class Colaboradores extends ModelBase {
                        TRIM(szhDataDemissao) dataDemissao,
                        TRIM(szhMotivoDemissao) motivoDemissao,
                        TRIM(szhRamal) ramal'])
-                ->from(__NAMESPACE__ . '\Colaboradores')
-                ->where("szhSdel = ' '")
-                ->andWhere('TRIM(szhCpf) = :cpf:', ['cpf' => $cpf])
-                ->andWhere('TRIM(szhEmpresa) = :empresa:', ['empresa' => $empresa])
-                ->andWhere('TO_CHAR(TO_DATE(szhDataAdmissao, \'YYYYMMDD\'), \'DD/MM/YYYY\') = :dataAdmissao:', ['dataAdmissao' => $dataAdmissao])
-                ->getQuery()
-                ->execute();
+                  ->from(__NAMESPACE__ . '\Colaboradores')
+                  ->leftJoin(__NAMESPACE__ . '\Zimbra', "TRIM(szgCpf) = TRIM(szhCpf)")
+                  ->where("szhSdel = ' '")
+                  ->andWhere('TRIM(szhCpf) = :cpf:', ['cpf' => $cpf])
+                  ->andWhere('TRIM(szhEmpresa) = :empresa:', ['empresa' => $empresa])
+                  ->andWhere('TO_CHAR(TO_DATE(szhDataAdmissao, \'YYYYMMDD\'), \'DD/MM/YYYY\') = :dataAdmissao:', ['dataAdmissao' => $dataAdmissao])
+                  ->getQuery()
+                  ->execute();
 
         return $dadosFunc->toArray(0)[0];
     }
 
-    private function getNameEmpresas() {
+    public function getNameEmpresas() {
         return "CASE szhEmpresa
                   WHEN '01' THEN 'MPE MONTAGENS'
                   WHEN '02' THEN 'EBE'
                   WHEN '03' THEN 'MPE ENGENHARIA'
                   WHEN '04' THEN 'GEMON'
-                  WHEN 'D1' THEN 'AAT'
-                  WHEN 'D2' THEN 'GEMON'
-                  WHEN 'D3' THEN 'IRLA'
-                  WHEN 'D4' THEN 'MPE PAINEIS'
-                  WHEN 'D5' THEN 'SOAHGRO'
-                  WHEN 'D6' THEN 'TEIA'
-                  WHEN 'D7' THEN 'VALENÇA'
+                  WHEN '05' THEN 'VALENÇA'
+                  WHEN '06' THEN 'AGROMOM'
+                  WHEN '07' THEN 'AAT'
+                  WHEN '08' THEN 'TEIA'
+                  WHEN '09' THEN 'SOAHGRO'
+                  WHEN '10' THEN 'MPE PAINEIS'
+                  WHEN '11' THEN 'IRLA'
+                  WHEN '12' THEN 'CANARI'
                   WHEN 'D8' THEN 'FW GEMON'
-                  WHEN 'D9' THEN 'CANARI'
-                  WHEN 'DA' THEN 'AGROMOM'
                   ELSE szhEmpresa
                 END";
     }

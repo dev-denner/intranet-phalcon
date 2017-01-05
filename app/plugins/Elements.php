@@ -12,7 +12,8 @@ namespace SysPhalcon\Plugins;
 use Phalcon\Mvc\User\Component;
 use Phalcon\Config as ObjectPhalcon;
 use Nucleo\Models\Menus;
-use Nucleo\Models\CategoriesDocuments;
+use Nucleo\Models\PagesCategories;
+use Intranet\Models\Processos;
 
 class Elements extends Component {
 
@@ -23,6 +24,7 @@ class Elements extends Component {
     public function renderMenuPrincipal() {
         try {
             $departments = $this->getMenu();
+
             $return = '<ul class="main-menu principal">';
 
             foreach ($departments as $idDepartment => $department) {
@@ -65,6 +67,7 @@ class Elements extends Component {
                     $return .= '<ul>';
                     foreach ($department->category as $idCategory => $category) {
                         if ($idCategory === '0') {
+
                             foreach ($category->menus as $idMenus => $menus) {
                                 $return .= '<li>';
                                 $return .= "<a class='{$menus->active}' href='{$menus->slug}'>";
@@ -97,6 +100,9 @@ class Elements extends Component {
                 }
             }
 
+            $return .= '<li class="chat-trigger" id="chat-trigger" data-trigger="#chat">
+                            <a href="javascript:;"><i class="tm-icon zmdi zmdi-view-comfy"></i> Aplicativos Externos</a>
+                        </li>';
             $return .= '</ul>';
 
             return $return;
@@ -173,11 +179,10 @@ class Elements extends Component {
             foreach ($department->category as $idCategory => $category) {
 
                 if ($idDepartment !== '0') {
-                    if ($idCategory === '0') {
-                        continue;
-                    }
+                    /* if ($idCategory === '0') {
+                      continue;
+                      } */
                 }
-
                 if ($idCategory === '0') {
                     $categoryTitle = 'Miscelâneas';
                     $categoryDescription = 'Menus não associados';
@@ -209,29 +214,48 @@ class Elements extends Component {
                     $link = true;
                 }
                 $return .= '</div><!-- media-body -->
-                        </div><!-- media -->';
+                            </div><!-- media -->';
                 if ($link) {
-                    $return .= "<a class='lv-item' href='http://ecm.grupompe.com.br/' target='_new'>
-                    <div class='media'>
-                        <div class='pull-left p-relative'>";
-                    $return .= "<img class='lv-img-sm' src='{$this->url->getBaseUri()}assets/img/logos/apps/totvs.png' alt=''>";
-                    $return .= '</div>
-                        <div class="media-body">
-                            <div class="lv-title">ECM - TOTVS</div>
-                            <small class="lv-small">Gerenciador de Documentos</small>
-                        </div>
-                    </div>
-                </a>';
+                    $return .= $this->renderLink($categoryTitle);
                     $link = false;
                 }
-
                 $return .= '</div><!-- card-body -->
-                        </div><!-- card -->
-                        </div><!-- grid-item -->';
+                            </div><!-- card -->
+                            </div><!-- grid-item -->';
             }
 
             $return .= '</div>';
         }
+        return $return;
+    }
+
+    private function renderLink($categoryTitle) {
+
+        switch ($categoryTitle) {
+            case 'Portal RH':
+                $link = 'http://portalrh.grupompe.com.br/';
+                $title = 'Portal RH - TOTVS';
+                $description = 'Portal RH do Colaborador';
+                break;
+            default:
+                $link = 'http://ecm.grupompe.com.br/';
+                $title = 'ECM - TOTVS';
+                $description = 'Gerenciador de Documentos';
+                break;
+        }
+
+        $return = "<a class='lv-item' href='{$link}' target='_new'>";
+        $return .= '<div class="media">';
+        $return .= '<div class="pull-left p-relative">';
+        $return .= "<img class='lv-img-sm' src='{$this->url->getBaseUri()}assets/img/logos/apps/totvs.png'>";
+        $return .= '</div>';
+        $return .= '<div class="media-body">';
+        $return .= "<div class='lv-title'>{$title}</div>";
+        $return .= "<small class='lv-small'>{$description}</small>";
+        $return .= '</div>';
+        $return .= '</div>';
+        $return .= '</a>';
+
         return $return;
     }
 
@@ -251,17 +275,17 @@ class Elements extends Component {
             ['bgm-orange', 'c-white'],
             ['bgm-deeporange', 'c-white'],
             ['bgm-bluegray', 'c-white'],
-                //['bgm-gray', 'c-white'],
-                //['bgm-lightblue', 'c-white'],
-                //['bgm-lightgreen', 'c-white'],
-                //['bgm-lime', 'c-white'],
-                //['bgm-pink', 'c-white'],
-                //['bgm-purple', 'c-white'],
-                //['bgm-yellow', 'c-black'],
-                //['bgm-amber', 'c-white'],
-                //['bgm-brown', 'c-white'],
-                //['bgm-black', 'c-white'],
-                //['bgm-white', 'c-black'],
+                  //['bgm-gray', 'c-white'],
+                  //['bgm-lightblue', 'c-white'],
+                  //['bgm-lightgreen', 'c-white'],
+                  //['bgm-lime', 'c-white'],
+                  //['bgm-pink', 'c-white'],
+                  //['bgm-purple', 'c-white'],
+                  //['bgm-yellow', 'c-black'],
+                  //['bgm-amber', 'c-white'],
+                  //['bgm-brown', 'c-white'],
+                  //['bgm-black', 'c-white'],
+                  //['bgm-white', 'c-black'],
         ];
     }
 
@@ -273,7 +297,7 @@ class Elements extends Component {
 
         $return = [];
 
-        $catDocs = CategoriesDocuments::find($param);
+        $catDocs = PagesCategories::find();
         foreach ($catDocs as $catDoc) {
             $return[$catDoc->department]['id'] = $catDoc->departments->id;
             $return[$catDoc->department]['title'] = $catDoc->departments->title;
@@ -318,6 +342,7 @@ class Elements extends Component {
     private function getMenu($id = null, $docs = false) {
         $return = [];
         $desc = '';
+        $keyActive = true;
 
         if (!$docs) {
             $desc = 'DESC';
@@ -335,7 +360,7 @@ class Elements extends Component {
         }
 
         if ($docs) {
-            $catDocs = CategoriesDocuments::find($param);
+            $catDocs = PagesCategories::find($param);
             foreach ($catDocs as $catDoc) {
 
                 $department = $catDoc->departments->id;
@@ -352,10 +377,12 @@ class Elements extends Component {
                 $return[$department]['title'] = $titleDepartment;
                 $return[$department]['cc'] = $ccDepartment;
                 $return[$department]['icon'] = $iconDepartment;
+                $return[$department]['active'] = '';
                 $return[$department]['category'][$category]['title'] = $titleCategory;
                 $return[$department]['category'][$category]['description'] = $descriptionCategory;
                 $return[$department]['category'][$category]['icon'] = $iconCategory;
                 $return[$department]['category'][$category]['document'][$catDoc->id]['description'] = $catDoc->description;
+                $return[$department]['category'][$category]['active'] = '';
             }
         }
 
@@ -378,7 +405,7 @@ class Elements extends Component {
             $actions = $menu->actions->slug;
 
             if ($this->access->isAllowed('private', $modules, $controllers, $actions)
-                    or $this->access->isAllowed('public', $modules, $controllers, $actions)) {
+                      or $this->access->isAllowed('public', $modules, $controllers, $actions)) {
 
                 if (is_null($menu->department)) {
                     $department = 0;
@@ -402,6 +429,13 @@ class Elements extends Component {
                     $titleCategory = $menu->categories->title;
                     $descriptionCategory = $menu->categories->description;
                     $iconCategory = $menu->categories->icon;
+                }
+
+                if ($keyActive) {
+                    $return[$department]['active'] = '';
+                    $return[$department]['category'][$category]['active'] = '';
+                    $return[$department]['category'][$category]['menus'][$menu->id]['active'] = '';
+                    $keyActive = false;
                 }
 
                 if ($currentModule == $modules && $currentController == $controllers && $currentAction == $actions) {
@@ -433,8 +467,19 @@ class Elements extends Component {
                 $return[$department]['category'][$category]['menus'][$menu->id]['title'] = $menu->title;
                 $return[$department]['category'][$category]['menus'][$menu->id]['slug'] = $baseUri . $menu->slug;
                 $return[$department]['category'][$category]['menus'][$menu->id]['icon'] = $menu->icon;
+
+                if (!isset($return[$department]['active'])) {
+                    $return[$department]['active'] = '';
+                }
+                if (!isset($return[$department]['category'][$category]['active'])) {
+                    $return[$department]['category'][$category]['active'] = '';
+                }
+                if (!isset($return[$department]['category'][$category]['menus'][$menu->id]['active'])) {
+                    $return[$department]['category'][$category]['menus'][$menu->id]['active'] = '';
+                }
             }
         }
+
         ksort($return);
 
         return new ObjectPhalcon($return);

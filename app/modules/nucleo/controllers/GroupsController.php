@@ -32,7 +32,7 @@ class GroupsController extends ControllerBase {
         try {
             $this->view->groups = Groups::find();
             if ($this->request->isPost()) {
-                $this->view->groups = Groups::find("UPPER(name) LIKE UPPER('%" . $this->request->getPost('groups', 'string') . "%')");
+                $this->view->groups = Groups::find("UPPER(title) LIKE UPPER('%" . $this->request->getPost('groups', 'string') . "%')");
                 $this->view->pesquisa = $this->request->getPost('groups');
             }
         } catch (Exception $exc) {
@@ -65,12 +65,12 @@ class GroupsController extends ControllerBase {
             }
 
             $this->view->id = $group->id;
-            $this->view->isPublic = $group->isPublic;
+            $this->view->type = $group->type;
 
             $this->tag->setDefault('id', $group->getId());
-            $this->tag->setDefault('name', $group->getName());
+            $this->tag->setDefault('title', $group->getTitle());
             $this->tag->setDefault('status', $group->getStatus());
-            $this->tag->setDefault('isPublic', $group->getIsPublic());
+            $this->tag->setDefault('type', $group->getType());
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
             return $this->response->redirect('nucleo/groups');
@@ -91,9 +91,9 @@ class GroupsController extends ControllerBase {
             $group = new Groups();
 
             $group->setId($group->autoincrement());
-            $group->setName($this->request->getPost('name'));
+            $group->setTitle($this->request->getPost('title'));
             $group->setStatus($this->request->getPost('status'));
-            $group->setIsPublic($this->request->getPost('isPublic'));
+            $group->setType($this->request->getPost('type'));
 
             if (!$group->create()) {
                 $msg = '';
@@ -130,9 +130,9 @@ class GroupsController extends ControllerBase {
             }
 
             $group->setId($this->request->getPost('id'));
-            $group->setName($this->request->getPost('name'));
+            $group->setTitle($this->request->getPost('title'));
             $group->setStatus($this->request->getPost('status'));
-            $group->setIsPublic($this->request->getPost('isPublic'));
+            $group->setType($this->request->getPost('type'));
 
 
             if (!$group->update()) {

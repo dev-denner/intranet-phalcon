@@ -181,4 +181,33 @@ class ModelBase extends \Phalcon\Mvc\Model {
         return $ora;
     }
 
+    protected function customSimpleQuery($serviceDb = 'protheusDb', $adapter = 'Oracle') {
+        $db = $this->getDi()->getDatabases()->database->$serviceDb;
+        $environment = $this->getDi()->getConfig()->application->environment != 'production' ? false : true;
+
+        if ($environment) {
+            $eventsManager = new \Phalcon\Events\Manager();
+            $dbListener = new \SysPhalcon\Plugins\DbListener();
+            $eventsManager->attach($serviceDb, $dbListener);
+        }
+        $config = array(
+            "host" => $db->host,
+            "dbname" => $db->dbname,
+            "username" => $db->username,
+            "password" => $db->password,
+            "charset" => $db->charset,
+            "persistent" => $db->persistent,
+        );
+        $adapter = '\Phalcon\Db\Adapter\Pdo\\' . $db->adapter;
+
+        $connection = new $adapter($config);
+
+        if ($environment) {
+            $connection->setEventsManager($eventsManager);
+        }
+
+        $this->schema = $db->schema;
+        return $connection;
+    }
+
 }

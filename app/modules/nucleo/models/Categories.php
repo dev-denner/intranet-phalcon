@@ -277,8 +277,6 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('NUCLEO');
-
         $this->hasMany('id', __NAMESPACE__ . '\Menus', 'category', array('alias' => 'Menus'));
 
         $this->addBehavior(new SoftDelete([

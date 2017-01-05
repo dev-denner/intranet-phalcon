@@ -10,7 +10,6 @@
 namespace SysPhalcon\Plugins;
 
 use Phalcon\Mvc\User\Component;
-use Nucleo\Models\Perfils;
 use Nucleo\Models\Groups;
 
 class Access extends Component {
@@ -69,7 +68,7 @@ class Access extends Component {
      */
     private function setPublicResources() {
 
-        $groups = Groups::findByIsPublic('S');
+        $groups = Groups::findByType('S');
 
         foreach ($groups as $group) {
             $perfils = $group->perfils;
@@ -147,13 +146,13 @@ class Access extends Component {
             return $this->privateResources;
         }
 
-        if (function_exists('apc_fetch')) {
-            $access = apc_fetch('nucleo-access-' . $userInfo['userInfo']['cpf']);
-            if (is_array($access)) {
-                $this->privateResources = $access;
-                return $access;
-            }
-        }
+        /* if (function_exists('apc_fetch')) {
+          $access = apc_fetch('nucleo-access-' . $userInfo['userInfo']['cpf']);
+          if (is_array($access)) {
+          $this->privateResources = $access;
+          return $access;
+          }
+          } */
 
         if (!file_exists($filePath)) {
             $this->privateResources = $this->rebuildPrivate();
@@ -163,9 +162,9 @@ class Access extends Component {
         $data = file_get_contents($filePath);
         $this->privateResources = unserialize($data);
 
-        if (function_exists('apc_store')) {
-            apc_store('nucleo-access-' . $userInfo['userInfo']['cpf'], $this->privateResources);
-        }
+        /* if (function_exists('apc_store')) {
+          apc_store('nucleo-access-' . $userInfo['userInfo']['cpf'], $this->privateResources);
+          } */
 
         return $this->privateResources;
     }
@@ -182,13 +181,13 @@ class Access extends Component {
             return $this->publicResources;
         }
 
-        if (function_exists('apc_fetch')) {
-            $access = apc_fetch('nucleo-access-public');
-            if (is_array($access)) {
-                $this->publicResources = $access;
-                return $access;
-            }
-        }
+        /* if (function_exists('apc_fetch')) {
+          $access = apc_fetch('nucleo-access-public');
+          if (is_array($access)) {
+          $this->publicResources = $access;
+          return $access;
+          }
+          } */
 
         if (!file_exists($filePath)) {
             $this->publicResources = $this->rebuildPublic();
@@ -199,9 +198,9 @@ class Access extends Component {
         $this->publicResources = unserialize($data);
 
 
-        if (function_exists('apc_store')) {
-            apc_store('nucleo-access-public', $this->publicResources);
-        }
+        /* if (function_exists('apc_store')) {
+          apc_store('nucleo-access-public', $this->publicResources);
+          } */
 
         return $this->publicResources;
     }
@@ -221,7 +220,7 @@ class Access extends Component {
         if (!file_exists($filePath)) {
             $file = fopen($filePath, 'w+');
             if ($file == false) {
-                throw new Exception('Não foi possível criar o arquivo em ' . $filePath);
+                throw new \Exception('Não foi possível criar o arquivo em ' . $filePath);
             }
         }
 
@@ -229,11 +228,11 @@ class Access extends Component {
 
             file_put_contents($filePath, serialize($acessPrivate));
 
-            if (function_exists('apc_store')) {
-                apc_store('nucleo-access-' . $userInfo['userInfo']['cpf'], $acessPrivate);
-            }
+            /* if (function_exists('apc_store')) {
+              apc_store('nucleo-access-' . $userInfo['userInfo']['cpf'], $acessPrivate);
+              } */
         } else {
-            throw new Exception('O usuário não tem permissões de escrita para criar a lista de acesso em ' . $filePath);
+            throw new \Exception('O usuário não tem permissões de escrita para criar a lista de acesso em ' . $filePath);
         }
 
         return $acessPrivate;
@@ -254,7 +253,7 @@ class Access extends Component {
         if (!file_exists($filePath)) {
             $file = fopen($filePath, 'w+');
             if ($file == false) {
-                throw new Exception('Não foi possível criar o arquivo em ' . $filePath);
+                throw new \Exception('Não foi possível criar o arquivo em ' . $filePath);
             }
         }
 
@@ -262,11 +261,11 @@ class Access extends Component {
 
             file_put_contents($filePath, serialize($acessPublic));
 
-            if (function_exists('apc_store')) {
-                apc_store('nucleo-access-public', $acessPublic);
-            }
+            /* if (function_exists('apc_store')) {
+              apc_store('nucleo-access-public', $acessPublic);
+              } */
         } else {
-            throw new Exception('O usuário não tem permissões de escrita para criar a lista de acesso em ' . $filePath);
+            throw new \Exception('O usuário não tem permissões de escrita para criar a lista de acesso em ' . $filePath);
         }
 
         return $acessPublic;

@@ -16,8 +16,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['userId',
-                                \Nucleo\Models\Users::find(),
-                                'using' => ['id', 'email'],
+                                \Nucleo\Models\Users::find(['order' => 'name']),
+                                'using' => ['id', 'name'],
                                 'useEmpty' => true,
                                 'emptyText' => 'Usuário (Escolha um Usuário)',
                                 'emptyValue' => '',
@@ -35,8 +35,8 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(),
-                                'using' => ['id', 'name'],
+                                \Nucleo\Models\Groups::find(['order' => 'title']),
+                                'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => 'Grupo (Escolha um Grupo)',
                                 'emptyValue' => '',

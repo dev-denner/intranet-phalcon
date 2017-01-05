@@ -1,0 +1,17 @@
+/*
+    Created on : 16/06/2016, 11:39:43
+    Author     : denner.fernandes
+*/
+
+#servico_email_box,
+#servico_sistemas_box,
+.servico_sistemas_protheus_box,
+.servico_sistemas_rm_box,
+.servico_sistemas_ecm_box,
+.servico_sistemas_bi_box,
+.servico_sistemas_otrs_box,
+#servico_matriz_box,
+.servico_matriz_rede_box,
+.servico_matriz_catraca_box{
+    display: none;
+}

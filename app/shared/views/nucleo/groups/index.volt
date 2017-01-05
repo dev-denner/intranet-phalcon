@@ -48,9 +48,9 @@
                 <thead>
                     <tr>
                         <th width="10" data-column-id="id" data-type="numeric">ID</th>
-                        <th width="60" data-column-id="name">Nome</th>
+                        <th width="60" data-column-id="title">Nome</th>
                         <th width="10" data-column-id="status">Status</th>
-                        <th width="10" data-column-id="isPublic">Público?</th>
+                        <th width="10" data-column-id="type">Tipo</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
                 </thead>
@@ -58,9 +58,9 @@
                     {% for group in groups %}
                     <tr>
                         <td>{{ group.id }}</td>
-                        <td>{{ group.name }}</td>
+                        <td>{{ group.title }}</td>
                         <td>{{ group.status }}</td>
-                        <td>{{ group.isPublic }}</td>
+                        <td>{{ group.type }}</td>
                         <td>{{ static_url('nucleo/groups') }}</td>
                     </tr>
                     {% endfor %}

@@ -350,8 +350,6 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('NUCLEO');
-
         $this->belongsTo('userId', __NAMESPACE__ . '\Users', 'id', ['alias' => 'Users']);
         $this->belongsTo('groupId', __NAMESPACE__ . '\Groups', 'id', ['alias' => 'Groups']);
         $this->belongsTo('module', __NAMESPACE__ . '\Modules', 'id', ['alias' => 'Modules']);

@@ -60,7 +60,7 @@ class Pfunc extends ModelBase {
         ];
     }
 
-    public function getDadosFuncionario($cpf) {
+    public function getDadosFuncionario($cpf, $chapa) {
 
         $dadosFunc = $this->modelsManager->createBuilder()
                 ->columns(['pfCodColigada coligada,
@@ -83,9 +83,10 @@ class Pfunc extends ModelBase {
                 ->innerJoin(__NAMESPACE__ . '\Pcodsituacao', 'siCodCliente = pfCodSituacao')
                 ->innerJoin(__NAMESPACE__ . '\Psecao', 'psCodColigada = pfCodColigada AND psCodigo = pfCodSecao')
                 ->innerJoin(__NAMESPACE__ . '\Pfuncao', 'fuCodColigada = pfCodColigada AND fuCodigo = pfCodFuncao')
-                ->where('ppCpf = :cpf:', ['cpf' => $cpf])
+                ->where('ppCpf = :cpf: AND pfChapa = :chapa:', ['cpf' => $cpf, 'chapa' => $chapa])
                 ->getQuery()
                 ->execute();
+
         return $dadosFunc->toArray(0)[0];
     }
 

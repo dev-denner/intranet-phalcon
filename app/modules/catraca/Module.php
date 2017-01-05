@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @copyright   2015 - 2015 Grupo MPE
+ * @license     New BSD License; see LICENSE
+ * @link        http://www.grupompe.com.br
+ * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
+ * */
+
+namespace Catraca;
+
+use Phalcon\DiInterface;
+use Phalcon\Loader;
+use Phalcon\Mvc\ModuleDefinitionInterface;
+
+/**
+ * Class Module
+ * @package Nucleo
+ */
+class Module implements ModuleDefinitionInterface {
+
+    private $_config;
+
+    /**
+     * Constructor
+     *
+     * @param $di
+     */
+    public function __construct() {
+        $this->_config = include __DIR__ . '/config/config.php';
+    }
+
+    /**
+     * Register a specific autoloader for the module
+     * @param \Phalcon\DiInterface $di
+     */
+    public function registerAutoloaders(DiInterface $di = null) {
+
+        $config = $this->_config;
+
+        $loader = new Loader();
+        $loader->registerNamespaces(
+                array(
+                    'Catraca\Controllers' => __DIR__ . '/controllers',
+                    'Catraca\Models' => __DIR__ . '/models',
+                    'Catraca\Forms' => __DIR__ . '/forms',
+                )
+        );
+
+        $loader->registerDirs(
+                array(
+                    $config->application->controllersDir,
+                    $config->application->modelsDir,
+                    $config->application->migrationsDir,
+                    $config->application->formsDir,
+                )
+        );
+
+        $loader->register();
+    }
+
+    /**
+     * Register specific services for the module
+     * @param \Phalcon\DiInterface $di
+     */
+    public function registerServices(DiInterface $di) {
+
+    }
+
+}

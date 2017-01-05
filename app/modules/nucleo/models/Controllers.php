@@ -41,6 +41,12 @@ use beforeUpdate;
      *
      * @var string
      */
+    protected $description;
+
+    /**
+     *
+     * @var string
+     */
     protected $sdel;
 
     /**
@@ -236,13 +242,29 @@ use beforeUpdate;
     }
 
     /**
+     *
+     * @return type
+     */
+    public function getDescription() {
+        return $this->description;
+    }
+
+    /**
+     *
+     * @param type $description
+     * @return \Nucleo\Models\Controllers
+     */
+    public function setDescription($description) {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize() {
 
         parent::initialize();
-
-        $this->setSchema('NUCLEO');
 
         $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'controller', ['alias' => 'Perfils']);
 
@@ -272,6 +294,7 @@ use beforeUpdate;
             'ID_CONTROLADOR' => 'id',
             'DS_TITULO' => 'title',
             'CD_SLUG' => 'slug',
+            'DS_DESCRICAO' => 'description',
             'SDEL' => 'sdel',
             'CREATEBY' => 'createBy',
             'CREATEIN' => 'createIn',

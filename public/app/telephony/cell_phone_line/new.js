@@ -4,18 +4,33 @@ $(document).ready(function () {
         $('#name, #cceo, #cpf').val('');
 
         if ($('#tipo').val() != 'Colaborador') {
-            $('#name, #cceo').removeAttr('readonly');
+            $('#name, #cceo').removeAttr('readonly').attr('required', 'required');
+            $('#cpf').removeAttr('required');
         } else {
-            $('#name, #cceo').attr('readonly', 'readonly');
+            $('#cpf').attr('required', 'required');
+            $('#name, #cceo').attr('readonly', 'readonly').removeAttr('required');
         }
     });
 
     $('#cpf').on('blur', function () {
-
         $('#name, #cceo').val('');
-
         getInfoUser();
     });
+
+    $("#linha")
+            .inputmask({"mask": "0##-####[#]-####", "placeholder": " "})
+            .focusout(function (event) {
+                var target, phone, element;
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);
+                element.inputmask('remove');
+                if (phone.length > 11) {
+                    element.inputmask({"mask": "0##-####[#]-####", "placeholder": " "});
+                } else {
+                    element.inputmask({"mask": "0##-####-[#]####", "placeholder": " "});
+                }
+            });
 
 });
 
@@ -28,7 +43,7 @@ var getInfoUser = function () {
         $.ajax({
             method: 'POST',
             dataType: "json",
-            url: '/nucleo/users/infoUser',
+            url: base_url_intranet + 'nucleo/users/infoUser',
             data: {cpf: cpf}
         }).success(function (returned) {
             $('#tipo').val('Colaborador');
@@ -46,9 +61,4 @@ var getInfoUser = function () {
             }
         });
     }
-}
-
-var validaAccessLine = function () {
-
-    return false;
 }

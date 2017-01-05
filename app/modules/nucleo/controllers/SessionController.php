@@ -9,23 +9,21 @@
 
 namespace Nucleo\Controllers;
 
-use SysPhalcon\Library\Auth\Exception as AuthException;
-use Nucleo\Controllers\UsersController;
-use Nucleo\Forms\UsersForm;
 use Nucleo\Models\Users;
 use Nucleo\Models\Mysql\ResetPasswords;
 use Nucleo\Models\Mysql\PasswordChanges;
-use Nucleo\Models\RM\Pfunc;
 use Nucleo\Models\Protheus\Colaboradores;
 use Nucleo\Models\UsersGroups;
 use SysPhalcon\Controllers\ControllerBase;
 
-class SessionController extends ControllerBase {
+class SessionController extends ControllerBase
+{
 
     /**
      *
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle(' Login ');
         parent::initialize();
         $this->view->setTemplateBefore('public');
@@ -35,8 +33,10 @@ class SessionController extends ControllerBase {
      *
      * @return type
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
+
             if ($this->auth->hasRememberMe()) {
                 return $this->auth->loginWithRememberMe();
             }
@@ -55,34 +55,35 @@ class SessionController extends ControllerBase {
      * @return type
      * @throws Exception
      */
-    public function logonAction() {
+    public function logonAction()
+    {
 
         try {
             if ($this->request->isPost()) {
-                if ($this->security->checkToken()) {
+                //if ($this->security->checkToken()) {
 
-                    if ($this->validation()) {
+                if ($this->validation()) {
 
-                        $this->auth->check([
-                            'cpf' => $this->request->getPost('cpf', 'alphanum'),
-                            'password' => $this->request->getPost('password'),
-                            'rememberMe' => $this->request->getPost('rememberMe')
-                        ]);
+                    $this->auth->check([
+                        'cpf' => $this->request->getPost('cpf', 'alphanum'),
+                        'password' => $this->request->getPost('password'),
+                        'rememberMe' => $this->request->getPost('rememberMe')
+                    ]);
 
-                        $user = $this->auth->getUser();
+                    $user = $this->auth->getUser();
 
-                        if ($user->mustChangePassword == 'S') {
-                            $msg = 'Este é seu primeiro acesso ao sistema, ou foi solicitado a mudança de sua senha pelo Administrador.<br>Por favor, redefina sua senha.';
-                            $this->flash->notice($msg);
-                            return $this->response->redirect('change-password');
-                        }
-
-                        return $this->response->redirect();
+                    if ($user->mustChangePassword == 'S') {
+                        $msg = 'Este é seu primeiro acesso ao sistema, ou foi solicitado a mudança de sua senha pelo Administrador.<br>Por favor, redefina sua senha.';
+                        $this->flash->notice($msg);
+                        return $this->response->redirect('change-password');
                     }
-                } else {
-                    $this->security->hash(rand());
-                    throw new Exception('Chave CSRF inválida.');
+
+                    return $this->response->redirect();
                 }
+                /* } else {
+                  $this->security->hash(rand());
+                  throw new Exception('Chave CSRF inválida.');
+                  } */
             }
         } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
@@ -95,24 +96,25 @@ class SessionController extends ControllerBase {
      * @return type
      * @throws Exception
      */
-    public function registerAction() {
+    public function registerAction()
+    {
 
         try {
             if (!$this->request->isPost()) {
                 return $this->response->redirect('login');
             } else {
-                if ($this->security->checkToken()) {
+                // if ($this->security->checkToken()) {
 
-                    if ($this->validation()) {
+                if ($this->validation()) {
 
-                        if ($this->makeRegister()) {
-                            $this->flash->success('Cadastro realizado com sucesso.');
-                        }
+                    if ($this->makeRegister()) {
+                        $this->flash->success('Cadastro realizado com sucesso.');
                     }
-                } else {
-                    $this->security->hash(rand());
-                    throw new Exception('Chave CSRF inválida.');
                 }
+                /* } else {
+                  $this->security->hash(rand());
+                  throw new Exception('Chave CSRF inválida.');
+                  } */
             }
         } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
@@ -124,36 +126,37 @@ class SessionController extends ControllerBase {
     /**
      * Shows the forgot password form
      */
-    public function forgotPasswordAction() {
+    public function forgotPasswordAction()
+    {
 
         try {
             if ($this->request->isPost()) {
-                if ($this->security->checkToken()) {
-                    if ($this->validation()) {
-                        $user = Users::findFirstByEmail($this->request->getPost('email', 'email'));
-                        if (!$user) {
-                            throw new Exception('Não há nenhuma conta associada a este e-mail');
+                //if ($this->security->checkToken()) {
+                if ($this->validation()) {
+                    $user = Users::findFirstByEmail($this->request->getPost('email', 'email'));
+                    if (!$user) {
+                        throw new Exception('Não há nenhuma conta associada a este e-mail');
+                    } else {
+                        $resetPassword = new ResetPasswords();
+                        $userName = explode('@', $user->email)[0];
+                        $resetPassword->usersName = $userName;
+                        if ($resetPassword->save()) {
+                            $this->flash->success('Sucesso! Por favor verifique suas mensagens de e-mail para redefinir sua senha.');
                         } else {
-                            $resetPassword = new ResetPasswords();
-                            $userName = explode('@', $user->email)[0];
-                            $resetPassword->usersName = $userName;
-                            if ($resetPassword->save()) {
-                                $this->flash->success('Sucesso! Por favor verifique suas mensagens de e-mail para uma redefinir sua senha.');
-                            } else {
+                            foreach ($resetPassword->getMessages() as $message) {
+                                $msg = '';
                                 foreach ($resetPassword->getMessages() as $message) {
-                                    $msg = '';
-                                    foreach ($resetPassword->getMessages() as $message) {
-                                        $msg .= $message . '<br>';
-                                    }
-                                    throw new Exception($msg);
+                                    $msg .= $message . '<br>';
                                 }
+                                throw new Exception($msg);
                             }
                         }
                     }
-                } else {
-                    $this->security->hash(rand());
-                    throw new Exception('Chave CSRF inválida.');
                 }
+                /* } else {
+                  $this->security->hash(rand());
+                  throw new Exception('Chave CSRF inválida.');
+                  } */
             }
         } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
@@ -165,9 +168,15 @@ class SessionController extends ControllerBase {
      *
      * @return type
      */
-    public function logoutAction() {
+    public function logoutAction()
+    {
+
         $this->auth->remove();
         $this->session->destroy();
+        session_unset();
+        session_write_close();
+        setcookie(session_name(), '', 0, '/');
+        session_regenerate_id(true);
 
         return $this->response->redirect('login');
     }
@@ -177,7 +186,8 @@ class SessionController extends ControllerBase {
      * @return boolean
      * @throws Exception
      */
-    private function validation() {
+    private function validation()
+    {
 
         $cpf = $this->request->getPost('cpf', 'alphanum');
         $password = $this->request->getPost('password');
@@ -239,29 +249,30 @@ class SessionController extends ControllerBase {
      * @return boolean
      * @throws Exception
      */
-    private function makeRegister() {
+    private function makeRegister()
+    {
 
         $cpf = $this->request->getPost('cpf', 'alphanum');
         $dataAdmissao = $this->request->getPost('dataAdmissao');
-        $empresa = $this->request->getPost('empresa', 'int');
+        $empresa = $this->request->getPost('empresa', 'alphanum');
 
         $colaboradores = new Colaboradores();
         $funcionarioProtheus = $colaboradores->validaDadosFuncionario($cpf, $empresa, $dataAdmissao);
 
         if (empty($funcionarioProtheus)) {
-            throw new Exception('Não foi encontrado esse CPF na base de dados.');
+            throw new Exception('Não foi encontrado esse CPF na base de dados. Verifique sua Data de Admissão ou Empresa e tente novamente.');
         }
 
         $user = new Users();
 
         $user->setId($user->autoincrement());
-        $user->setName($this->request->getPost('name', 'string'));
+        $user->setName($funcionarioProtheus['NOME']);
         $user->setCpf($cpf);
         $email = $this->request->getPost('email', 'email');
         $user->setEmail($email);
         $user->setUserName(explode('@', $email)[0]);
         $user->setPassword($this->security->hash($this->request->getPost('password')));
-        $user->setMustChangePassword('S');
+        $user->setMustChangePassword('N');
         $user->setStatus('A');
 
         if (!$user->create()) {
@@ -293,7 +304,8 @@ class SessionController extends ControllerBase {
      * @return type
      * @throws Exception
      */
-    public function resetPasswordAction() {
+    public function resetPasswordAction()
+    {
 
         try {
 
@@ -320,8 +332,8 @@ class SessionController extends ControllerBase {
             }
 
             $user = Users::findFirst([
-                        'userName = ?0',
-                        'bind' => [$resetPassword->usersName]
+                          'userName = ?0',
+                          'bind' => [$resetPassword->usersName]
             ]);
 
             $this->auth->authUserById($user->id);
@@ -335,9 +347,11 @@ class SessionController extends ControllerBase {
 
     /**
      *
+     * @return type
      * @throws Exception
      */
-    public function changePasswordAction() {
+    public function changePasswordAction()
+    {
 
         try {
             $user = $this->auth->getUser();

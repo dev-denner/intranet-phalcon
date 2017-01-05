@@ -14,7 +14,7 @@
                         <input type="text" class="form-control" name="requisito_minimo" id="requisito_minimo" value="{{ pesquisa }}" onclick="this.select()" />
                         <label class="fg-label">Digite sua pesquisa</label>
                     </div>
-                    <p class="help-block">Buscar por Código, Descrição ou Grupo.</p>
+                    <p class="help-block">Buscar por Código ou Descrição.</p>
                 </div>
             </div>
             <div class="col-sm-2">
@@ -49,8 +49,8 @@
                     <tr>
                         <th data-column-id="CODIGO_REQMIN">Código</th>
                         <th data-column-id="DESCRICAO_REQMIN">Descrição</th>
-                        <th data-column-id="CODIGO_GRUPO">Cód. Grupo</th>
-                        <th data-column-id="DESCRICAO_GRUPO">grupo</th>
+<!--                        <th data-column-id="CODIGO_GRUPO">Cód. Grupo</th>
+                        <th data-column-id="DESCRICAO_GRUPO">grupo</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -58,8 +58,8 @@
                     <tr>
                         <td>{{ requisito_minimo.CODIGO_REQMIN }}</td>
                         <td>{{ requisito_minimo.DESCRICAO_REQMIN }}</td>
-                        <td>{{ requisito_minimo.CODIGO_GRUPO }}</td>
-                        <td>{{ requisito_minimo.DESCRICAO_GRUPO }}</td>
+<!--                        <td>{{ requisito_minimo.CODIGO_GRUPO }}</td>
+                        <td>{{ requisito_minimo.DESCRICAO_GRUPO }}</td>-->
                     </tr>
                     {% endfor %}
                 </tbody>

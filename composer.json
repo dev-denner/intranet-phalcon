@@ -1,25 +1,31 @@
 {
     "name": "denners777/api-phalcon",
     "description": "APP for application management in Phalcon PHP. Database: Oracle. Integrated with Whoops.",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "require": {
         "php": ">=5.6",
-        "ext-phalcon": ">=2.0",
+        "ext-phalcon": "2.*",
+        "phalcon/incubator": "2.*",
         "aymanrb/php-unstructured-text-parser": "dev-master",
         "ilya/belt": "~2",
         "filp/whoops": "*",
-        "mpdf/mpdf": "dev-master",
-        "phalcon/incubator": "2.*",
-        "phpoffice/phpexcel": "dev-master",
-        "phpoffice/phpword": "dev-master",
+        "phpoffice/phpexcel": "^1.1",
         "swiftmailer/swiftmailer": "^5.4",
-        "respect/validation": "dev-master",
-        "phalcongelist/breadcrumbs": "^1.2"
+        "respect/validation": "^1.1",
+        "phalcongelist/breadcrumbs": "^1.2",
+        "jbroadway/urlify": "*",
+        "mpdf/mpdf": "dev-master",
+        "cangelis/pdf": "2.*",
+        "iio/libmergepdf": "~3.0",
+        "kriswallsmith/assetic": "*",
+        "vlucas/phpdotenv": "*"
     },
     "require-dev": {
         "symfony/debug": "*",
         "symfony/var-dumper": "*",
-        "phpspec/phpspec": "~2.0"
+        "devster/ubench": "1.1.*",
+        "tracy/tracy": "*",
+        "roave/security-advisories": "dev-master"
     },
     "authors": [{
             "name": "Denner Fernandes",

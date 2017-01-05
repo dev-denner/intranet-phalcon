@@ -40,10 +40,15 @@ class NotFound extends Plugin {
                 case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
                     $this->response->redirect('not-found');
                     return false;
+                    break;
+                default :
+                    $this->response->redirect('internal-error');
+                    return false;
+                    break;
             }
         }
-        //$this->response->redirect('internal-error');
-        // return false;
+        $this->response->redirect('internal-error');
+        return false;
     }
 
 }

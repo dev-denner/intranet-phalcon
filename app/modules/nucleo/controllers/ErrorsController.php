@@ -19,17 +19,17 @@ class ErrorsController extends ControllerBase {
     }
 
     public function show404Action() {
-        $this->tag->setTitle('Oops!');
+        $this->tag->setTitle('Oops! Não Encontrado');
         $this->response->setStatusCode(404, "Não Encontrado");
     }
 
     public function show401Action() {
-        $this->tag->setTitle('Oops!');
+        $this->tag->setTitle('Oops! Não Autorizado');
         $this->response->setStatusCode(401, "Não Autorizado");
     }
 
     public function show500Action() {
-        $this->tag->setTitle('Oops!');
+        $this->tag->setTitle('Oops! Erro Interno');
         $this->response->setStatusCode(500, "Erro Interno");
     }
 

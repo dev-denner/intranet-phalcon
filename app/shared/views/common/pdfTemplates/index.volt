@@ -21,7 +21,7 @@
                     <thead>
                         <tr>
                             {% for index, value in dado %}
-                            <th><?php echo ucwords(strtolower(str_replace('_', ' ', $index))); ?></th>
+                            <th>{{ str_replace('_', ' ', index)|lower|capitalize }}</th>
                             {% endfor %}
                         </tr>
                     </thead>

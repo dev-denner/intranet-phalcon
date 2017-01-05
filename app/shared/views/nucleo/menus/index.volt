@@ -55,6 +55,8 @@
                         <th data-column-id="action">Ação</th>
                         <th data-column-id="department">Departamento</th>
                         <th data-column-id="category">Categoria</th>
+                        <th data-column-id="type">Tipo</th>
+                        <th data-column-id="position">Posição</th>
                         <th data-column-id="icon" data-formatter="icon" data-sortable="false" data-align='center'>Ícone</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
                     </tr>
@@ -65,11 +67,13 @@
                         <td>{{ menu.id }}</td>
                         <td>{{ menu.title }}</td>
                         <td>{{ menu.slug }}</td>
-                        <td>{{ menu.modules.name }}</td>
+                        <td>{{ menu.modules.title }}</td>
                         <td>{{ menu.controllers.title }}</td>
                         <td>{{ menu.actions.title }}</td>
                         <td>{{ menu.departments.title }}</td>
                         <td>{{ menu.categories.title }}</td>
+                        <td>{{ menu.type }}</td>
+                        <td>{{ menu.position }}</td>
                         <td>{{ menu.icon }}</td>
                         <td>{{ static_url('nucleo/menus') }}</td>
                     </tr>

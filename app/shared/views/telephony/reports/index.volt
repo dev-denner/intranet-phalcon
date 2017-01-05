@@ -2,7 +2,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Impressão de Relatórios <small>Escolha o relatório desejado, escolha mês e ano, e se necessário digite um valor. Após clique no botão Gerar.</small></h2>
+        <h2>Relatórios para Rateios de TI <small>Escolha o relatório desejado, escolha mês e ano, e se necessário digite um valor. Após clique no botão Gerar.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">
@@ -34,7 +34,8 @@
                 </div>
             </div>
             <div class="col-sm-2">
-                <div class="fg-float">
+                <div class="input-group fg-float">
+                    <span class="input-group-addon"><i class="zmdi zmdi-calendar-alt"></i></span>
                     <div class="fg-line">
                         {{ text_field("mes", "class" : "form-control fg-input monthPicker", 'required': 'required') }}
                         <label class="fg-label">Mês de Referência</label>

@@ -8,7 +8,7 @@
             </div>
 
             <div class="card-body card-padding">
-                {{ form("telephony/cell_phone_line/create", "method":"post", "autocomplete" : "off", 'onsubmit': 'return validaAccessLine();') }}
+                {{ form("telephony/cell_phone_line/create", "method":"post", "autocomplete" : "off", 'onsubmit': 'overlay(true);') }}
 
                 <div class="form-group fg-float">
                     <div class="fg-line">

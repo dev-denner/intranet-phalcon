@@ -43,7 +43,7 @@
 </div>
 
 <!-- Register -->
-<div class="lc-block" id="l-register">
+<div class="lc-block valid-block" id="l-register">
     {{ form('login/register', 'method': 'post', 'autocomplete': 'off', 'onsubmit': 'overlay(true)') }}
     <h3>Cadastre-se</h3>
     <input type="hidden" name="{{ keyToken }}" value="{{ valueToken }}" />
@@ -147,7 +147,7 @@
     {{ end_form() }}
 
     <ul class="login-navigation">
-        <li data-block="#l-login" class="bgm-green">Entar</li>
+        <li data-block="#l-login" class="bgm-green">Entrar</li>
         <li data-block="#l-register" class="bgm-red">Cadastre-se</li>
     </ul>
 </div>

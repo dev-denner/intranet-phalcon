@@ -30,7 +30,7 @@ use beforeUpdate;
      *
      * @var string
      */
-    protected $name;
+    protected $title;
 
     /**
      *
@@ -42,7 +42,7 @@ use beforeUpdate;
      *
      * @var string
      */
-    protected $isPublic;
+    protected $type;
 
     /**
      *
@@ -87,13 +87,13 @@ use beforeUpdate;
     }
 
     /**
-     * Method to set the value of field name
+     * Method to set the value of field title
      *
-     * @param string $name
+     * @param string $title
      * @return $this
      */
-    public function setName($name) {
-        $this->name = $name;
+    public function setTitle($title) {
+        $this->title = $title;
 
         return $this;
     }
@@ -111,13 +111,13 @@ use beforeUpdate;
     }
 
     /**
-     * Method to set the value of field isPublic
+     * Method to set the value of field type
      *
-     * @param string $isPublic
+     * @param string $type
      * @return $this
      */
-    public function setIsPublic($isPublic) {
-        $this->isPublic = $isPublic;
+    public function setType($type) {
+        $this->type = $type;
 
         return $this;
     }
@@ -192,12 +192,12 @@ use beforeUpdate;
     }
 
     /**
-     * Returns the value of field name
+     * Returns the value of field title
      *
      * @return string
      */
-    public function getName() {
-        return $this->name;
+    public function getTitle() {
+        return $this->title;
     }
 
     /**
@@ -210,12 +210,12 @@ use beforeUpdate;
     }
 
     /**
-     * Returns the value of field isPublic
+     * Returns the value of field type
      *
      * @return string
      */
-    public function getIsPublic() {
-        return $this->isPublic;
+    public function getType() {
+        return $this->type;
     }
 
     /**
@@ -268,7 +268,6 @@ use beforeUpdate;
      */
     public function initialize() {
         parent::initialize();
-        $this->setSchema('NUCLEO');
         $this->hasMany('id', __NAMESPACE__ . '\Perfils', 'groupId', ['alias' => 'Perfils']);
         $this->hasMany('id', __NAMESPACE__ . '\UsersGroups', 'groupId', ['alias' => 'UsersGroups']);
         $this->addBehavior(new SoftDelete([
@@ -295,9 +294,9 @@ use beforeUpdate;
     public static function columnMap() {
         return array(
             'ID_GRUPO' => 'id',
-            'DS_NOME' => 'name',
+            'DS_TITULO' => 'title',
             'FL_STATUS' => 'status',
-            'FL_PUBLICO' => 'isPublic',
+            'FL_TIPO' => 'type',
             'SDEL' => 'sdel',
             'CREATEBY' => 'createBy',
             'CREATEIN' => 'createIn',

@@ -502,7 +502,6 @@ class Statement extends ModelBase {
 
         parent::initialize();
 
-        $this->setSchema('TELEFONIA');
         $this->setConnectionService('telefoniaDb');
     }
 
@@ -598,7 +597,7 @@ FROM SA_EXTRATO)';
         $connection = $this->customConnection('telefoniaDb');
 
         $query = "SELECT SUM(VALOR) valor FROM EXTRATO
-                WHERE NUMACS = '{$linhas}' AND MESREF = '{$mes}'";
+                WHERE NUMACS = '{$linhas}' AND MESREF = '{$mes}' AND OPERLD IS NULL";
 
         $result = $connection->select($query);
         $return = $connection->fetchObject($result);

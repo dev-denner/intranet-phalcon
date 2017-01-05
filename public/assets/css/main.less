@@ -1,15 +1,36 @@
+@import '../vendors/bower_components/animate.css/animate.min.css';
+@import '../vendors/bower_components/bootstrap-sweetalert/dist/sweetalert.css';
+@import '../vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css';
+@import '../vendors/bower_components/jquery.bootgrid/dist/jquery.bootgrid.min.css';
+@import '../vendors/bower_components/glyphicons-halflings/css/glyphicons-halflings.css';
+@import '../vendors/bower_components/components-font-awesome/css/font-awesome.min.css';
+@import '../vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css';
+@import '../vendors/bower_components/foundation-icon-fonts/foundation-icons.css';
+@import '../vendors/bower_components/jquery-ui/themes/south-street/jquery-ui.min.css';
+@import '../vendors/bower_components/jquery-ui/themes/south-street/theme.css';
+@import '../vendors/bower_components/jquery-ui-month-picker/src/MonthPicker.css';
+@import '../vendors/bower_components/summernote/dist/summernote.css';
+@import '../vendors/bower_components/chosen/chosen.css';
+@import '../vendors/bower_components/bootstrap-fileinput/css/fileinput.min.css';
+
+@import '../vendors/bower_components/datatables.net-dt/css/jquery.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-autofill-dt/css/autoFill.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-buttons-dt/css/buttons.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-colreorder-dt/css/colReorder.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-fixedcolumns-dt/css/fixedColumns.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-responsive-dt/css/responsive.dataTables.min.css';
+@import '../vendors/bower_components/datatables.net-select-dt/css/select.dataTables.min.css';
+
+@import '../vendors/bower_components/tablecloth/assets/css/bootstrap-tables.css';
+@import '../vendors/bower_components/tablecloth/assets/css/tablecloth.css';
+@import '../vendors/bower_components/tablecloth/assets/css/prettify.css';
+
 @import 'app.min.1.less';
 @import 'app.min.2.less';
-@import 'font-awesome.min.less';
 @import 'icomoon-variables.less';
 @import 'icomoon.less';
 @import 'bootgrid-custom.less';
-@import 'prettify.less';
-@import 'jquery-ui.less';
-@import 'jquery-ui.structure.less';
-@import 'jquery-ui.theme.less';
-@import 'monthPicker.less';
-@import 'summernote.less';
 
 
 .a-link{
@@ -83,30 +104,6 @@ body{
         }
     }
 }
-#overlay{
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    z-index: 9999999;
-    background: rgba(0, 0, 0, 0.3);
-    top: 0;
-    .loading {
-        position: absolute;
-        bottom: 10%;
-        right: 10%;
-        color: #EEEDDD;
-        .circle{
-            background: rgba(255, 255, 255, 0.65);
-            border-radius: 75px;
-            overflow: hidden;
-            .preloader{
-                width: 120px;
-            }
-        }
-
-    }
-}
-
 @media (min-width: 1199px){
     body {
         &.sw-toggled{
@@ -262,10 +259,183 @@ body{
     }
 }
 
+.well-alt{
+    background-color: #e5f2d7 !important;
+}
+
 .gradient_verd_diagonal{
     background: #a8d6a8;
-    background: -moz-linear-gradient(-45deg,  #a8d6a8 0%, #7ac07a 17%, #4fa94f 33%, #038103 67%, #025202 83%, #012101 100%);
-    background: -webkit-linear-gradient(-45deg,  #a8d6a8 0%,#7ac07a 17%,#4fa94f 33%,#038103 67%,#025202 83%,#012101 100%);
-    background: linear-gradient(135deg,  #a8d6a8 0%,#7ac07a 17%,#4fa94f 33%,#038103 67%,#025202 83%,#012101 100%);
+    background: -moz-linear-gradient(-45deg, #a8d6a8 0%, #7ac07a 17%, #4fa94f 33%, #038103 67%, #025202 83%, #012101 100%);
+    background: -webkit-linear-gradient(-45deg, #a8d6a8 0%, #7ac07a 17%, #4fa94f 33%, #038103 67%, #025202 83%, #012101 100%);
+    background: linear-gradient(135deg, #a8d6a8 0%, #7ac07a 17%, #4fa94f 33%, #038103 67%, #025202 83%, #012101 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8d6a8', endColorstr='#012101',GradientType=1 );
+}
+
+#overlay{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 9999999;
+    background: rgba(0, 0, 0, 0.3);
+    top: 0;
+    .loading {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #EEEDDD;
+    }
+}
+
+html:not(.ie9) .select:before {
+    background-color: transparent;
+}
+
+@media print {
+    .ui-tooltip {
+        display: none !important;
+    }
+}
+
+.check-legend{
+    margin-top: 5px;
+    .input-helper::before{
+        background-color: #fbf9f9;
+    }
+}
+
+.m_translate(@x, @y){
+    -webkit-transform: translateZ(0px) translate(@x, @y);
+    transform: translateZ(0px) translate(@x, @y);
+}
+
+.m_rotate(@deg){
+    -webkit-transform: rotate(@deg);
+    transform: rotate(@deg);
+}
+
+.m_circle(@width, @height){
+    width: @width;
+    height: @height;
+    border-radius: 50%;
+}
+
+.mpc_preloader{
+    z-index: 999;
+    .m_translate(-50%, -50%);
+}
+
+@mpc_preloader18_time: 3.5s;
+@mpc_preloader18_size: 125px;
+@mpc_preloader18_color1: #fff;
+//@mpc_preloader18_color2: #1b436b;
+@mpc_preloader18_color2: rgb(76, 175, 80);
+
+.mpc_preloader18{
+
+    height: @mpc_preloader18_size;
+    width: @mpc_preloader18_size;
+    background-color: @mpc_preloader18_color1;
+
+    -webkit-animation:  mpc_preloader18 @mpc_preloader18_time ease-in-out alternate infinite;
+    animation: mpc_preloader18 @mpc_preloader18_time ease-in-out alternate infinite;
+}
+
+.mpc_preloader18_label{
+
+    font-size: 14px;
+    color: @mpc_preloader18_color2;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    .m_translate(-50%,-50%);
+
+    -webkit-animation:  zoom_text @mpc_preloader18_time ease-in-out alternate infinite;
+    animation: zoom_text @mpc_preloader18_time ease-in-out alternate infinite;
+}
+
+.ma_mpc_preloader18(){
+
+    10%{
+        .m_rotate(0deg);
+    }
+
+    50%{
+        .m_rotate(360deg);
+        border-radius: 50%;
+        background-color: @mpc_preloader18_color2;
+    }
+
+    98%{
+        .m_rotate(0deg);
+    }
+}
+
+.ma_animation_text(){
+
+    25%{
+        opacity: 0.2;
+    }
+
+    50%{
+        opacity: 1;
+        color: @mpc_preloader18_color1;
+    }
+}
+
+@keyframes mpc_preloader18{
+    .ma_mpc_preloader18();
+}
+
+@-webkit-keyframes mpc_preloader18{
+    .ma_mpc_preloader18();
+}
+
+@keyframes zoom_text{
+    .ma_animation_text();
+}
+
+@-webkit-keyframes zoom_text{
+    .ma_animation_text();
+}
+
+@keyframes pulse_animation {
+    0% { transform: scale(1.5); opacity: 0.0}
+    10% { transform: scale(1.45); opacity: 0.1}
+    20% { transform: scale(1.4); opacity: 0.2}
+    30% { transform: scale(1.35); opacity: 0.3}
+    40% { transform: scale(1.3); opacity: 0.4}
+    50% { transform: scale(1.25); opacity: 0.5}
+    60% { transform: scale(1.2); opacity: 0.6}
+    70% { transform: scale(1.15); opacity: 0.7}
+    80% { transform: scale(1.1); opacity: 0.8}
+    80% { transform: scale(1.05); opacity: 0.9}
+    100% { transform: scale(1); opacity: 1.0}
+}
+
+.pulse {
+    animation-name: pulse_animation;
+    animation-duration: 1000ms;
+    transform-origin:70% 70%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+
+.chosen-container-multi{
+    .chosen-choices{
+        li{
+            &.search-choice {
+                background: #4caf50;
+                color: #ddfbd7;
+                .search-choice-close {
+                    color: #4caf50;
+                    &::before {
+                        color: #ddfbd7;
+                    }
+                }
+            }
+        }
+    }
 }

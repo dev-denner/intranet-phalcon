@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Acessos Exclusivos CPF x Linhas <small>Digite abaixo o acesso exclusivo cpf x linha desejado e então clique no botão Buscar.</small></h2>
+        <h2>Acessos Exclusivos a Linhas <small>Digite abaixo o acesso exclusivo cpf x linha desejado e então clique no botão Buscar.</small></h2>
     </div>
     <div class="card-body card-padding">
         <div class="row">

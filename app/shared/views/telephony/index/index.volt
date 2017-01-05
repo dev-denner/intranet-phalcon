@@ -88,7 +88,7 @@
                         <td>{{ extrato.numChamada|trim }}</td>
                         <td>{{ extrato.tipo|trim }}</td>
                         <td>{{ extrato.duracao|trim }}</td>
-                        <td>R$ <?php echo number_format($extrato->valor, 2, ',', '.'); ?></td>
+                        <td>R$ {{ number_format(extrato.valor, 2, ',', '.') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -99,12 +99,12 @@
                         <td>{{ total.numAcs }}</td>
                         <td colspan="3">{{ total.plano }}</td>
                         <td colspan="4">{{ total.tpServ }}</td>
-                        <td>R$ <?php echo number_format($total->valor, 2, ',', '.'); ?></td>
+                        <td>R$ {{ number_format(total.valor, 2, ',', '.') }}</td>
                     </tr>
                     {% endfor %}
                     <tr>
                         <td colspan="9"><b>Total</b></td>
-                        <td><b>R$ <?php echo number_format($totalLinha->VALOR, 2, ',', '.'); ?></b></td>
+                        <td><b>R$ {{ number_format(totalLinha.VALOR, 2, ',', '.') }}</b></td>
                     </tr>
                 </tfoot>
             </table>

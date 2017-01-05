@@ -14,6 +14,7 @@ use SysPhalcon\Models\ModelBase;
 class Zimbra extends ModelBase {
 
     protected $szgEmail;
+    protected $szgCpf;
     protected $szgNome;
     protected $szgStatus;
     protected $szgObs;
@@ -27,7 +28,7 @@ class Zimbra extends ModelBase {
         $this->setConnectionService('protheusDb');
         $this->setReadConnectionService('protheusDb');
 
-        $this->hasMany('szgEmail', __NAMESPACE__ . '\Colaboradores', 'szhEmail', ['alias' => 'Colaboradores',]);
+        $this->hasMany('szgCpf', __NAMESPACE__ . '\Colaboradores', 'szhCpf', ['alias' => 'Colaboradores',]);
     }
 
     public function getSource() {
@@ -37,6 +38,7 @@ class Zimbra extends ModelBase {
     public static function columnMap() {
         return [
             'ZG_EMAIL' => 'szgEmail',
+            'ZG_CPF' => 'szgCpf',
             'ZG_NOME' => 'szgNome',
             'ZG_STATUS' => 'szgStatus',
             'ZG_OBS' => 'szgObs',

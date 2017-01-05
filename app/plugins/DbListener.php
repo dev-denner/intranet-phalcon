@@ -4,7 +4,6 @@ namespace SysPhalcon\Plugins;
 
 use Phalcon\Db\Profiler;
 use Phalcon\Logger;
-use Phalcon\Logger\Adapter\File;
 use Phalcon\Mvc\User\Component;
 use Phalcon\DI\FactoryDefault as Di;
 

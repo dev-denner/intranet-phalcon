@@ -10,80 +10,82 @@
 namespace SysPhalcon\Library\Mail;
 
 use Phalcon\Mvc\User\Component;
-use Phalcon\Mvc\View;
+use Nucleo\Models\Mysql\LogForms;
 
 class Mail extends Component {
 
     protected $transport;
     protected $amazonSes;
-    protected $directSmtp = true;
 
-    private function amazonSESSend($raw) {
-        if ($this->amazonSes == null) {
-            $this->amazonSes = new \Aws\S3\S3Client([
-                'key' => $this->config->amazon->AWSAccessKeyId,
-                'secret' => $this->config->amazon->AWSSecretKey,
-                'version' => 'latest',
-                'region' => 'us-east-1'
-            ]);
-            @$this->amazonSes->disable_ssl_verification();
-        }
-
-        $response = $this->amazonSes->send_raw_email(
-                [
-            'Data' => base64_encode($raw)
-                ], [
-            'curlopts' => [
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0
-            ]
-                ]
-        );
-
-        if (!$response->isOK()) {
-            $this->logger->error('Error sending email from AWS SES: ' . $response->body->asXML());
-        }
-
-        return true;
+    public function initialize() {
+        parent::initialize();
     }
 
     public function getTemplate($name, $params) {
         $parameters = array_merge(['publicUrl' => $this->config->application->baseUri,], $params);
         return $this->view->getRender('emailTemplates', $name, $parameters, function($view) use ($name) {
-                    $view->setMainView('common/emailTemplates/' . $name);
-                });
-        return $view->getContent();
+                      $view->setMainView('common/emailTemplates/' . $name);
+                  });
+        return $this->view->getContent();
     }
 
-    public function send($to, $subject, $name, $params) {
+    public function send($to, $subject, $name, $params, $options = []) {
 
         $mailSettings = $this->config->mail;
-
         $template = $this->getTemplate($name, $params);
+        $fromEmail = $mailSettings->fromEmail;
+        $fromName = $mailSettings->fromName;
+
+        if (isset($options['fromEmail'])) {
+            $fromEmail = $options['fromEmail'];
+        }
+        if (isset($options['fromName'])) {
+            $fromName = $options['fromName'];
+        }
+
+        //echo $template, exit;
 
         $message = \Swift_Message::newInstance()
-                ->setSubject($subject)
-                ->setTo($to)
-                ->setFrom([$mailSettings->fromEmail => $mailSettings->fromName])
-                ->setReplyTo([$mailSettings->fromEmail => $mailSettings->fromName])
-                ->setBody($template, 'text/html');
+                  ->setSubject($subject)
+                  ->setTo($to)
+                  ->setBcc([$mailSettings->fromEmail => $mailSettings->fromName])
+                  ->setFrom([$fromEmail => $fromName])
+                  ->setReplyTo($to)
+                  ->setBody($template, 'text/html');
 
-        if ($this->directSmtp) {
-
-            if (!$this->transport) {
-                $this->transport = \Swift_SmtpTransport::newInstance(
-                                $mailSettings->smtp->server, $mailSettings->smtp->port, $mailSettings->smtp->security
-                        )
-                        ->setUsername($mailSettings->smtp->username)
-                        ->setPassword($mailSettings->smtp->password);
-            }
-
-            $mailer = \Swift_Mailer::newInstance($this->transport);
-
-            return $mailer->send($message);
-        } else {
-            return $this->amazonSESSend($message->toString());
+        if (isset($options['copy'])) {
+            $message->setCc($options['copy']);
         }
+
+        if (isset($options['attach'])) {
+            foreach ($options['attach'] as $attach) {
+                $message->attach(\Swift_Attachment::fromPath($attach['file'], $attach['type'])->setFilename($attach['name']));
+            }
+        }
+
+        if (!$this->transport) {
+            $this->transport = \Swift_SmtpTransport::newInstance($mailSettings->smtp->server, $mailSettings->smtp->port, $mailSettings->smtp->security)
+                      ->setUsername($mailSettings->smtp->username)
+                      ->setPassword($mailSettings->smtp->password);
+        }
+
+        $mailer = \Swift_Mailer::newInstance($this->transport);
+
+        //logs
+        if (isset($options['log'])) {
+            $this->logForms($options['log']);
+        }
+
+        return $mailer->send($message);
+    }
+
+    private function logForms($options) {
+        $log_forms = new LogForms();
+
+        $log_forms->formName = $options['formName'];
+        $log_forms->identKey = $options['identKey'];
+        $log_forms->usersName = $options['usersName'];
+        $log_forms->save();
     }
 
 }

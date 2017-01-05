@@ -94,7 +94,7 @@ class CellPhoneLineController extends ControllerBase {
 
         try {
 
-            if ($this->request->isPost()) {
+            if (!$this->request->isPost()) {
                 throw new Exception('Acesso não permitido a essa action.');
             }
 
@@ -159,7 +159,9 @@ class CellPhoneLineController extends ControllerBase {
             }
 
             $this->flash->success('Linha Celular atualizada com sucesso!!!');
-        } catch (\Exception $exc) {
+        } catch (\PDOException $exc) {
+            dump($exc);
+            exit;
             $this->flash->error($exc->getMessage());
         }
         return $this->response->redirect('telephony/cell_phone_line');

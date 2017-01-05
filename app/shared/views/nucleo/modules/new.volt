@@ -12,7 +12,7 @@
 
                 <div class="form-group fg-float">
                     <div class="fg-line">
-                        {{ text_field("name", "class" : "form-control fg-input", 'required': 'required') }}
+                        {{ text_field("title", "class" : "form-control fg-input", 'required': 'required') }}
                         <label class="fg-label">Nome do módulo</label>
                     </div>
                 </div>
@@ -22,6 +22,21 @@
                     <div class="fg-line">
                         {{ text_field("slug", "class" : "form-control fg-input", 'required': 'required') }}
                         <label class="fg-label">Slug</label>
+                    </div>
+                </div>
+                <br />
+
+                <div class="form-group fg-float">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="fg-line">
+                                {{ text_field("icon", "class" : "form-control fg-input") }}
+                                <label class="fg-label">Ícone do Módulo</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <span class="f-20 icon-view text-center"><i></i></span>
+                        </div>
                     </div>
                 </div>
                 <br />

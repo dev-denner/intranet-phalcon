@@ -48,6 +48,8 @@
                 <thead>
                     <tr>
                         <th data-column-id="id" data-type="numeric">ID</th>
+                        <th data-column-id="name">Nome</th>
+                        <th data-column-id="userName">Nome de Usuário</th>
                         <th data-column-id="cpf">CPF</th>
                         <th data-column-id="email">E-mail</th>
                         <th data-column-id="status">Status</th>
@@ -58,6 +60,8 @@
                     {% for user in users %}
                     <tr>
                         <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.userName }}</td>
                         <td>{{ user.cpf }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.status }}</td>

@@ -73,11 +73,11 @@ class EmailConfirmations extends ModelBase {
      */
     public function afterCreate() {
         $this->getDI()
-                ->getMail()
-                ->send(array(
-                    $this->user->email => $this->user->name
-                        ), "Pro favor, confirme seu E-mail", 'confirmation', array(
-                    'confirmUrl' => '/confirm/' . $this->code . '/' . $this->user->email
+                  ->getMail()
+                  ->send(array(
+                      $this->user->email => $this->user->name
+                            ), "Por favor, confirme seu E-mail", 'confirmation', array(
+                      'confirmUrl' => '/confirm/' . $this->code . '/' . $this->user->email
         ));
     }
 

@@ -500,7 +500,6 @@ class SaStatement extends ModelBase {
 
         parent::initialize();
 
-        $this->setSchema('TELEFONIA');
         $this->setConnectionService('telefoniaDb');
     }
 

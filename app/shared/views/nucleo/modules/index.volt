@@ -48,7 +48,7 @@
                 <thead>
                     <tr>
                         <th data-column-id="id" data-type="numeric">ID</th>
-                        <th data-column-id="name">Nome</th>
+                        <th data-column-id="title">Nome</th>
                         <th data-column-id="slug">Slug</th>
                         <th data-column-id="description">Descrição</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Comandos</th>
@@ -58,7 +58,7 @@
                     {% for module in modules %}
                     <tr>
                         <td>{{ module.id }}</td>
-                        <td>{{ module.name }}</td>
+                        <td>{{ module.title }}</td>
                         <td>{{ module.slug }}</td>
                         <td>{{ module.description }}</td>
                         <td>{{ static_url('nucleo/modules')}}</td>

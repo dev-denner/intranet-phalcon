@@ -33,7 +33,7 @@ class ModulesController extends ControllerBase {
             $this->view->pesquisa = '';
             if ($this->request->isPost()) {
                 $modules = $this->request->getPost('modules', 'alphanum');
-                $search = "(UPPER(name) LIKE UPPER('%" . $modules . "%')
+                $search = "(UPPER(title) LIKE UPPER('%" . $modules . "%')
                          (UPPER(slug) LIKE UPPER('%" . $modules . "%')
                          (UPPER(description) LIKE UPPER('%" . $modules . "%'))";
                 $this->view->modules = Modules::find($search);
@@ -48,7 +48,7 @@ class ModulesController extends ControllerBase {
      * Displays the creation form
      */
     public function newAction() {
-
+        $this->assets->collection('footerJs')->addJs('app/commons/icon.js');
     }
 
     /**
@@ -62,7 +62,7 @@ class ModulesController extends ControllerBase {
             if ($this->request->isPost()) {
                 throw new Exception('Acesso inválido a essa action!!!');
             }
-
+            $this->assets->collection('footerJs')->addJs('app/commons/icon.js');
             $module = Modules::findFirstByid($id);
             if (!$module) {
                 throw new Exception('Módulo não encontrado!');
@@ -71,8 +71,9 @@ class ModulesController extends ControllerBase {
             $this->view->id = $module->id;
 
             $this->tag->setDefault('id', $module->getId());
-            $this->tag->setDefault('name', $module->getName());
+            $this->tag->setDefault('title', $module->getTitle());
             $this->tag->setDefault('slug', $module->getSlug());
+            $this->tag->setDefault('icon', $module->getIcon());
             $this->tag->setDefault('description', $module->getDescription());
         } catch (Exception $exc) {
             $this->flash->error($exc->getMessage());
@@ -94,8 +95,9 @@ class ModulesController extends ControllerBase {
             $module = new Modules();
 
             $module->setId($module->autoincrement());
-            $module->setName($this->request->getPost('name'));
+            $module->setTitle($this->request->getPost('title'));
             $module->setSlug($this->request->getPost('slug'));
+            $module->setIcon($this->request->getPost('icon'));
             $module->setDescription($this->request->getPost('description'));
 
             if (!$module->create()) {
@@ -133,8 +135,9 @@ class ModulesController extends ControllerBase {
             }
 
             $module->setId($this->request->getPost('id'));
-            $module->setName($this->request->getPost('name'));
+            $module->setTitle($this->request->getPost('title'));
             $module->setSlug($this->request->getPost('slug'));
+            $module->setIcon($this->request->getPost('icon'));
             $module->setDescription($this->request->getPost('description'));
 
             if (!$module->update()) {

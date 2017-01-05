@@ -269,10 +269,9 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->setSchema('NUCLEO');
-
         $this->hasMany('id', __NAMESPACE__ . '\Menus', 'department', array('alias' => 'Menus'));
-        $this->hasMany('id', __NAMESPACE__ . '\CategoriesDocuments', 'department', array('alias' => 'CategoriesDocuments'));
+        $this->hasMany('id', __NAMESPACE__ . '\PagesCategories', 'department', array('alias' => 'PagesCategories'));
+        $this->hasMany('id', '\Intranet\Models\Processos', 'department', array('alias' => 'Processos'));
 
 
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
@@ -299,7 +298,7 @@ use beforeUpdate;
     public static function columnMap() {
         return array(
             'ID_DEPARTAMENTO' => 'id',
-            'DS_NOME' => 'title',
+            'DS_TITULO' => 'title',
             'CD_CC' => 'cc',
             'DS_ICONE' => 'icon',
             'SDEL' => 'sdel',

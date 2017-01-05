@@ -223,9 +223,6 @@ use beforeUpdate;
     public function initialize() {
 
         parent::initialize();
-
-        $this->setSchema('NUCLEO');
-
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([
             'field' => 'sdel',
             'value' => '*'

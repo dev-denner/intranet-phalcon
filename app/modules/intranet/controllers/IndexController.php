@@ -19,7 +19,7 @@ class IndexController extends ControllerBase {
     }
 
     public function indexAction() {
-
+        
     }
 
     public function categoriesAction($idDepartment) {

@@ -104,7 +104,7 @@ $(document).ready(function () {
      */
     (function () {
         //Toggle
-        $('body').on('click', '#menu-trigger, #chat-trigger', function (e) {
+        $('body').on('click', '#menu-trigger, .chat-trigger', function (e) {
             e.preventDefault();
             var x = $(this).data('trigger');
 
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 $elem = '#sidebar';
                 $elem2 = '#menu-trigger';
 
-                $('#chat-trigger').removeClass('open');
+                $('.chat-trigger').removeClass('open');
 
                 if (!$('#chat').hasClass('toggled')) {
                     $('#header').toggleClass('sidebar-toggled');
@@ -137,7 +137,7 @@ $(document).ready(function () {
 
             if (x == '#chat') {
                 $elem = '#chat';
-                $elem2 = '#chat-trigger';
+                $elem2 = '.chat-trigger';
 
                 $('#menu-trigger').removeClass('open');
 
