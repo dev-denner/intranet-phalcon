@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Models\RM;
+namespace App\Modules\Nucleo\Models\RM;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 
 class Ppessoa extends ModelBase {
 

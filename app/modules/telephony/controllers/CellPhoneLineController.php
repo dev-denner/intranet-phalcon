@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Telephony\Controllers;
+namespace App\Modules\Telephony\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Telephony\Models\CellPhoneLine;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Telephony\Models\CellPhoneLine;
 
 class CellPhoneLineController extends ControllerBase {
 

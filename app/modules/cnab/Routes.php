@@ -6,9 +6,9 @@
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
 **/
-        
 
-namespace Cnab;
+
+namespace App\Modules\Cnab;
 
 /**
  * Class Routes

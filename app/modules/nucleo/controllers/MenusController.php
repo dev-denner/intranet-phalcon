@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Menus;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Menus;
+use App\Shared\Controllers\ControllerBase;
 
 class MenusController extends ControllerBase {
 

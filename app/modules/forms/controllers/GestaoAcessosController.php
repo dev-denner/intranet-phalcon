@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use Forms\Models\GestaoAcesso;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Forms\Models\GestaoAcesso;
+use App\Shared\Controllers\ControllerBase;
 
 class GestaoAcessosController extends ControllerBase {
 

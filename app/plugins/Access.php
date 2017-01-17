@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Mvc\User\Component;
-use Nucleo\Models\Groups;
+use App\Modules\Nucleo\Models\Groups;
 
 class Access extends Component {
 

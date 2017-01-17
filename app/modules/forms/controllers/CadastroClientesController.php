@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
+use App\Shared\Controllers\ControllerBase;
 
 class CadastroClientesController extends ControllerBase
 {

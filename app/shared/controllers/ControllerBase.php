@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace SysPhalcon\Controllers;
+namespace App\Shared\Controllers;
 
-use Nucleo\Models\Mysql\Clicks;
+use App\Modules\Nucleo\Models\Mysql\Clicks;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher as Dispatcher;
 use Phalcon\Config as ObjectPhalcon;

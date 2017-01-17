@@ -44,7 +44,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['empresa',
-                                \Nucleo\Models\Empresas::find(),
+                                \App\Modules\Nucleo\Models\Empresas::find(),
                                 'using' => ['id', 'nomeFantasia'],
                                 'useEmpty' => true,
                                 'emptyText' => 'Empresa (Escolha uma opção)',

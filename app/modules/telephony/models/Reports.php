@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Telephony\Models;
+namespace App\Modules\Telephony\Models;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 use Phalcon\Config as ObjectPhalcon;
 
 class Reports extends ModelBase

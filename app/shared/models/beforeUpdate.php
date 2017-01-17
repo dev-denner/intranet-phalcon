@@ -1,6 +1,6 @@
 <?php
 
-namespace SysPhalcon\Models;
+namespace App\Shared\Models;
 
 use Phalcon\Db\RawValue;
 

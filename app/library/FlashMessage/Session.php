@@ -12,7 +12,7 @@
  * @author denner.fernandes
  */
 
-namespace SysPhalcon\Library\FlashMessage;
+namespace App\Library\FlashMessage;
 
 use Phalcon\Flash\Session as FlashSession;
 

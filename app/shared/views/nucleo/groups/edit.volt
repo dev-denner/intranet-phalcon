@@ -23,7 +23,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(["status",
-                                \Nucleo\Models\TablesSystem::find("table = 'status'"),
+                                \App\Modules\Nucleo\Models\TablesSystem::find("table = 'status'"),
                                 "using" => ["code", "value"],
                                 'useEmpty' => true,
                                 'emptyText' => 'Status (Escolha uma opção)',

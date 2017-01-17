@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet\Controllers;
+namespace App\Modules\Intranet\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
+use App\Shared\Controllers\ControllerBase;
 
 class IndexController extends ControllerBase {
 
@@ -19,7 +19,7 @@ class IndexController extends ControllerBase {
     }
 
     public function indexAction() {
-        
+
     }
 
     public function categoriesAction($idDepartment) {

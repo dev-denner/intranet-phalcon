@@ -7,18 +7,18 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet\Controllers;
+namespace App\Modules\Intranet\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Nucleo\Models\Protheus\ProdutosDescricao as Produtos;
-use Nucleo\Models\Protheus\Fornecedores;
-use Nucleo\Models\Protheus\CentroCustos;
-use Nucleo\Models\Protheus\NaturezaFinanceira;
-use Nucleo\Models\Protheus\Tes;
-use Nucleo\Models\Protheus\RequisitoMinimo;
-use Nucleo\Models\Protheus\Clientes;
-use Nucleo\Models\RM\Psecao;
-use Intranet\Models\Processos;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Protheus\ProdutosDescricao as Produtos;
+use App\Modules\Nucleo\Models\Protheus\Fornecedores;
+use App\Modules\Nucleo\Models\Protheus\CentroCustos;
+use App\Modules\Nucleo\Models\Protheus\NaturezaFinanceira;
+use App\Modules\Nucleo\Models\Protheus\Tes;
+use App\Modules\Nucleo\Models\Protheus\RequisitoMinimo;
+use App\Modules\Nucleo\Models\Protheus\Clientes;
+use App\Modules\Nucleo\Models\RM\Psecao;
+use App\Modules\Intranet\Models\Processos;
 
 class ConsultasController extends ControllerBase {
 

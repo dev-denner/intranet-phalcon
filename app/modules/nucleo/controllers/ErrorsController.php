@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
+use App\Shared\Controllers\ControllerBase;
 
 class ErrorsController extends ControllerBase {
 

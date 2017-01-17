@@ -1,6 +1,6 @@
 <?php
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Db\Profiler;
 use Phalcon\Logger;

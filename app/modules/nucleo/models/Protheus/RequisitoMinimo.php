@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Models\Protheus;
+namespace App\Modules\Nucleo\Models\Protheus;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 use Phalcon\Config as ObjectPhalcon;
 
 class RequisitoMinimo extends ModelBase {

@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet\Controllers;
+namespace App\Modules\Intranet\Controllers;
 
-use Intranet\Models\Processos;
-use Nucleo\Models\Departments;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Intranet\Models\Processos;
+use App\Modules\Nucleo\Models\Departments;
+use App\Shared\Controllers\ControllerBase;
 
 class ProcessosController extends ControllerBase {
 

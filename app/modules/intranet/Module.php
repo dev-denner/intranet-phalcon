@@ -7,21 +7,18 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet;
+namespace App\Modules\Intranet;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
-use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Engine\Volt;
-use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Mvc\Dispatcher;
 
 /**
  * Class Module
  * @package Nucleo
  */
-class Module implements ModuleDefinitionInterface {
+class Module implements ModuleDefinitionInterface
+{
 
     private $_config;
 
@@ -30,7 +27,8 @@ class Module implements ModuleDefinitionInterface {
      *
      * @param $di
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_config = include __DIR__ . '/config/config.php';
     }
 
@@ -38,26 +36,27 @@ class Module implements ModuleDefinitionInterface {
      * Register a specific autoloader for the module
      * @param \Phalcon\DiInterface $di
      */
-    public function registerAutoloaders(DiInterface $di = null) {
+    public function registerAutoloaders(DiInterface $di = null)
+    {
 
         $config = $this->_config;
 
         $loader = new Loader();
         $loader->registerNamespaces(
-                array(
-                    __NAMESPACE__ . '\Controllers' => __DIR__ . '/controllers',
-                    __NAMESPACE__ . '\Models' => __DIR__ . '/models',
-                    __NAMESPACE__ . '\Forms' => __DIR__ . '/forms',
-                )
+                  array(
+                      __NAMESPACE__ . '\Controllers' => __DIR__ . '/controllers',
+                      __NAMESPACE__ . '\Models' => __DIR__ . '/models',
+                      __NAMESPACE__ . '\Forms' => __DIR__ . '/forms',
+                  )
         );
 
         $loader->registerDirs(
-                array(
-                    $config->application->controllersDir,
-                    $config->application->modelsDir,
-                    $config->application->migrationsDir,
-                    $config->application->formsDir,
-                )
+                  array(
+                      $config->application->controllersDir,
+                      $config->application->modelsDir,
+                      $config->application->migrationsDir,
+                      $config->application->formsDir,
+                  )
         );
 
         $loader->register();
@@ -67,7 +66,8 @@ class Module implements ModuleDefinitionInterface {
      * Register specific services for the module
      * @param \Phalcon\DiInterface $di
      */
-    public function registerServices(DiInterface $di) {
+    public function registerServices(DiInterface $di)
+    {
 
         return $di;
     }

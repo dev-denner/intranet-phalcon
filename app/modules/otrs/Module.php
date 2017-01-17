@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Otrs;
+namespace App\Modules\Otrs;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
@@ -41,9 +41,9 @@ class Module implements ModuleDefinitionInterface {
         $loader = new Loader();
         $loader->registerNamespaces(
                 array(
-                    'Otrs\Controllers' => __DIR__ . '/controllers',
-                    'Otrs\Models' => __DIR__ . '/models',
-                    'Otrs\Forms' => __DIR__ . '/forms',
+                    __NAMESPACE__ . '\Controllers' => __DIR__ . '/controllers',
+                    __NAMESPACE__ . '\Models' => __DIR__ . '/models',
+                    __NAMESPACE__ . '\Forms' => __DIR__ . '/forms',
                 )
         );
 

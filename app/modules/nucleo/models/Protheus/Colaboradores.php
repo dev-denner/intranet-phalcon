@@ -7,11 +7,12 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Models\Protheus;
+namespace App\Modules\Nucleo\Models\Protheus;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 
-class Colaboradores extends ModelBase {
+class Colaboradores extends ModelBase
+{
 
     public $szhEmpresa;
     public $szhNome;
@@ -29,7 +30,8 @@ class Colaboradores extends ModelBase {
     public $szhRamal;
     public $szhSdel;
 
-    public function initialize() {
+    public function initialize()
+    {
 
         parent::initialize();
 
@@ -41,11 +43,13 @@ class Colaboradores extends ModelBase {
         $this->hasMany('SUBSTR(szhCpf, 1, 6)', '\Catraca\Models\Movimentos', 'SUBSTR(TRIM(id), 14, 6)', ['alias' => 'Colaboradores',]);
     }
 
-    public function getSource() {
+    public function getSource()
+    {
         return 'SZH010';
     }
 
-    public static function columnMap() {
+    public static function columnMap()
+    {
         return [
             'ZH_EMPRESA' => 'szhEmpresa',
             'ZH_NOME' => 'szhNome',
@@ -65,7 +69,8 @@ class Colaboradores extends ModelBase {
         ];
     }
 
-    public function getColaborador($search = '') {
+    public function getColaborador($search = '')
+    {
 
         if (empty($search)) {
             throw new \Exception('Erro parametro vazio.');
@@ -78,10 +83,16 @@ class Colaboradores extends ModelBase {
 
         $query = "SELECT * FROM VW_COLABORADOR_RM WHERE CPF = ? AND CHAPA = ?";
         $rm = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$search, $protheus['CHAPA']]);
+
+        if ($rm === false) {
+            return $protheus;
+        }
+
         return array_merge($protheus, $rm);
     }
 
-    public function getColaboradorByCpf($cpf = '') {
+    public function getColaboradorByCpf($cpf = '')
+    {
 
         if (empty($cpf)) {
             throw new \Exception('Erro cpf vazio.');
@@ -100,7 +111,8 @@ class Colaboradores extends ModelBase {
         return $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$cpf]);
     }
 
-    public function getColaboradorByEmail($search = '') {
+    public function getColaboradorByEmail($search = '')
+    {
 
         if (empty($search)) {
             throw new \Exception('Erro search vazio.');
@@ -111,16 +123,17 @@ class Colaboradores extends ModelBase {
         $query = "SELECT * FROM VW_COLABORADOR_PROTHEUS WHERE EMAIL = ?";
         $protheus = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$search]);
 
-        if(!$protheus){
+        if (!$protheus) {
             return false;
         }
-        
+
         $query = "SELECT * FROM VW_COLABORADOR_RM WHERE CPF = ? AND CHAPA = ?";
         $rm = $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC, [$protheus['CPF'], $protheus['CHAPA']]);
         return array_merge($protheus, $rm);
     }
 
-    public function getDadosFuncionario($cpf) {
+    public function getDadosFuncionario($cpf)
+    {
         $empresas = $this->getNameEmpresas();
         $dadosFunc = $this->modelsManager->createBuilder()
                   ->columns([$empresas . ' empresa,
@@ -148,7 +161,8 @@ class Colaboradores extends ModelBase {
         return $dadosFunc->toArray(0)[0];
     }
 
-    public function getEmpresas() {
+    public function getEmpresas()
+    {
         $empresas = $this->getNameEmpresas();
         $empresa = $this->modelsManager->createBuilder()
                   ->columns(['DISTINCT TRIM(szhEmpresa) id, ' . $empresas . ' empresa'])
@@ -167,7 +181,8 @@ class Colaboradores extends ModelBase {
         return $return;
     }
 
-    public function validaDadosFuncionario($cpf, $empresa, $dataAdmissao) {
+    public function validaDadosFuncionario($cpf, $empresa, $dataAdmissao)
+    {
         $empresas = $this->getNameEmpresas();
 
         $dadosFunc = $this->modelsManager->createBuilder()
@@ -197,7 +212,8 @@ class Colaboradores extends ModelBase {
         return $dadosFunc->toArray(0)[0];
     }
 
-    public function getNameEmpresas() {
+    public function getNameEmpresas()
+    {
         return "CASE szhEmpresa
                   WHEN '01' THEN 'MPE MONTAGENS'
                   WHEN '02' THEN 'EBE'

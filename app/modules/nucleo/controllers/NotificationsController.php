@@ -7,12 +7,12 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
 use Phalcon\Mvc\Model\Criteria as Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
-use Nucleo\Models\Notifications;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Notifications;
+use App\Shared\Controllers\ControllerBase;
 
 class NotificationsController extends ControllerBase {
 

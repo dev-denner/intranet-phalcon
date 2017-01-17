@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet\Models;
+namespace App\Modules\Intranet\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 use Phalcon\Db\RawValue;
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
@@ -194,7 +194,7 @@ use beforeUpdate;
     /**
      *
      * @param type $id
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setId($id) {
         $this->id = $id;
@@ -204,7 +204,7 @@ use beforeUpdate;
     /**
      *
      * @param type $code
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setCode($code) {
         $this->code = $code;
@@ -214,7 +214,7 @@ use beforeUpdate;
     /**
      *
      * @param type $department
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setDepartment($department) {
         $this->department = $department;
@@ -224,7 +224,7 @@ use beforeUpdate;
     /**
      *
      * @param type $description
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setDescription($description) {
         $this->description = $description;
@@ -234,7 +234,7 @@ use beforeUpdate;
     /**
      *
      * @param type $link
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setLink($link) {
         $this->link = $link;
@@ -244,7 +244,7 @@ use beforeUpdate;
     /**
      *
      * @param type $version
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setVersion($version) {
         $this->version = $version;
@@ -254,7 +254,7 @@ use beforeUpdate;
     /**
      *
      * @param type $dateUpdated
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setDateUpdated($dateUpdated) {
         $this->dateUpdated = new RawValue("TO_DATE('{$dateUpdated}', 'DD/MM/YYYY')");
@@ -264,7 +264,7 @@ use beforeUpdate;
     /**
      *
      * @param type $sdel
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setSdel($sdel) {
         $this->sdel = $sdel;
@@ -274,7 +274,7 @@ use beforeUpdate;
     /**
      *
      * @param type $createBy
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setCreateBy($createBy) {
         $this->createBy = $createBy;
@@ -284,7 +284,7 @@ use beforeUpdate;
     /**
      *
      * @param type $createIn
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setCreateIn($createIn) {
         $this->createIn = $createIn;
@@ -294,7 +294,7 @@ use beforeUpdate;
     /**
      *
      * @param type $updateBy
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setUpdateBy($updateBy) {
         $this->updateBy = $updateBy;
@@ -304,7 +304,7 @@ use beforeUpdate;
     /**
      *
      * @param type $updateIn
-     * @return \Intranet\Models\Processos
+     * @return \App\Modules\Intranet\Models\Processos
      */
     public function setUpdateIn($updateIn) {
         $this->updateIn = $updateIn;
@@ -317,7 +317,7 @@ use beforeUpdate;
     public function initialize() {
 
         parent::initialize();
-        $this->belongsTo('department', '\Nucleo\Models\Departments', 'id', ['alias' => 'Departments']);
+        $this->belongsTo('department', '\App\Modules\Nucleo\Models\Departments', 'id', ['alias' => 'Departments']);
 
         $this->addBehavior(new SoftDelete([
             'field' => 'sdel',

@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Models;
+namespace App\Modules\Forms\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 use Phalcon\Db\RawValue;
 

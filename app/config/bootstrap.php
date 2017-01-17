@@ -6,12 +6,13 @@
  * @link        https://github.com/denners777/API-Phalcon
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
-use SysPhalcon\Library\Auth\Auth as Auth;
-use SysPhalcon\Library\Mail\Mail as Mail;
-use SysPhalcon\Library\FlashMessage\Closable as Closable;
-use SysPhalcon\Plugins\Access as Access;
-use SysPhalcon\Plugins\Elements as Elements;
-use SysPhalcon\Plugins\NotFound as NotFound;
+use App\Library\Auth\Auth as Auth;
+use App\Library\Mail\Mail as Mail;
+use App\Library\FlashMessage\Closable as Closable;
+use App\Plugins\Access as Access;
+use App\Plugins\Elements as Elements;
+use App\Plugins\NotFound as NotFound;
+use App\Plugins\DbListener;
 use Phalcon\Assets\Manager as AssetsManager;
 use Phalcon\Cache\Frontend\Data as CacheFront;
 use Phalcon\Cache\Backend\Memcache as CacheBack;
@@ -34,7 +35,6 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt;
 use Phalcon\Security as Security;
 use Phalcon\Session\Adapter\Database as Session;
-use SysPhalcon\Plugins\DbListener;
 use Respect\Validation\Validator as Validator;
 use Phalcon\Filter;
 use Phalcon\Translate\Adapter\NativeArray as Translator;
@@ -136,7 +136,7 @@ class Bootstrap
         }
 
         $dotenv->load();
-        
+
         $config = include APP_PATH . "/app/config/{$pasta}/config.php";
         $databases = include APP_PATH . "/app/config/{$pasta}/database.php";
 
@@ -161,21 +161,21 @@ class Bootstrap
         $loader = new Loader();
 
         $loader->registerNamespaces([
-            'SysPhalcon\Controllers' => APP_PATH . '/app/shared/controllers',
-            'SysPhalcon\Models' => APP_PATH . '/app/shared/models',
-            'SysPhalcon\Library' => APP_PATH . '/app/library',
-            'SysPhalcon\Forms' => APP_PATH . '/app/forms',
-            'SysPhalcon\Plugins' => APP_PATH . '/app/plugins',
-            'SysPhalcon\Helpers' => APP_PATH . '/app/helpers',
+            'App\Shared\Controllers' => APP_PATH . '/app/shared/controllers',
+            'App\Shared\Models' => APP_PATH . '/app/shared/models',
+            'App\Library' => APP_PATH . '/app/library',
+            'App\Forms' => APP_PATH . '/app/forms',
+            'App\Plugins' => APP_PATH . '/app/plugins',
+            'App\Helpers' => APP_PATH . '/app/helpers',
             //models
-            'Intranet\Models' => APP_PATH . '/app/modules/intranet/models',
-            'Nucleo\Models' => APP_PATH . '/app/modules/nucleo/models',
-            'Cnab\Models' => APP_PATH . '/app/modules/cnab/models',
-            'Imports\Models' => APP_PATH . '/app/modules/imports/models',
-            'Telephony\Models' => APP_PATH . '/app/modules/telephony/models',
-            'Forms\Models' => APP_PATH . '/app/modules/forms/models',
-            'Catraca\Models' => APP_PATH . '/app/modules/catraca/models',
-            'Otrs\Models' => APP_PATH . '/app/modules/otrs/models',
+            'App\Modules\Intranet\Models' => APP_PATH . '/app/modules/intranet/models',
+            'App\Modules\Nucleo\Models' => APP_PATH . '/app/modules/nucleo/models',
+            'App\Modules\Cnab\Models' => APP_PATH . '/app/modules/cnab/models',
+            'App\Modules\Imports\Models' => APP_PATH . '/app/modules/imports/models',
+            'App\Modules\Telephony\Models' => APP_PATH . '/app/modules/telephony/models',
+            'App\Modules\Forms\Models' => APP_PATH . '/app/modules/forms/models',
+            'App\Modules\Catraca\Models' => APP_PATH . '/app/modules/catraca/models',
+            'App\Modules\Otrs\Models' => APP_PATH . '/app/modules/otrs/models',
         ]);
 
         $loader->registerDirs([
@@ -211,9 +211,9 @@ class Bootstrap
             error_reporting(-1);
         }
 
-        set_error_handler(['\SysPhalcon\Plugins\Error', 'normal']);
-        set_exception_handler(['\SysPhalcon\Plugins\Error', 'exception']);
-        register_shutdown_function(['\SysPhalcon\Plugins\Error', 'shutdown']);
+        set_error_handler(['\App\Plugins\Error', 'normal']);
+        set_exception_handler(['\App\Plugins\Error', 'exception']);
+        register_shutdown_function(['\App\Plugins\Error', 'shutdown']);
     }
 
     /**
@@ -275,7 +275,7 @@ class Bootstrap
             $eventsManager->attach('dispatch:beforeException', new NotFound());
             $dispatcher = new Dispatcher();
             $dispatcher->setEventsManager($eventsManager);
-            $dispatcher->setDefaultNamespace('Nucleo');
+            $dispatcher->setDefaultNamespace('App\Modules\Nucleo');
 
             return $dispatcher;
         });
@@ -407,14 +407,15 @@ class Bootstrap
      */
     protected function initSession($options = [])
     {
+        $databases = $this->_di->get('databases');
 
-        $this->_di->setShared('session', function() {
+        $this->_di->setShared('session', function() use ($databases) {
 
             $connection = new Mysql([
-                'host' => 'localhost',
-                'username' => 'root',
-                'password' => '!mpe123',
-                'dbname' => 'intranet',
+                'host' => $databases->database->helpersDb->host,
+                'username' => $databases->database->helpersDb->username,
+                'password' => $databases->database->helpersDb->password,
+                'dbname' => $databases->database->helpersDb->dbname,
             ]);
 
 
@@ -658,7 +659,7 @@ class Bootstrap
             $router = new Router();
 
             $router->setDefaultModule('intranet');
-            $router->setDefaultNamespace('Intranet\Controllers');
+            $router->setDefaultNamespace('App\Modules\Intranet\Controllers');
             $router->removeExtraSlashes(true);
 
             return $router;
@@ -792,35 +793,35 @@ class Bootstrap
     {
         $application->registerModules([
             'intranet' => [
-                'className' => 'Intranet\Module',
+                'className' => 'App\Modules\Intranet\Module',
                 'path' => APP_PATH . '/app/modules/intranet/Module.php'
             ],
             'nucleo' => [
-                'className' => 'Nucleo\Module',
+                'className' => 'App\Modules\Nucleo\Module',
                 'path' => APP_PATH . '/app/modules/nucleo/Module.php'
             ],
             'telephony' => [
-                'className' => 'Telephony\Module',
+                'className' => 'App\Modules\Telephony\Module',
                 'path' => APP_PATH . '/app/modules/telephony/Module.php'
             ],
             'forms' => [
-                'className' => 'Forms\Module',
+                'className' => 'App\Modules\Forms\Module',
                 'path' => APP_PATH . '/app/modules/forms/Module.php'
             ],
             'catraca' => [
-                'className' => 'Catraca\Module',
+                'className' => 'App\Modules\Catraca\Module',
                 'path' => APP_PATH . '/app/modules/catraca/Module.php'
             ],
             'otrs' => [
-                'className' => 'Otrs\Module',
+                'className' => 'App\Modules\Otrs\Module',
                 'path' => APP_PATH . '/app/modules/otrs/Module.php'
             ],
             'cnab' => [
-                'className' => 'Cnab\Module',
+                'className' => 'App\Modules\Cnab\Module',
                 'path' => APP_PATH . '/app/modules/cnab/Module.php'
             ],
             'imports' => [
-                'className' => 'Imports\Module',
+                'className' => 'App\Modules\Imports\Module',
                 'path' => APP_PATH . '/app/modules/imports/Module.php'
             ],
         ]);
@@ -836,80 +837,80 @@ class Bootstrap
 
         $router = $this->_di->get('router');
         $router->add('/', [
-            'namespace' => 'Intranet\Controllers',
+            'namespace' => 'App\Modules\Intranet\Controllers',
             'module' => 'intranet',
             'controller' => 'index',
             'action' => 'index',
         ]);
         $router->notFound([
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'errors',
             'action' => 'show404'
         ]);
         $router->add('/forbidden', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'errors',
             'action' => 'show401'
         ]);
         $router->add('/not-found', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'errors',
             'action' => 'show404'
         ]);
         $router->add('/internal-error', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'errors',
             'action' => 'show500'
         ]);
         $router->add('/confirm/{code}/{email}', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'users',
             'action' => 'confirmEmail'
         ]);
         $router->add('/reset-password/{code}/{email}', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'session',
             'action' => 'resetPassword'
         ]);
         $router->add('/change-password', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'session',
             'action' => 'changePassword'
         ]);
         $router->add('/login', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'session',
             'action' => 'index'
         ]);
 
         $router->add('/login/:action', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'session',
             'action' => 1
         ]);
         $router->add('/produtos', [
-            'namespace' => 'Intranet\Controllers',
+            'namespace' => 'App\Modules\Intranet\Controllers',
             'module' => 'intranet',
             'controller' => 'consultas',
             'action' => 'produtosServicos'
         ]);
         $router->add('/fornecedores', [
-            'namespace' => 'Intranet\Controllers',
+            'namespace' => 'App\Modules\Intranet\Controllers',
             'module' => 'intranet',
             'controller' => 'consultas',
             'action' => 'fornecedores'
         ]);
         $router->add('/profile', [
-            'namespace' => 'Nucleo\Controllers',
+            'namespace' => 'App\Modules\Nucleo\Controllers',
             'module' => 'nucleo',
             'controller' => 'users',
             'action' => 'profile'
@@ -917,7 +918,11 @@ class Bootstrap
 
 
         foreach ($application->getModules() as $key => $module) {
-            $namespace = str_replace('Module', 'Controllers', $module['className']);
+
+            $namespace = str_replace('Modules', 'aux', $module['className']);
+            $namespace = str_replace('Module', 'Controllers', $namespace);
+            $namespace = str_replace('aux', 'Modules', $namespace);
+
             $router->add('/' . $key . '/:params', [
                 'namespace' => $namespace,
                 'module' => $key,
@@ -941,7 +946,6 @@ class Bootstrap
                 'params' => 3
             ]);
         }
-
         $router->handle();
 
         $this->_di->setShared("router", $router);

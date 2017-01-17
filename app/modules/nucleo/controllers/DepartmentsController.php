@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Departments;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Departments;
+use App\Shared\Controllers\ControllerBase;
 
 class DepartmentsController extends ControllerBase {
 

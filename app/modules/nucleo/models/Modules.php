@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Models;
+namespace App\Modules\Nucleo\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 
 class Modules extends ModelBase {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace SysPhalcon\Library;
+namespace App\Library;
 
 define('ORA_CHARSET_DEFAULT', 'SPANISH_SPAIN.AL32UTF8');
 define('ORA_CONNECTION_TYPE_DEFAULT', 1);

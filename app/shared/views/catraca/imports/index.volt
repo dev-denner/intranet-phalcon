@@ -17,7 +17,7 @@
                             $userId = $auth_identity->userId;
                             $search = "nomeFormulario = 'Indicadores SGI' AND userId = '{$userId}'";
                             echo $this->tag->select(['centro_custo',
-                                \Forms\Models\GestaoAcesso::find($search),
+                                \App\Modules\Forms\Models\GestaoAcesso::find($search),
                                 'using' => ['amarracao', 'amarracao'],
                                 'useEmpty' => true,
                                 'emptyText' => '',

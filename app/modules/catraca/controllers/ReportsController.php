@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca\Controllers;
+namespace App\Modules\Catraca\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Catraca\Models\Movimentos;
-use Catraca\Models\Firebird;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Catraca\Models\Movimentos;
+use App\Modules\Catraca\Models\Firebird;
 
 /**
  * Class ReportsController

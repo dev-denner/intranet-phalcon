@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet;
+namespace App\Modules\Intranet;
 
 /**
  * Class Routes

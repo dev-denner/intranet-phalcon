@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Models;
+namespace App\Modules\Nucleo\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 
 class Departments extends ModelBase {
 
@@ -271,7 +271,7 @@ use beforeUpdate;
 
         $this->hasMany('id', __NAMESPACE__ . '\Menus', 'department', array('alias' => 'Menus'));
         $this->hasMany('id', __NAMESPACE__ . '\PagesCategories', 'department', array('alias' => 'PagesCategories'));
-        $this->hasMany('id', '\Intranet\Models\Processos', 'department', array('alias' => 'Processos'));
+        $this->hasMany('id', '\App\Modules\Intranet\Models\Processos', 'department', array('alias' => 'Processos'));
 
 
         $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete([

@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Telephony;
+namespace App\Modules\Telephony;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;

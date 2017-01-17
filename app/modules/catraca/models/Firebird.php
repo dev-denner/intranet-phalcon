@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca\Models;
+namespace App\Modules\Catraca\Models;
 
 use Phalcon\Config as ObjectPhalcon;
 

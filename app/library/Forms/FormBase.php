@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Library\Forms;
+namespace App\Library\Forms;
 
 class FormBase extends FormMaterial {
 
@@ -213,11 +213,11 @@ class FormBase extends FormMaterial {
      * @param type $name
      * @param type $attr
      * @param type $icon
-     * @return \SysPhalcon\Library\Forms\Button
+     * @return \App\Library\Forms\Button
      */
     protected function _button($name, $attr = [], $icon = null) {
 
-        $element = new \SysPhalcon\Library\Forms\Button($name, $attr, $icon);
+        $element = new \App\Library\Forms\Button($name, $attr, $icon);
         return $element;
     }
 

@@ -7,12 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Users;
-use Nucleo\Models\Protheus\Colaboradores;
-use Nucleo\Models\RM\Pfunc;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Users;
+use App\Modules\Nucleo\Models\Protheus\Colaboradores;
+use App\Shared\Controllers\ControllerBase;
 
 class UsersController extends ControllerBase {
 

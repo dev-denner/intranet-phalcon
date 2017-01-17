@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\UsersGroups;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\UsersGroups;
+use App\Shared\Controllers\ControllerBase;
 
 class UsersGroupsController extends ControllerBase {
 

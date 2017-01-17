@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
@@ -20,7 +20,8 @@ use Phalcon\Mvc\Dispatcher as MvcDispatcher;
  *
  * Handles not-found controller/actions
  */
-class NotFound extends Plugin {
+class NotFound extends Plugin
+{
 
     /**
      * This action is executed before execute any action in the application
@@ -30,10 +31,12 @@ class NotFound extends Plugin {
      * @param Exception $exception
      * @return boolean
      */
-    public function beforeException(Event $event, MvcDispatcher $dispatcher, \Exception $exception) {
+    public function beforeException(Event $event, MvcDispatcher $dispatcher, \Exception $exception)
+    {
 
         error_log($exception->getMessage() . PHP_EOL . $exception->getTraceAsString());
-
+        dump($exception);
+        exit;
         if ($exception instanceof DispatcherException) {
             switch ($exception->getCode()) {
                 case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:

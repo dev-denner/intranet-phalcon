@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Otrs\Models;
+namespace App\Modules\Otrs\Models;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
+use App\Modules\Nucleo\Models\Protheus\Protheus;
 use Phalcon\Db\RawValue;
-use Nucleo\Models\Protheus\Protheus;
 
 class Chamados extends ModelBase
 {

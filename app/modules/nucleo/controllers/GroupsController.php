@@ -7,11 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Groups;
-use Nucleo\Models\TablesSystem;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Groups;
+use App\Shared\Controllers\ControllerBase;
 
 class GroupsController extends ControllerBase {
 

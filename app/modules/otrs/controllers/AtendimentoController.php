@@ -7,12 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Otrs\Controllers;
+namespace App\Modules\Otrs\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Otrs\Models\Chamados;
-
-//use Otrs\Models\Colaboradores;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Otrs\Models\Chamados;
 
 /**
  * Class AtendimentoController
@@ -52,8 +50,8 @@ class AtendimentoController extends ControllerBase
                 $this->view->export = true;
             }
 
-            $tipo = isset($this->request->post['tipo']) ? $this->request->post['tipo'] : 'Abertos';
-
+            $tipo = isset($this->request->getPost()['tipo']) ? $this->request->getPost()['tipo'] : 'Abertos';
+            
             $this->view->tipo = $this->prepareFind(['columns' => 'DISTINCT tipo', 'order' => 'tipo'], 'TIPO');
             $this->view->fila = $this->prepareFind(['columns' => 'DISTINCT filaMaster fila', 'conditions' => "tipo = '$tipo'", 'order' => 'filaMaster'], 'FILA');
             $this->view->gestores = $this->prepareFind(['columns' => 'DISTINCT codGestor code, gestor', 'conditions' => "tipo = '$tipo'", 'order' => 'codGestor'], ['CODE', 'GESTOR'], 2);

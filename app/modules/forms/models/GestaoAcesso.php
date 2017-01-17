@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Models;
+namespace App\Modules\Forms\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 
 class GestaoAcesso extends ModelBase {
@@ -118,8 +118,8 @@ use beforeUpdate;
 
         parent::initialize();
 
-        $this->belongsTo('userId', 'Nucleo\Models\Users', 'id', ['alias' => 'Users']);
-        $this->belongsTo('amarracao', 'Nucleo\Models\Protheus\CentroCustos', 'cttCusto', ['alias' => 'CentroCustos']);
+        $this->belongsTo('userId', 'App\Modules\Nucleo\Models\Users', 'id', ['alias' => 'Users']);
+        $this->belongsTo('amarracao', 'App\Modules\Nucleo\Models\Protheus\CentroCustos', 'cttCusto', ['alias' => 'CentroCustos']);
 
         $this->addBehavior(new SoftDelete([
             'field' => 'sdel',

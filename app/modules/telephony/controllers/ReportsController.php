@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Telephony\Controllers;
+namespace App\Modules\Telephony\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use SysPhalcon\Plugins\Tools;
-use Telephony\Models\Reports;
+use App\Shared\Controllers\ControllerBase;
+use App\Plugins\Tools;
+use App\Modules\Telephony\Models\Reports;
 
 class ReportsController extends ControllerBase
 {

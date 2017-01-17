@@ -7,13 +7,12 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Mvc\User\Component;
 use Phalcon\Config as ObjectPhalcon;
-use Nucleo\Models\Menus;
-use Nucleo\Models\PagesCategories;
-use Intranet\Models\Processos;
+use App\Modules\Nucleo\Models\Menus;
+use App\Modules\Nucleo\Models\PagesCategories;
 
 class Elements extends Component {
 

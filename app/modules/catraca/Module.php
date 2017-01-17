@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca;
+namespace App\Modules\Catraca;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
@@ -41,9 +41,9 @@ class Module implements ModuleDefinitionInterface {
         $loader = new Loader();
         $loader->registerNamespaces(
                 array(
-                    'Catraca\Controllers' => __DIR__ . '/controllers',
-                    'Catraca\Models' => __DIR__ . '/models',
-                    'Catraca\Forms' => __DIR__ . '/forms',
+                    __NAMESPACE__ . '\Controllers' => __DIR__ . '/controllers',
+                    __NAMESPACE__ . '\Models' => __DIR__ . '/models',
+                    __NAMESPACE__ . '\Forms' => __DIR__ . '/forms',
                 )
         );
 

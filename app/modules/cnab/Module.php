@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Cnab;
+namespace App\Modules\Cnab;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
@@ -27,7 +27,7 @@ class Module implements ModuleDefinitionInterface {
 
   /**
    * Constructor
-   * 
+   *
    * @param $di
    */
   public function __construct() {

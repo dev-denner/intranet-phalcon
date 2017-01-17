@@ -1,8 +1,8 @@
 <?php
 
-namespace Nucleo\Models\Mysql;
+namespace App\Modules\Nucleo\Models\Mysql;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 
 /**
  * SuccessLogins

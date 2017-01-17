@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use SysPhalcon\Plugins\Tools;
-use Nucleo\Models\Protheus\Protheus;
+use App\Shared\Controllers\ControllerBase;
+use App\Plugins\Tools;
+use App\Modules\Nucleo\Models\Protheus\Protheus;
 
 class CadastroCentroCustosController extends ControllerBase
 {

@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\Mvc\User\Plugin as Plugin;
 use Phalcon\Http\Response;

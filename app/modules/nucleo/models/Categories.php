@@ -7,14 +7,12 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Models;
+namespace App\Modules\Nucleo\Models;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete as SoftDelete;
-use Phalcon\Mvc\Model\Message as Message;
-use Phalcon\Validation as Validation;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
 
 class Categories extends ModelBase {
 

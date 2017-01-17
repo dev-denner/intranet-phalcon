@@ -7,11 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Intranet\Controllers;
+namespace App\Modules\Intranet\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Nucleo\Models\Departments;
-use Phalcon\Mvc\View;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Departments;
 
 class DocumentsController extends ControllerBase {
 

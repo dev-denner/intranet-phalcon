@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Forms;
+namespace App\Modules\Nucleo\Forms;
 
-use Nucleo\Models\Users;
+use App\Modules\Nucleo\Models\Users;
 
-class UsersForm extends \SysPhalcon\Library\Forms\FormBase {
+class UsersForm extends \App\Library\Forms\FormBase {
 
     public function initialize($entity = null, $options = []) {
 

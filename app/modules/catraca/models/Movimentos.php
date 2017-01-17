@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca\Models;
+namespace App\Modules\Catraca\Models;
 
-use SysPhalcon\Models\ModelBase;
+use App\Shared\Models\ModelBase;
 use Phalcon\Db\RawValue;
 use Phalcon\Config as ObjectPhalcon;
 

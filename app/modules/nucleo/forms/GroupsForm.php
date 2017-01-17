@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Forms;
+namespace App\Modules\Nucleo\Forms;
 
-use Nucleo\Models\Groups;
-use SysPhalcon\Library\Forms\FormBase;
+use App\Modules\Nucleo\Models\Groups;
+use App\Library\Forms\FormBase;
 
 class UsersForm extends FormBase {
 

@@ -7,10 +7,9 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Nucleo\Models\RM;
+namespace App\Modules\Nucleo\Models\RM;
 
-use SysPhalcon\Models\ModelBase;
-use Phalcon\Config as ObjectPhalcon;
+use App\Shared\Models\ModelBase;
 
 class Perfil extends ModelBase {
 

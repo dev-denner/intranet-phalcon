@@ -18,7 +18,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['userId',
-                                \Nucleo\Models\Users::find(['order' => 'name']),
+                                \App\Modules\Nucleo\Models\Users::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
@@ -39,7 +39,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['groupId',
-                                \Nucleo\Models\Groups::find(['order' => 'title']),
+                                \App\Modules\Nucleo\Models\Groups::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
@@ -60,7 +60,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['module',
-                                \Nucleo\Models\Modules::find(['order' => 'title']),
+                                \App\Modules\Nucleo\Models\Modules::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
@@ -82,7 +82,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['controller',
-                                \Nucleo\Models\Controllers::find(['order' => 'title']),
+                                \App\Modules\Nucleo\Models\Controllers::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
@@ -104,7 +104,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['action',
-                                \Nucleo\Models\Actions::find(['order' => 'title']),
+                                \App\Modules\Nucleo\Models\Actions::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',

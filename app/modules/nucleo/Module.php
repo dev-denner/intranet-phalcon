@@ -7,12 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo;
+namespace App\Modules\Nucleo;
 
 use Phalcon\DiInterface;
 use Phalcon\Loader;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Mvc\Dispatcher;
 
 /**
  * Class Module

@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-namespace SysPhalcon\Library\FlashMessage;
+namespace App\Library\FlashMessage;
 
 /**
  * Description of Closable
  *
  * @author denner.fernandes
  */
-class Closable extends \SysPhalcon\Library\FlashMessage\Session {
+class Closable extends \App\Library\FlashMessage\Session {
 
     public function __construct($cssClasses = null) {
 

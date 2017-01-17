@@ -7,12 +7,12 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use SysPhalcon\Plugins\Tools;
-use Nucleo\Models\Protheus\Protheus;
-use Forms\Models\SolicitacoesExternas;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Protheus\Protheus;
+use App\Modules\Forms\Models\SolicitacoesExternas;
+use App\Plugins\Tools;
 
 class SolicitacoesExternasController extends ControllerBase {
 

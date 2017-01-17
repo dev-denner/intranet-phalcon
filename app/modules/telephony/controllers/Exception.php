@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Telephony\Controllers;
+namespace App\Modules\Telephony\Controllers;
 
 class Exception extends \Phalcon\Exception {
 

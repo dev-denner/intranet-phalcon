@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace Telephony\Models;
+namespace App\Modules\Telephony\Models;
 
-use SysPhalcon\Models\ModelBase;
-use SysPhalcon\Models\beforeCreate;
-use SysPhalcon\Models\beforeUpdate;
+use App\Shared\Models\ModelBase;
+use App\Shared\Models\beforeCreate;
+use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 
 class AccessLine extends ModelBase {

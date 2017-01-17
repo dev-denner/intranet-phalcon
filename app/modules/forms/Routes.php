@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms;
+namespace App\Modules\Forms;
 
 /**
  * Class Routes

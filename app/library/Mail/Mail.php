@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Library\Mail;
+namespace App\Library\Mail;
 
 use Phalcon\Mvc\User\Component;
-use Nucleo\Models\Mysql\LogForms;
+use App\Modules\Nucleo\Models\Mysql\LogForms;
 
 class Mail extends Component {
 

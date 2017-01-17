@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca\Controllers;
+namespace App\Modules\Catraca\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
+use App\Shared\Controllers\ControllerBase;
 
 /**
  * Class IndexController
@@ -18,7 +18,7 @@ use SysPhalcon\Controllers\ControllerBase;
 class IndexController extends ControllerBase {
 
     public function indexAction() {
-        
+
     }
 
 }

@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Catraca;
+namespace App\Modules\Catraca;
 
 /**
  * Class Routes

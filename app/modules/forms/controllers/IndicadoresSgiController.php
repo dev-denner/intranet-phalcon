@@ -7,11 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use Forms\Models\IndicadoresSgi;
-use Nucleo\Models\Protheus\CentroCustos;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Forms\Models\IndicadoresSgi;
+use App\Shared\Controllers\ControllerBase;
 
 class IndicadoresSgiController extends ControllerBase {
 

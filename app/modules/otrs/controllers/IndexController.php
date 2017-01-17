@@ -7,9 +7,9 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Otrs\Controllers;
+namespace App\Modules\Otrs\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
+use App\Shared\Controllers\ControllerBase;
 
 /**
  * Class IndexController

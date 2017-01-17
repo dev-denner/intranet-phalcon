@@ -7,11 +7,11 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use Forms\Models\GestaoAcesso;
-use SysPhalcon\Controllers\ControllerBase;
-use Nucleo\Models\Protheus\CentroCustos;
+use App\Modules\Forms\Models\GestaoAcesso;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Protheus\CentroCustos;
 
 class GestaoAcessosIndicadoresSgiController extends ControllerBase {
 

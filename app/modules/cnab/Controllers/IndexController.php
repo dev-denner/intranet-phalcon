@@ -6,9 +6,9 @@
  * @link        http://www.grupompe.com.br
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
 **/
-        
 
-namespace Cnab\Controllers;
+
+namespace App\Modules\Cnab\Controllers;
 
 use Phalcon\Mvc\Controller;
 

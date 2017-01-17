@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Otrs;
+namespace App\Modules\Otrs;
 
 /**
  * Class Routes

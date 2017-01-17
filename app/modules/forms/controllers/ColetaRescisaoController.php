@@ -7,12 +7,12 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use Nucleo\Models\RM\RM;
-use Forms\Models\ColetaRecisao;
-use SysPhalcon\Plugins\Tools;
+use App\Shared\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\RM\RM;
+use App\Modules\Forms\Models\ColetaRecisao;
+use App\Plugins\Tools;
 
 class ColetaRescisaoController extends ControllerBase {
 

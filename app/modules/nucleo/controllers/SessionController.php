@@ -7,14 +7,14 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Users;
-use Nucleo\Models\Mysql\ResetPasswords;
-use Nucleo\Models\Mysql\PasswordChanges;
-use Nucleo\Models\Protheus\Colaboradores;
-use Nucleo\Models\UsersGroups;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Users;
+use App\Modules\Nucleo\Models\Mysql\ResetPasswords;
+use App\Modules\Nucleo\Models\Mysql\PasswordChanges;
+use App\Modules\Nucleo\Models\Protheus\Colaboradores;
+use App\Modules\Nucleo\Models\UsersGroups;
+use App\Shared\Controllers\ControllerBase;
 
 class SessionController extends ControllerBase
 {

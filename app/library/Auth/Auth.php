@@ -7,18 +7,18 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Library\Auth;
+namespace App\Library\Auth;
 
 use Phalcon\Mvc\User\Component;
-use SysPhalcon\Library\Auth\Exception;
-use Nucleo\Models\Mysql\RememberTokens;
-use Nucleo\Models\Mysql\SuccessLogins;
-use Nucleo\Models\Mysql\FailedLogins;
-use Nucleo\Models\Users;
-use Nucleo\Models\UsersGroups;
-use Nucleo\Models\Perfils;
-use Nucleo\Models\RM\Pfunc;
-use Nucleo\Models\Protheus\Colaboradores;
+use App\Library\Auth\Exception;
+use App\Modules\Nucleo\Models\Mysql\RememberTokens;
+use App\Modules\Nucleo\Models\Mysql\SuccessLogins;
+use App\Modules\Nucleo\Models\Mysql\FailedLogins;
+use App\Modules\Nucleo\Models\Users;
+use App\Modules\Nucleo\Models\UsersGroups;
+use App\Modules\Nucleo\Models\Perfils;
+use App\Modules\Nucleo\Models\RM\Pfunc;
+use App\Modules\Nucleo\Models\Protheus\Colaboradores;
 
 class Auth extends Component {
 
@@ -205,7 +205,7 @@ class Auth extends Component {
         }
 
         if ($user->status == 'I') {
-            throw new Exception('Este usuário está não foi ativado. Entre em contato com o suporte.');
+            throw new Exception('Este usuário não foi ativado. Entre em contato com o suporte.');
         }
     }
 
@@ -263,7 +263,7 @@ class Auth extends Component {
         $funcionarios = new Pfunc();
         $funcionario = $funcionarios->getDadosFuncionario($colaborador['CPF'], $colaborador['CHAPA']);
 
-        $infoColaborador = [];
+        $infoColaborador = $colaborador;
 
         if ($funcionario) {
             $infoColaborador = array_merge($colaborador, $funcionario);

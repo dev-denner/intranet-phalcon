@@ -14,7 +14,7 @@ use App\Modules\Nucleo\Models\TablesSystem;
 use App\Modules\Nucleo\Models\RM\Gcoligada;
 use App\Shared\Controllers\ControllerBase;
 
-class SolicitacoesAcessosController extends ControllerBase
+class RequisicaoMudancaController extends ControllerBase
 {
 
     /**
@@ -22,7 +22,7 @@ class SolicitacoesAcessosController extends ControllerBase
      */
     public function initialize()
     {
-        $this->tag->setTitle('Solicitações de Acessos a Serviços de TI');
+        $this->tag->setTitle('Requisição de Mudança');
         parent::initialize();
     }
 
@@ -30,33 +30,7 @@ class SolicitacoesAcessosController extends ControllerBase
     {
         try {
 
-            if ($this->request->isPost()) {
 
-                if ($this->request->isAjax()) {
-                    $filiais = new Filiais();
-                    echo json_encode($filiais->getFiliais($this->request->getPost('empresa', 'string')));
-                    return $this->view->disable();
-                }
-            }
-
-            $filiais = new Filiais();
-
-            $empresas = [];
-            foreach ($filiais->getEmpresas() as $filial) {
-                $empresas[$filial['CODEMPRESA']] = $filial['CODEMPRESA'] . ' ' . $filial['EMPRESA'];
-            }
-
-            $coligadas = new Gcoligada();
-
-            $this->view->empresas = $empresas;
-            $this->view->modulos = TablesSystem::find(["table = 'module_protheus'", 'order' => 'value']);
-            $this->view->rede_matriz = TablesSystem::find(["table = 'mother_network'", 'order' => 'value']);
-            $this->view->papeis_otrs = TablesSystem::find(["table = 'papeis_otrs'", 'order' => 'value']);
-            $this->view->coligadas = $coligadas->getColigada();
-            $this->view->perfils = TablesSystem::find(["table = 'perfil_rm'", 'order' => 'value']);
-
-            $this->assets->collection('headerCss')->addJs('app/forms/solicitacoes_acessos/index.css');
-            $this->assets->collection('footerJs')->addJs('app/forms/solicitacoes_acessos/index.js');
         } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
@@ -83,17 +57,6 @@ class SolicitacoesAcessosController extends ControllerBase
                 }
 
                 $subject = 'Solicitação Acesso ';
-
-                if (!is_null($this->request->getPost('servico_email'))) {
-                    $subject .= 'E-mail/';
-                }
-                if (!is_null($this->request->getPost('servico_sistemas'))) {
-                    $subject .= 'Sistemas/';
-                }
-                if (!is_null($this->request->getPost('servico_matriz'))) {
-                    $subject .= 'Matriz/';
-                }
-                $subject = substr($subject, 0, strlen($subject) - 1);
 
                 $this->view->campos = $this->request->getPost();
                 $to = [$this->auth_identity->email => $this->auth_identity->nome];

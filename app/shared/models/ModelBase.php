@@ -1,8 +1,8 @@
 <?php
 
-namespace SysPhalcon\Models;
+namespace App\Shared\Models;
 
-use SysPhalcon\Library\CustomConnectionOracle;
+use App\Library\CustomConnectionOracle;
 use Phalcon\Mvc\Model as MvcModel;
 
 class ModelBase extends \Phalcon\Mvc\Model {
@@ -183,11 +183,11 @@ class ModelBase extends \Phalcon\Mvc\Model {
 
     protected function customSimpleQuery($serviceDb = 'protheusDb', $adapter = 'Oracle') {
         $db = $this->getDi()->getDatabases()->database->$serviceDb;
-        $environment = $this->getDi()->getConfig()->application->environment != 'production' ? false : true;
+        $environment = $this->getDi()->getConfig()->application->environment != 'production' ? true : false;
 
         if ($environment) {
             $eventsManager = new \Phalcon\Events\Manager();
-            $dbListener = new \SysPhalcon\Plugins\DbListener();
+            $dbListener = new \App\Plugins\DbListener();
             $eventsManager->attach($serviceDb, $dbListener);
         }
         $config = array(

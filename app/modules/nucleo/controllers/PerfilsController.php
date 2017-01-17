@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo\Controllers;
+namespace App\Modules\Nucleo\Controllers;
 
-use Nucleo\Models\Perfils;
-use SysPhalcon\Controllers\ControllerBase;
+use App\Modules\Nucleo\Models\Perfils;
+use App\Shared\Controllers\ControllerBase;
 
 class PerfilsController extends ControllerBase {
 

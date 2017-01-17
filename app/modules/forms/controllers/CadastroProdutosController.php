@@ -7,10 +7,10 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Forms\Controllers;
+namespace App\Modules\Forms\Controllers;
 
-use SysPhalcon\Controllers\ControllerBase;
-use SysPhalcon\Plugins\Tools;
+use App\Shared\Controllers\ControllerBase;
+use App\Plugins\Tools;
 
 class CadastroProdutosController extends ControllerBase
 {

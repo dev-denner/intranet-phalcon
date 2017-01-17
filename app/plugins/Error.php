@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denners777@hotmail.com>
  * */
 
-namespace SysPhalcon\Plugins;
+namespace App\Plugins;
 
 use Phalcon\DI\FactoryDefault as Di;
 use Phalcon\Mvc\User\Plugin as Plugin;

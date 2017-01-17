@@ -7,7 +7,7 @@
  * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
  * */
 
-namespace Nucleo;
+namespace App\Modules\Nucleo;
 
 /**
  * Class Routes
@@ -26,7 +26,7 @@ class Routes {
         'action' => 3,
         'params' => 4
     ));
-    
+
     return $router;
   }
 

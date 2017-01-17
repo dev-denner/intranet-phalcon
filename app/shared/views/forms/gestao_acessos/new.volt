@@ -23,7 +23,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['userId',
-                                \Nucleo\Models\Users::find(['order' => 'name']),
+                                \App\Modules\Nucleo\Models\Users::find(['order' => 'name']),
                                 'using' => ['id', 'name'],
                                 'useEmpty' => true,
                                 'emptyText' => '',
