@@ -37,7 +37,7 @@ class PagesCategoriesController extends ControllerBase {
                 $this->view->pages_categories = PagesCategories::find($search);
                 $this->view->pesquisa = $this->request->getPost('pages_categories');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -73,8 +73,8 @@ class PagesCategoriesController extends ControllerBase {
             $this->tag->setDefault('description', $page_category->getDescription());
             $this->tag->setDefault('category', $page_category->getCategory());
             $this->tag->setDefault('department', $page_category->getDepartment());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/pages_categories');
         }
     }
@@ -106,8 +106,8 @@ class PagesCategoriesController extends ControllerBase {
             }
 
             $this->flash->success('Páginas por Categorias gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/pages_categories');
     }
@@ -146,8 +146,8 @@ class PagesCategoriesController extends ControllerBase {
             }
 
             $this->flash->success('Páginas por Categorias atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/pages_categories');
     }
@@ -184,8 +184,8 @@ class PagesCategoriesController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/pages_categories');
         }
     }

@@ -19,11 +19,8 @@
                     <div class="form-group fg-line">
                         <label>Centro de Custo <span class="text-danger">*</span></label>
                         <?php
-                        $userId = $auth_identity->userId;
-                        $search = "nomeFormulario = 'Indicadores SGI' AND userId = '{$userId}'";
-                        echo $this->tag->select(['cc',
-                            App\Modules\Forms\Models\GestaoAcesso::find($search),
-                            'using' => ['amarracao', 'amarracao'],
+                        echo $this->tag->selectStatic(['cc',
+                            $gestaoAcesso,
                             'useEmpty' => true,
                             'emptyText' => 'Escolha uma opção',
                             'emptyValue' => '',
@@ -133,7 +130,7 @@
                                 <div class="form-group fg-line">
                                     <label><i class="badge bgm-lightgreen">2.4</i> TFCA - Taxa de Frequência de Acidentes com Afastamento - Acumulada (Acidentes Típicos)</label>
                                     {{ text_field("tfcaMes", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
-                                    <label>Acumulado TFCA</label>
+                                    <label><span class="c-green"><i class="badge bgm-lightgreen">AC</i> Acumulado TFCA</span></label>
                                     {{ text_field("tfca", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
                                 </div>
                                 <p class="help-block">(2.1 x 10<sup>6</sup> ) / 1.5</p>
@@ -143,7 +140,7 @@
                                 <div class="form-group fg-line">
                                     <label><i class="badge bgm-lightgreen">2.5</i> TG - Taxa de Gravidade</label>
                                     {{ text_field("txGravAcumMes", "class" : "form-control fg-input fc-alt onlyNumber", "readonly": "readonly") }}
-                                    <label>Acumulado TG</label>
+                                    <label><span class="c-green"><i class="badge bgm-lightgreen">AC</i> Acumulado TG</span></label>
                                     {{ text_field("txGravAcum", "class" : "form-control fg-input fc-alt onlyNumber", "readonly": "readonly") }}
                                 </div>
                                 <p class="help-block">((2.2 + 2.3) x 10<sup>6</sup> ) / 1.5</p>
@@ -160,7 +157,7 @@
                                 <div class="form-group fg-line">
                                     <label><i class="badge bgm-lightgreen">2.7</i> TFSA - Taxa de Frequência de Acidentes sem Afastamento</label>
                                     {{ text_field("tfsaMes", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
-                                    <label>Acumulado TFSA</label>
+                                    <label><span class="c-green"><i class="badge bgm-lightgreen">AC</i> Acumulado TFSA</span></label>
                                     {{ text_field("tfsa", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
                                 </div>
                                 <p class="help-block">(2.6 x 10<sup>6</sup> ) / 1.5</p>
@@ -172,7 +169,7 @@
                                 <div class="form-group fg-line">
                                     <label><i class="badge bgm-lightgreen">2.8</i> TOR - Taxa de Ocorrências Registráveis</label>
                                     {{ text_field("torMes", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
-                                    <label>Acumulado TOR</label>
+                                    <label><span class="c-green"><i class="badge bgm-lightgreen">AC</i> Acumulado TOR</span></label>
                                     {{ text_field("tor", "class" : "form-control fg-input fc-alt onlyFloatWithDot", "readonly": "readonly") }}
                                 </div>
                                 <p class="help-block">((2.1 + 2.6) x 10<sup>6</sup> ) / 1.5</p>
@@ -703,7 +700,7 @@
                                 <!-- /totalResidVidro -->
                                 <!-- residConstrucaoCivil -->
                                 <div class="form-group clearfix">
-                                    <label><i class="badge bgm-lightgreen">11.3</i> Resíduos da construção civil</label>
+                                    <label><i class="badge bgm-lightgreen">11.4</i> Resíduos da construção civil</label>
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="fg-line">

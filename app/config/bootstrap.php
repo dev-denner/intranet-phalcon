@@ -42,9 +42,6 @@ use Phalcon\Breadcrumbs;
 use Phalcon\Di\FactoryDefault as Di;
 use Dotenv\Dotenv as Dotenv;
 
-/**
- *
- */
 class Bootstrap
 {
 
@@ -171,7 +168,6 @@ class Bootstrap
             'App\Modules\Intranet\Models' => APP_PATH . '/app/modules/intranet/models',
             'App\Modules\Nucleo\Models' => APP_PATH . '/app/modules/nucleo/models',
             'App\Modules\Cnab\Models' => APP_PATH . '/app/modules/cnab/models',
-            'App\Modules\Imports\Models' => APP_PATH . '/app/modules/imports/models',
             'App\Modules\Telephony\Models' => APP_PATH . '/app/modules/telephony/models',
             'App\Modules\Forms\Models' => APP_PATH . '/app/modules/forms/models',
             'App\Modules\Catraca\Models' => APP_PATH . '/app/modules/catraca/models',
@@ -204,16 +200,24 @@ class Bootstrap
             if (is_file(APP_PATH . '/app/library/WhoopsServiceProvider.php')) {
                 require_once APP_PATH . '/app/library/WhoopsServiceProvider.php';
             }
-
             new \Whoops\Provider\Phalcon\WhoopsServiceProvider($this->_di);
+            $debug = new \Phalcon\Debug();
+            $debug->listen();
+            $rollbar['environment'] = 'development';
+            $rollbar['root'] = '/var/www/html/intranet/';
         } else {
             ini_set('display_errors', false);
             error_reporting(-1);
+            $rollbar['environment'] = 'production';
+            $rollbar['root'] = '/var/www/html/';
         }
+
+        $rollbar['access_token'] = '262a557a310a4cfb8d69a0085c5d861f';
 
         set_error_handler(['\App\Plugins\Error', 'normal']);
         set_exception_handler(['\App\Plugins\Error', 'exception']);
         register_shutdown_function(['\App\Plugins\Error', 'shutdown']);
+        \Rollbar::init($rollbar);
     }
 
     /**
@@ -333,7 +337,7 @@ class Bootstrap
                 if ($environment) {
                     $eventsManager = new EventsManager();
                     $dbListener = new DbListener();
-                    $eventsManager->attach($key, $dbListener);
+                    $eventsManager->attach('db', $dbListener);
                 }
 
                 $params = [
@@ -353,8 +357,8 @@ class Bootstrap
 
                 switch ($value->adapter) {
                     case 'Oracle':
-                        $conn = new Oracle($params);
                         $params['options'][PDO::ATTR_CASE] = PDO::CASE_UPPER;
+                        $conn = new Oracle($params);
                         break;
                     case 'Mysql':
                         $conn = new Mysql($params);
@@ -506,13 +510,13 @@ class Bootstrap
         $this->_di->setShared('volt', function($view, $di) use($config) {
             $volt = new Volt($view, $di);
             $volt->setOptions(
-                      [
-                          'compiledPath' => $config->volt->path,
-                          'compiledExtension' => $config->volt->extension,
-                          'compiledSeparator' => $config->volt->separator,
-                          'compileAlways' => (bool) $config->volt->compileAlways,
-                          'stat' => (bool) $config->volt->stat,
-                      ]
+                    [
+                        'compiledPath' => $config->volt->path,
+                        'compiledExtension' => $config->volt->extension,
+                        'compiledSeparator' => $config->volt->separator,
+                        'compileAlways' => (bool) $config->volt->compileAlways,
+                        'stat' => (bool) $config->volt->stat,
+                    ]
             );
 
             $compiler = $volt->getCompiler();
@@ -524,6 +528,7 @@ class Bootstrap
             $compiler->addFunction('explode', 'explode');
             $compiler->addFunction('implode', 'implode');
             $compiler->addFunction('array_unique', 'array_unique');
+            $compiler->addFunction('json_encode', 'json_encode');
 
             return $volt;
         });
@@ -819,10 +824,6 @@ class Bootstrap
             'cnab' => [
                 'className' => 'App\Modules\Cnab\Module',
                 'path' => APP_PATH . '/app/modules/cnab/Module.php'
-            ],
-            'imports' => [
-                'className' => 'App\Modules\Imports\Module',
-                'path' => APP_PATH . '/app/modules/imports/Module.php'
             ],
         ]);
         return $application;

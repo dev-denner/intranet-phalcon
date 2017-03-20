@@ -13,7 +13,8 @@ use App\Shared\Models\ModelBase;
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 use Phalcon\Config as ObjectPhalcon;
 
-class Statement extends ModelBase {
+class Statement extends ModelBase
+{
 
     /**
      *
@@ -139,7 +140,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getNumNf() {
+    public function getNumNf()
+    {
         return $this->numNf;
     }
 
@@ -147,7 +149,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getIdCliente() {
+    public function getIdCliente()
+    {
         return $this->idCliente;
     }
 
@@ -155,7 +158,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getMes() {
+    public function getMes()
+    {
         return $this->mes;
     }
 
@@ -163,7 +167,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getNumAcs() {
+    public function getNumAcs()
+    {
         return $this->numAcs;
     }
 
@@ -171,7 +176,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getPlano() {
+    public function getPlano()
+    {
         return $this->plano;
     }
 
@@ -179,7 +185,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
@@ -187,7 +194,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getTpServ() {
+    public function getTpServ()
+    {
         return $this->tpServ;
     }
 
@@ -195,7 +203,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 
@@ -203,7 +212,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getHora() {
+    public function getHora()
+    {
         return $this->hora;
     }
 
@@ -211,7 +221,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getOrigem() {
+    public function getOrigem()
+    {
         return $this->origem;
     }
 
@@ -219,7 +230,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getDestino() {
+    public function getDestino()
+    {
         return $this->destino;
     }
 
@@ -227,7 +239,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getNumChamada() {
+    public function getNumChamada()
+    {
         return $this->numChamada;
     }
 
@@ -235,7 +248,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getTipo() {
+    public function getTipo()
+    {
         return $this->tipo;
     }
 
@@ -243,7 +257,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getDuracao() {
+    public function getDuracao()
+    {
         return $this->duracao;
     }
 
@@ -251,7 +266,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getValor() {
+    public function getValor()
+    {
         return $this->valor;
     }
 
@@ -259,7 +275,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getOperLd() {
+    public function getOperLd()
+    {
         return $this->operLd;
     }
 
@@ -267,7 +284,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getTimid() {
+    public function getTimid()
+    {
         return $this->timid;
     }
 
@@ -275,7 +293,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getAliquota() {
+    public function getAliquota()
+    {
         return $this->aliquota;
     }
 
@@ -283,7 +302,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getCodFebraban() {
+    public function getCodFebraban()
+    {
         return $this->codFebraban;
     }
 
@@ -291,16 +311,18 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public function getTotalGeral() {
+    public function getTotalGeral()
+    {
         return $this->totalGeral;
     }
 
     /**
      *
      * @param type $numNf
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setNumNf($numNf) {
+    public function setNumNf($numNf)
+    {
         $this->numNf = $numNf;
         return $this;
     }
@@ -308,9 +330,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $idCliente
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setIdCliente($idCliente) {
+    public function setIdCliente($idCliente)
+    {
         $this->idCliente = $idCliente;
         return $this;
     }
@@ -318,9 +341,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $mes
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setMes($mes) {
+    public function setMes($mes)
+    {
         $this->mes = $mes;
         return $this;
     }
@@ -328,9 +352,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $numAcs
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setNumAcs($numAcs) {
+    public function setNumAcs($numAcs)
+    {
         $this->numAcs = $numAcs;
         return $this;
     }
@@ -338,9 +363,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $plano
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setPlano($plano) {
+    public function setPlano($plano)
+    {
         $this->plano = $plano;
         return $this;
     }
@@ -348,9 +374,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $nome
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setNome($nome) {
+    public function setNome($nome)
+    {
         $this->nome = $nome;
         return $this;
     }
@@ -358,9 +385,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $tpServ
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setTpServ($tpServ) {
+    public function setTpServ($tpServ)
+    {
         $this->tpServ = $tpServ;
         return $this;
     }
@@ -368,9 +396,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $data
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setData($data) {
+    public function setData($data)
+    {
         $this->data = $data;
         return $this;
     }
@@ -378,9 +407,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $hora
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setHora($hora) {
+    public function setHora($hora)
+    {
         $this->hora = $hora;
         return $this;
     }
@@ -388,9 +418,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $origem
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setOrigem($origem) {
+    public function setOrigem($origem)
+    {
         $this->origem = $origem;
         return $this;
     }
@@ -398,9 +429,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $destino
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setDestino($destino) {
+    public function setDestino($destino)
+    {
         $this->destino = $destino;
         return $this;
     }
@@ -408,9 +440,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $numChamada
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setNumChamada($numChamada) {
+    public function setNumChamada($numChamada)
+    {
         $this->numChamada = $numChamada;
         return $this;
     }
@@ -418,9 +451,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $tipo
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setTipo($tipo) {
+    public function setTipo($tipo)
+    {
         $this->tipo = $tipo;
         return $this;
     }
@@ -428,9 +462,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $duracao
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setDuracao($duracao) {
+    public function setDuracao($duracao)
+    {
         $this->duracao = $duracao;
         return $this;
     }
@@ -438,9 +473,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $valor
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setValor($valor) {
+    public function setValor($valor)
+    {
         $this->valor = $valor;
         return $this;
     }
@@ -448,9 +484,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $operLd
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setOperLd($operLd) {
+    public function setOperLd($operLd)
+    {
         $this->operLd = $operLd;
         return $this;
     }
@@ -458,9 +495,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $timid
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setTimid($timid) {
+    public function setTimid($timid)
+    {
         $this->timid = $timid;
         return $this;
     }
@@ -468,9 +506,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $aliquota
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setAliquota($aliquota) {
+    public function setAliquota($aliquota)
+    {
         $this->aliquota = $aliquota;
         return $this;
     }
@@ -478,9 +517,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $codFebraban
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setCodFebraban($codFebraban) {
+    public function setCodFebraban($codFebraban)
+    {
         $this->codFebraban = $codFebraban;
         return $this;
     }
@@ -488,9 +528,10 @@ class Statement extends ModelBase {
     /**
      *
      * @param type $totalGeral
-     * @return \Telephony\Models\Statement
+     * @return \App\Modules\Telephony\Models\Statement
      */
-    public function setTotalGeral($totalGeral) {
+    public function setTotalGeral($totalGeral)
+    {
         $this->totalGeral = $totalGeral;
         return $this;
     }
@@ -498,7 +539,8 @@ class Statement extends ModelBase {
     /**
      *
      */
-    public function initialize() {
+    public function initialize()
+    {
 
         parent::initialize();
 
@@ -509,7 +551,8 @@ class Statement extends ModelBase {
      *
      * @return string
      */
-    public function getSource() {
+    public function getSource()
+    {
         return 'EXTRATO';
     }
 
@@ -517,7 +560,8 @@ class Statement extends ModelBase {
      *
      * @return type
      */
-    public static function columnMap() {
+    public static function columnMap()
+    {
         return [
             'NUMNF' => 'numNf',
             'NUMIDCLI' => 'idCliente',
@@ -542,13 +586,14 @@ class Statement extends ModelBase {
         ];
     }
 
-    public function importExternalTable($nameFile = null) {
+    public function importExternalTable($nameFile = null)
+    {
 
         if (is_null($nameFile)) {
             throw new Exception('Nome do arquivo ausente.');
         }
 
-        $saStatement = new \Telephony\Models\SaStatement();
+        $saStatement = new \App\Modules\Telephony\Models\Statement();
 
         $sqlLocation = "ALTER TABLE SA_EXTRATO LOCATION (ETL: 'FAT{$nameFile}.TXT')";
 
@@ -558,7 +603,7 @@ class Statement extends ModelBase {
             throw new Exception('Erro ao alterar location da tabela EXTRATO.');
         }
 
-        $statement = new \Telephony\Models\Statement();
+        $statement = new \App\Modules\Telephony\Models\Statement();
 
         $sqlDelete = 'DELETE FROM EXTRATO WHERE MESREF IN (SELECT DISTINCT MESREF FROM SA_EXTRATO)';
 
@@ -580,7 +625,7 @@ FROM SA_EXTRATO)';
             throw new Exception('Erro ao inserir na tabela EXTRATO.');
         }
 
-        $saStatement = new \Telephony\Models\SaStatement();
+        $saStatement = new \App\Modules\Telephony\Models\SaStatement();
 
         $sqlCount = 'SELECT COUNT(1) M FROM SA_EXTRATO';
 
@@ -592,22 +637,23 @@ FROM SA_EXTRATO)';
         return $count->toArray(0)[0]['M'];
     }
 
-    public function getTotal($linhas, $mes) {
+    public function getTotal($linhas, $mes)
+    {
 
-        $connection = $this->customConnection('telefoniaDb');
+        $connection = $this->customSimpleQuery('telefoniaDb');
 
         $query = "SELECT SUM(VALOR) valor FROM EXTRATO
                 WHERE NUMACS = '{$linhas}' AND MESREF = '{$mes}' AND OPERLD IS NULL";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchObject($result);
-        $connection->bye();
-        return $return;
+
+        return $connection->fetchOne($query, \Phalcon\Db::FETCH_ASSOC);
+
     }
 
-    public function getReportByLine($linha, $mes) {
+    public function getReportByLine($linha, $mes)
+    {
 
-        $connection = $this->customConnection('telefoniaDb');
+        $connection = $this->customSimpleQuery('telefoniaDb');
 
         $query = "SELECT MESREF, NUMACS, DATA, HORA, ORIGEM, NUMCHAM, TIPO, DURACAO, VALOR FROM EXTRATO
                 WHERE OPERLD IS NOT NULL
@@ -620,11 +666,8 @@ FROM SA_EXTRATO)';
                 SELECT 'TOTAL', '', '', '', '', '', '', '', SUM(VALOR) FROM EXTRATO
                 WHERE NUMACS = '{$linha}' AND MESREF = '{$mes}'
                 ";
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
 
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

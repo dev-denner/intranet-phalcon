@@ -20,23 +20,30 @@ use App\Modules\Nucleo\Models\Protheus\Clientes;
 use App\Modules\Nucleo\Models\RM\Psecao;
 use App\Modules\Intranet\Models\Processos;
 
-class ConsultasController extends ControllerBase {
+class ConsultasController extends ControllerBase
+{
 
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle('Consultas');
         parent::initialize();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         return $this->response->redirect('documents');
     }
 
-    public function produtosServicosAction() {
+    public function produtosServicosAction()
+    {
 
         try {
             $this->assets->collection('footerJs')->addJs('app/intranet/consultas/produtosServicos.js');
 
             $produtos = new Produtos();
+            $this->view->produtos = '';
+            $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isAjax()) {
                 echo json_encode([
@@ -54,12 +61,13 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function fornecedoresAction() {
+    public function fornecedoresAction()
+    {
 
         try {
             $this->assets->collection('footerJs')->addJs('app/intranet/consultas/fornecedores.js');
@@ -71,7 +79,9 @@ class ConsultasController extends ControllerBase {
                 return $this->view->disable();
             }
 
+            $this->view->fornecedores = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = $this->request->getPost('fornecedor', 'string');
@@ -79,16 +89,19 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function centroCustosAction() {
+    public function centroCustosAction()
+    {
 
         try {
 
+            $this->view->centro_custos = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('centro_custo', 'string'));
@@ -104,11 +117,14 @@ class ConsultasController extends ControllerBase {
         }
     }
 
-    public function naturezaFinanceiraAction() {
+    public function naturezaFinanceiraAction()
+    {
 
         try {
 
+            $this->view->natureza_financeiras = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('natureza_financeira', 'string'));
@@ -117,16 +133,19 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function tesAction() {
+    public function tesAction()
+    {
 
         try {
 
+            $this->view->tess = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('tes', 'string'));
@@ -135,16 +154,19 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function requisitoMinimoAction() {
+    public function requisitoMinimoAction()
+    {
 
         try {
 
+            $this->view->requisito_minimos = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('requisito_minimo', 'string'));
@@ -153,16 +175,19 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function secaoAction() {
+    public function secaoAction()
+    {
 
         try {
 
+            $this->view->secoes = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('secao', 'string'));
@@ -171,12 +196,13 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function clientesAction() {
+    public function clientesAction()
+    {
 
         try {
 
@@ -189,7 +215,9 @@ class ConsultasController extends ControllerBase {
                 return $this->view->disable();
             }
 
+            $this->view->clientes = '';
             $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
                 $search = strtoupper($this->request->getPost('cliente', 'string'));
@@ -197,12 +225,13 @@ class ConsultasController extends ControllerBase {
                 $this->view->pesquisa = $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
 
-    public function processosAction() {
+    public function processosAction()
+    {
 
         try {
             $this->view->processos = Processos::find();
@@ -213,7 +242,7 @@ class ConsultasController extends ControllerBase {
                 $this->view->processos = Processos::find($search);
                 $this->view->pesquisa = $this->request->getPost('processos');
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }

@@ -33,7 +33,7 @@ class NaturezaFinanceira extends ModelBase {
 
     public function getNaturezaFinanceira($search) {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         if (!empty($search)) {
             $search = "AND (CODIGO LIKE '%{$search}%'
@@ -62,10 +62,7 @@ class NaturezaFinanceira extends ModelBase {
             ORDER BY CODIGO
 ";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

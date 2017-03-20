@@ -38,7 +38,7 @@ class AccessLineController extends ControllerBase {
                 $this->view->access_lines = AccessLine::find($search);
                 $this->view->pesquisa = $this->request->getPost('access_lines');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -102,8 +102,8 @@ class AccessLineController extends ControllerBase {
             $this->tag->setDefault('id', $accessLine->getId());
             $this->tag->setDefault('cpf', $accessLine->getCpf());
             $this->tag->setDefault('linha', $accessLine->getLinha());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('telephony/access_line');
         }
     }
@@ -134,8 +134,8 @@ class AccessLineController extends ControllerBase {
             }
 
             $this->flash->success('Acesso a Linha gravada com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('telephony/access_line');
     }
@@ -173,8 +173,8 @@ class AccessLineController extends ControllerBase {
             }
 
             $this->flash->success('Acesso a Linha atualizada com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('telephony/access_line');
     }
@@ -211,8 +211,8 @@ class AccessLineController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('telephony/access_line');
         }
     }

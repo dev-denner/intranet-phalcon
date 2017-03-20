@@ -32,7 +32,7 @@ class IndexController extends ControllerBase {
                 $id = $this->filter->sanitize($idDepartment, 'alphanum');
             }
             $this->view->idDepartment = $id;
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }

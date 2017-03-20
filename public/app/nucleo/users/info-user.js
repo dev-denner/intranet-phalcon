@@ -8,7 +8,7 @@ var getInfoUser = function (e) {
         $.ajax({
             method: 'POST',
             dataType: "json",
-            url: '/nucleo/users/infoUser',
+            url: base_url_intranet + 'nucleo/users/infoUser',
             data: {cpf: cpf}
         }).success(function (returned) {
 

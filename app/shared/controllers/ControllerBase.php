@@ -336,4 +336,13 @@ class ControllerBase extends Controller
         return;
     }
 
+    protected function getMessageEntity($entity)
+    {
+        $msg = '';
+        foreach ($entity->getMessages() as $message) {
+            $msg .= $message . '<br />';
+        }
+        throw new Exception($msg);
+    }
+
 }

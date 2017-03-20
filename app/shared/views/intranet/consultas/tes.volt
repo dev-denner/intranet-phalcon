@@ -27,7 +27,7 @@
         {{ end_form() }}
     </div>
 </div>
-
+{% if tess is not empty %}
 <div class="card">
     <div class="card-header">
         Resultado para pesquisa: <span class="text-danger">{{ pesquisa }}</span>
@@ -89,3 +89,4 @@
         </div>
     </div>
 </div>
+{% endif %}

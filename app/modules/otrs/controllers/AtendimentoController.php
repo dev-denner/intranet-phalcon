@@ -48,10 +48,13 @@ class AtendimentoController extends ControllerBase
                 $this->view->pesquisa = $this->makeSearchView($this->request->getPost());
                 $this->view->search = json_encode($search, true);
                 $this->view->export = true;
+                $this->view->fields = Chamados::exportMap();
+                $this->view->questions = json_encode($this->makeSearchExport($this->request->getPost()));
             }
 
             $tipo = isset($this->request->getPost()['tipo']) ? $this->request->getPost()['tipo'] : 'Abertos';
-            
+
+            $this->view->selTipo = $tipo;
             $this->view->tipo = $this->prepareFind(['columns' => 'DISTINCT tipo', 'order' => 'tipo'], 'TIPO');
             $this->view->fila = $this->prepareFind(['columns' => 'DISTINCT filaMaster fila', 'conditions' => "tipo = '$tipo'", 'order' => 'filaMaster'], 'FILA');
             $this->view->gestores = $this->prepareFind(['columns' => 'DISTINCT codGestor code, gestor', 'conditions' => "tipo = '$tipo'", 'order' => 'codGestor'], ['CODE', 'GESTOR'], 2);
@@ -68,6 +71,26 @@ class AtendimentoController extends ControllerBase
         } catch (\PDOException $e) {
             $this->flash->error($e->getMessage());
         }
+    }
+
+    public function relatorioAction()
+    {
+        try {
+
+            if ($this->request->isPost()) {
+                if (empty($this->request->getPost('fields'))) {
+                    throw new \Exception('Erro: Nenhum campo foi escolhido. Tente novamente.');
+                }
+                $chamados = new Chamados();
+                $chamados->report($this->request->getPost());
+                return true;
+            }
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
+        } catch (\PDOException $e) {
+            $this->flash->error($e->getMessage());
+        }
+        return $this->response->redirect('otrs/atendimento');
     }
 
     private function verifyListagem()
@@ -112,7 +135,6 @@ class AtendimentoController extends ControllerBase
                 }
                 break;
         }
-
         return $return;
     }
 
@@ -133,14 +155,14 @@ class AtendimentoController extends ControllerBase
             $return .= isset($post['dataDe']) && !empty($post['dataDe']) ? " AND dataFechamento >= " . $this->formateDateForAdapter($post['dataDe']) : '';
             $return .= isset($post['dataAte']) && !empty($post['dataAte']) ? " AND dataFechamento <= " . $this->formateDateForAdapter($post['dataAte']) : '';
         }
-        $return .= isset($post['gestor']) && !empty($post['gestor']) ? " AND codGestor IN ('" . implode("', '", $post['gestor']) . "')" : '';
-        $return .= isset($post['centrocusto']) && !empty($post['centrocusto']) ? " AND masterCc IN ('" . implode("', '", $post['centrocusto']) . "')" : '';
-        $return .= isset($post['departamento']) && !empty($post['departamento']) ? " AND codDepto IN ('" . implode("', '", $post['departamento']) . "')" : '';
-        $return .= isset($post['cliente']) && !empty($post['cliente']) ? " AND cliente IN ('" . implode("', '", $post['cliente']) . "')" : '';
-        $return .= isset($post['responsavel']) && !empty($post['responsavel']) ? " AND responsavel IN ('" . implode("', '", $post['responsavel']) . "')" : '';
-        $return .= isset($post['proprietario']) && !empty($post['proprietario']) ? " AND proprietario IN ('" . implode("', '", $post['proprietario']) . "')" : '';
-        $return .= isset($post['status']) && !empty($post['status']) ? " AND status IN ('" . implode("', '", $post['status']) . "')" : '';
+        $return .= isset($post['gestor']) && !empty($post['gestor']) ? ' AND codGestor IN ' . $this->implodeQuery($post['gestor']) : '';
+        $return .= isset($post['centrocusto']) && !empty($post['centrocusto']) ? ' AND masterCc IN ' . $this->implodeQuery($post['centrocusto']) : '';
 
+        $return .= isset($post['departamento']) && !empty($post['departamento']) ? ' AND codDepto IN ' . $this->implodeQuery($post['departamento']) : '';
+        $return .= isset($post['cliente']) && !empty($post['cliente']) ? ' AND cliente IN ' . $this->implodeQuery($post['cliente']) : '';
+        $return .= isset($post['responsavel']) && !empty($post['responsavel']) ? ' AND responsavel IN ' . $this->implodeQuery($post['responsavel']) : '';
+        $return .= isset($post['proprietario']) && !empty($post['proprietario']) ? ' AND proprietario IN ' . $this->implodeQuery($post['proprietario']) : '';
+        $return .= isset($post['status']) && !empty($post['status']) ? ' AND status IN ' . $this->implodeQuery($post['status']) : '';
         return $return;
     }
 
@@ -161,7 +183,7 @@ class AtendimentoController extends ControllerBase
         $return = '';
 
         if (!empty($search['tipo'])) {
-            $return .= ' | <b>Tipo de Chamados:</b> ' . $search['tipo'];
+            $return .= '<b>Tipo de Chamados:</b> ' . $search['tipo'];
         }
         if (!empty($search['assunto'])) {
             $return .= ' | <b>Título do Chamado:</b> ' . $search['assunto'];
@@ -199,6 +221,59 @@ class AtendimentoController extends ControllerBase
         return $return;
     }
 
+    private function makeSearchExport($search)
+    {
+        $return = [];
+
+        if (isset($search['gestor'])) {
+            $gestor = Chamados::find(['columns' => 'DISTINCT codGestor code, gestor description', 'conditions' => "tipo = '{$search['tipo']}' AND codGestor IN {$this->implodeQuery($search['gestor'])}", 'order' => 'codGestor']);
+            $search['gestor'] = $this->hidrateForExport($gestor);
+        }
+        if (isset($search['centrocusto'])) {
+            $centrocusto = Chamados::find(['columns' => 'DISTINCT masterCc code, descCc description', 'conditions' => "tipo = '{$search['tipo']}' AND masterCc IN {$this->implodeQuery($search['centrocusto'])}", 'order' => 'masterCc']);
+            $search['centrocusto'] = $this->hidrateForExport($centrocusto);
+        }
+        if (isset($search['departamento'])) {
+            $departamento = Chamados::find(['columns' => 'DISTINCT codDepto code, depto description', 'conditions' => "tipo = '{$search['tipo']}' AND codDepto IN {$this->implodeQuery($search['departamento'])}", 'order' => 'codDepto']);
+            $search['departamento'] = $this->hidrateForExport($departamento);
+        }
+        if (isset($search['cliente'])) {
+            $search['cliente'] = $this->hidrateForExport($search['cliente'], false);
+        }
+        if (isset($search['responsavel'])) {
+            $search['responsavel'] = $this->hidrateForExport($search['responsavel'], false);
+        }
+        if (isset($search['proprietario'])) {
+            $search['proprietario'] = $this->hidrateForExport($search['proprietario'], false);
+        }
+        if (isset($search['status'])) {
+            $search['status'] = $this->hidrateForExport($search['status'], false);
+        }
+
+        $map = Chamados::exportMap();
+
+        foreach ($search as $key => $value) {
+            $return[$map['questions'][$key]] = $value;
+        }
+
+        return $return;
+    }
+
+    private function hidrateForExport($dados, $query = true)
+    {
+        $return = '';
+        if ($query) {
+            foreach ($dados->toArray(0) as $value) {
+                $return .= $value['CODE'] . ' - ' . $value['DESCRIPTION'] . ', ';
+            }
+        } else {
+            foreach ($dados as $value) {
+                $return .= $value . ', ';
+            }
+        }
+        return substr($return, 0, -2);
+    }
+
     private function makeSearchHidratate($dados, $title)
     {
         $return = '';
@@ -224,7 +299,7 @@ class AtendimentoController extends ControllerBase
             case 'centrocusto':
                 return $this->prepareFind(['columns' => "DISTINCT masterCc cc, descCc", 'conditions' => $search, 'order' => 'masterCc'], ['CC', 'DESCCC'], 2);
             case 'departamento':
-                return $this->prepareFind(['columns' => "DISTINCT codDepto, depto", 'conditions' => $search, 'order' => 'codDepto'], ['CODDEPTO', 'DEPTO'], 2);
+                return $this->prepareFind(['columns' => "DISTINCT codDepto code, depto", 'conditions' => $search, 'order' => 'codDepto'], ['CODE', 'DEPTO'], 2);
             case 'cliente':
                 return $this->prepareFind(['columns' => "DISTINCT cliente", 'conditions' => $search, 'order' => 'cliente'], 'CLIENTE');
             case 'responsavel':
@@ -234,6 +309,11 @@ class AtendimentoController extends ControllerBase
             case 'status':
                 return $this->prepareFind(['columns' => "DISTINCT status", 'conditions' => $search, 'order' => 'status'], 'STATUS');
         }
+    }
+
+    private function implodeQuery($dados)
+    {
+        return "('" . implode("', '", $dados) . "')";
     }
 
 }

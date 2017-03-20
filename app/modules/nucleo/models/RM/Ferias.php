@@ -12,9 +12,11 @@ namespace App\Modules\Nucleo\Models\RM;
 use App\Shared\Models\ModelBase;
 use Phalcon\Config as ObjectPhalcon;
 
-class Ferias extends ModelBase {
+class Ferias extends ModelBase
+{
 
-    public function initialize() {
+    public function initialize()
+    {
 
         parent::initialize();
 
@@ -23,51 +25,49 @@ class Ferias extends ModelBase {
         $this->setReadConnectionService('rmDb');
     }
 
-    public function getListaReciboFerias($coligada, $chapa) {
+    public function getListaReciboFerias($coligada, $chapa)
+    {
 
         if (empty($coligada) || empty($chapa)) {
             throw new \Exception('Erro em getListaReciboFerias: Variáveis vazias');
         }
 
-        $connection = $this->customConnection('rmDb');
+        $connection = $this->customSimpleQuery('rmDb');
 
         $query = "SELECT EXTRACT(YEAR FROM INICIOPERAQUIS) ANO,
                          TO_CHAR(FIMPERAQUIS, 'DD-MM-YYYY') FIM_PERIODO_AQUISITIVO
                   FROM RM.PFUFERIAS
-                  WHERE CODCOLIGADA = {$coligada}
-                  AND CHAPA= '{$chapa}'
+                  WHERE CODCOLIGADA = ?
+                  AND CHAPA = ?
                   AND PERIODOABERTO = 0
                   AND EXTRACT(YEAR FROM INICIOPERAQUIS) >= 2013";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC, [$coligada, $chapa]));
     }
 
-    public function getDadosColigada($coligada) {
+    public function getDadosColigada($coligada)
+    {
 
         if (empty($coligada)) {
             throw new \Exception('Erro em getListaReciboFerias: Variável vazia');
         }
 
-        $connection = $this->customConnection('rmDb');
+        $connection = $this->customSimpleQuery('rmDb');
 
-        $query = 'SELECT NOME, CGC, RUA, BAIRRO, CIDADE FROM RM.GCOLIGADA WHERE CODCOLIGADA = ' . $coligada;
+        $query = 'SELECT NOME, CGC, RUA, BAIRRO, CIDADE FROM RM.GCOLIGADA WHERE CODCOLIGADA = ?';
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC, [$coligada]));
     }
 
-    public function getDadosColaborador($coligada, $chapa, $periodo) {
+    public function getDadosColaborador($coligada, $chapa, $periodo)
+    {
 
         if (empty($coligada) || empty($chapa) || empty($periodo)) {
             throw new \Exception('Erro em getListaReciboFerias: Variáveis vazias');
         }
 
-        $connection = $this->customConnection('rmDb');
+        $connection = $this->customSimpleQuery('rmDb');
 
         $query = "SELECT DISTINCT PF.CHAPA,
                                   PF.NOME,
@@ -95,23 +95,21 @@ class Ferias extends ModelBase {
                   INNER JOIN RM.PFUNCAO FU
                         ON FU.CODCOLIGADA = PF.CODCOLIGADA
                         AND FU.CODIGO = PF.CODFUNCAO
-                  WHERE RF.CODCOLIGADA = {$coligada}
-                        AND RF.CHAPA = '{$chapa}'
-                        AND RF.FIMPERAQUIS = TO_DATE('{$periodo}', 'DD-MM-YYYY')";
+                  WHERE RF.CODCOLIGADA = ?
+                        AND RF.CHAPA = ?
+                        AND RF.FIMPERAQUIS = TO_DATE(?, 'DD-MM-YYYY')";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC, [$coligada, $chapa, $periodo]));
     }
 
-    public function getValores($coligada, $chapa, $periodo) {
+    public function getValores($coligada, $chapa, $periodo)
+    {
 
         if (empty($coligada) || empty($chapa) || empty($periodo)) {
             throw new \Exception('Erro em getListaReciboFerias: Variáveis vazias');
         }
 
-        $connection = $this->customConnection('rmDb');
+        $connection = $this->customSimpleQuery('rmDb');
 
         $query = "SELECT CODEVENTO,
                          REF,
@@ -131,26 +129,24 @@ class Ferias extends ModelBase {
                         INNER JOIN RM.PEVENTO PE
                           ON PE.CODCOLIGADA  = FV.CODCOLIGADA
                           AND PE.CODIGO      = FV.CODEVENTO
-                        WHERE FV.CODCOLIGADA = {$coligada}
-                          AND FV.CHAPA     = '{$chapa}'
-                          AND FV.FIMPERAQUIS = TO_DATE('{$periodo}', 'DD-MM-YYYY')
+                        WHERE FV.CODCOLIGADA = ?
+                          AND FV.CHAPA     = ?
+                          AND FV.FIMPERAQUIS = TO_DATE(?, 'DD-MM-YYYY')
                           AND PE.PROVDESCBASE IN('D', 'P')
                         ORDER BY PE.PROVDESCBASE DESC, FV.VALOR DESC
                         )";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC, [$coligada, $chapa, $periodo]));
     }
 
-    public function getTotalizadores($coligada, $chapa, $periodo) {
+    public function getTotalizadores($coligada, $chapa, $periodo)
+    {
 
         if (empty($coligada) || empty($chapa) || empty($periodo)) {
             throw new \Exception('Erro em getListaReciboFerias: Variáveis vazias');
         }
 
-        $connection = $this->customConnection('rmDb');
+        $connection = $this->customSimpleQuery('rmDb');
 
         $query = "SELECT SUM(PROVENTOS) TOTAL_PROVENTOS,
                          SUM(DESCONTOS) TOTAL_DESCONTOS,
@@ -167,17 +163,14 @@ class Ferias extends ModelBase {
                               INNER JOIN RM.PEVENTO PE
                                     ON PE.CODCOLIGADA    = FV.CODCOLIGADA
                                     AND PE.CODIGO        = FV.CODEVENTO
-                              WHERE FV.CODCOLIGADA = {$coligada}
-                                AND FV.CHAPA         = '{$chapa}'
-                                AND FV.FIMPERAQUIS   = TO_DATE('{$periodo}', 'DD-MM-YY')
+                              WHERE FV.CODCOLIGADA = ?
+                                AND FV.CHAPA         = ?
+                                AND FV.FIMPERAQUIS   = TO_DATE(?, 'DD-MM-YY')
                                 AND PE.PROVDESCBASE IN('D', 'P')
                               )
                         )";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC, [$coligada, $chapa, $periodo]));
     }
 
 }

@@ -10,15 +10,19 @@
 namespace App\Modules\Nucleo\Controllers;
 
 use App\Modules\Nucleo\Models\Users;
+use App\Modules\Nucleo\Models\Groups;
+use App\Modules\Nucleo\Models\UsersGroups;
 use App\Modules\Nucleo\Models\Protheus\Colaboradores;
 use App\Shared\Controllers\ControllerBase;
 
-class UsersController extends ControllerBase {
+class UsersController extends ControllerBase
+{
 
     /**
      * initialize
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle(' Usuários ');
         parent::initialize();
 
@@ -28,7 +32,8 @@ class UsersController extends ControllerBase {
     /**
      * Index user
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
             $this->view->users = Users::find();
             $this->view->pesquisa = '';
@@ -38,7 +43,7 @@ class UsersController extends ControllerBase {
                 $this->view->users = Users::find($search);
                 $this->view->pesquisa = $users;
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -46,8 +51,10 @@ class UsersController extends ControllerBase {
     /**
      * Displays the creation form
      */
-    public function newAction() {
+    public function newAction()
+    {
         $this->assets->collection('footerJs')->addJs('app/nucleo/users/info-user.js');
+        $this->view->groups = Groups::find(['conditions' => "status = 'A'", 'order' => 'title']);
     }
 
     /**
@@ -55,7 +62,8 @@ class UsersController extends ControllerBase {
      *
      * @param string $id
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         try {
 
             if ($this->request->isPost()) {
@@ -71,6 +79,9 @@ class UsersController extends ControllerBase {
 
             $this->view->id = $user->id;
             $this->view->info_user = $this->infoUserAction($user->cpf);
+            $this->view->mustChangePassword = $user->getMustChangePassword();
+            $this->view->groups = Groups::find(['conditions' => "status = 'A'", 'order' => 'title']);
+            $this->view->usersgroups = UsersGroups::find("userId = '{$user->id}'");
 
             $this->tag->setDefault('id', $user->getId());
             $this->tag->setDefault('cpf', $user->getCpf());
@@ -79,8 +90,8 @@ class UsersController extends ControllerBase {
             $this->tag->setDefault('mustChangePassword', $user->getMustChangePassword());
             $this->tag->setDefault('email', $user->getEmail());
             $this->tag->setDefault('status', $user->getStatus());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/users');
         }
     }
@@ -88,7 +99,8 @@ class UsersController extends ControllerBase {
     /**
      * Creates a new user
      */
-    public function createAction() {
+    public function createAction()
+    {
 
         try {
 
@@ -101,24 +113,30 @@ class UsersController extends ControllerBase {
             $user->setId($user->autoincrement());
             $user->setName($this->request->getPost('name', 'string'));
             $user->setCpf($this->request->getPost('cpf', 'alphanum'));
-            $user->setPassword($this->security->hash($this->request->getPost('cpf', 'alphanum')));
+            $user->setPassword($this->security->hash($this->request->getPost('password', 'string')));
+            $user->setEmail($this->request->getPost('email', 'email'));
+            $user->setUserName($this->request->getPost('userName', 'string'));
             $user->setMustChangePassword('S');
-            $email = $this->request->getPost('email', 'email');
-            $user->setEmail($email);
-            $user->setUserName(explode('@', $email)[0]);
             $user->setStatus('A');
 
             if (!$user->create()) {
-                $msg = '';
-                foreach ($user->getMessages() as $message) {
-                    $msg .= $message . '<br />';
+                $this->getMessageEntity($user);
+            }
+
+            foreach ($this->request->getPost('group') as $value) {
+                $usersGroups = new UsersGroups();
+                $usersGroups->setId($usersGroups->autoincrement());
+                $usersGroups->setUserId($user->getId());
+                $usersGroups->setGroupId($value);
+
+                if (!$usersGroups->create()) {
+                    $this->getMessageEntity($usersGroups);
                 }
-                throw new Exception($msg);
             }
 
             $this->flash->success('Usuário gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/users');
     }
@@ -127,7 +145,8 @@ class UsersController extends ControllerBase {
      * Saves a user edited
      *
      */
-    public function saveAction() {
+    public function saveAction()
+    {
 
         try {
 
@@ -142,27 +161,42 @@ class UsersController extends ControllerBase {
                 throw new Exception('Usuário não encontrado!');
             }
 
-            $user->setId($this->request->getPost('id'));
+            $id = $this->request->getPost('id', 'int');
+
+            $user->setId($id);
             $user->setName($this->request->getPost('name', 'string'));
             $user->setCpf($this->request->getPost('cpf', 'alphanum'));
-            $user->setMustChangePassword($_POST['mustChangePassword']);
-            $email = $this->request->getPost('email', 'email');
-            $user->setEmail($email);
-            $user->setUserName(explode('@', $email)[0]);
+            $user->setEmail($this->request->getPost('email', 'email'));
+            $user->setUserName($this->request->getPost('userName', 'string'));
             $user->setStatus($this->request->getPost('status'));
 
-            if (!$user->update()) {
-
-                $msg = '';
-                foreach ($user->getMessages() as $message) {
-                    $msg .= $message . '<br />';
-                }
-                throw new Exception($msg);
-            } else {
-                $this->flash->success('Usuário atualizado com sucesso!!!');
+            if ($this->request->getPost('mustChangePassword')) {
+                $user->setMustChangePassword($this->request->getPost('mustChangePassword'));
             }
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+
+            if (!$user->update()) {
+                $this->getMessageEntity($user);
+            }
+
+            $usersGroups = UsersGroups::find("userId = {$id}");
+
+            if (!$usersGroups->delete()) {
+                $this->getMessageEntity($usersGroups);
+            }
+
+            foreach ($this->request->getPost('group') as $value) {
+                $usersGroups = new UsersGroups();
+                $usersGroups->setId($usersGroups->autoincrement());
+                $usersGroups->setUserId($user->getId());
+                $usersGroups->setGroupId($value);
+                if (!$usersGroups->create()) {
+                    $this->getMessageEntity($usersGroups);
+                }
+            }
+
+            $this->flash->success('Usuário atualizado com sucesso!!!');
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/users');
     }
@@ -172,7 +206,8 @@ class UsersController extends ControllerBase {
      *
      * @param string $id
      */
-    public function deleteAction() {
+    public function deleteAction()
+    {
 
         try {
             if (!$this->request->isPost()) {
@@ -191,37 +226,40 @@ class UsersController extends ControllerBase {
             }
 
             if (!$user->delete()) {
-
-                $msg = '';
-                foreach ($user->getMessages() as $message) {
-                    $msg .= $message . '<br />';
-                }
-                throw new Exception($msg);
+                $this->getMessageEntity($user);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/users');
         }
     }
 
-    public function profileAction() {
+    public function profileAction()
+    {
 
     }
 
-    public function infoUserAction($cpf = null) {
+    public function infoUserAction($cpf = null)
+    {
         try {
 
+            if ($this->request->isPost()) {
+                $this->view->disable();
+                $cpf = $this->request->getPost('cpf', 'alphanum');
+                $colaborador = new Colaboradores();
+                echo json_encode($colaborador->getDadosFuncionario($cpf));
+                return true;
+            }
             $colaborador = new Colaboradores();
-            $return = $colaborador->getDadosFuncionario($cpf);
-
-            return $return;
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
+            return $colaborador->getDadosFuncionario($cpf);
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 
-    public function infoUserAjaxAction() {
+    public function infoUserAjaxAction()
+    {
         try {
 
             if (!$this->request->isAjax()) {
@@ -260,8 +298,8 @@ class UsersController extends ControllerBase {
                 echo json_encode($return);
                 return true;
             }
-        } catch (Exception $exc) {
-            echo $exc->getMessage();
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 

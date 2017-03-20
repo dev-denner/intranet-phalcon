@@ -42,7 +42,7 @@ class CellPhoneLineController extends ControllerBase {
                 $this->view->cellPhoneLines = CellPhoneLine::find($search);
                 $this->view->pesquisa = $this->request->getPost('cellPhoneLines');
             }
-        } catch (\Exception $exc) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -81,8 +81,8 @@ class CellPhoneLineController extends ControllerBase {
             $this->tag->setDefault('tipo', $cellPhoneLine->getTipo());
             $this->tag->setDefault('descontaFolha', $cellPhoneLine->getDescontaFolha());
             $this->tag->setDefault('cceo', $cellPhoneLine->getCceo());
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('telephony/cell_phone_line');
         }
     }
@@ -117,8 +117,8 @@ class CellPhoneLineController extends ControllerBase {
             }
 
             $this->flash->success('Linha Celular gravada com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('telephony/cell_phone_line');
     }
@@ -159,10 +159,10 @@ class CellPhoneLineController extends ControllerBase {
             }
 
             $this->flash->success('Linha Celular atualizada com sucesso!!!');
-        } catch (\PDOException $exc) {
-            dump($exc);
+        } catch (\PDOException $e) {
+            dump($e);
             exit;
-            $this->flash->error($exc->getMessage());
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('telephony/cell_phone_line');
     }
@@ -199,8 +199,8 @@ class CellPhoneLineController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('telephony/cell_phone_line');
         }
     }

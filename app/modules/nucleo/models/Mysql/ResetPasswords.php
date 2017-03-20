@@ -2,6 +2,7 @@
 
 namespace App\Modules\Nucleo\Models\Mysql;
 
+use App\Modules\Nucleo\Models\Users;
 use App\Shared\Models\ModelBase;
 
 /**
@@ -73,7 +74,7 @@ class ResetPasswords extends ModelBase {
      */
     public function afterCreate() {
 
-        $user = \Nucleo\Models\Users::findFirst([
+        $user = Users::findFirst([
                     'userName = ?0',
                     'bind' => [$this->usersName]
         ]);

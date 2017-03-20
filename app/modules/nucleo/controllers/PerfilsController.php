@@ -48,7 +48,7 @@ class PerfilsController extends ControllerBase {
                 $this->view->perfils = Perfils::find($search);
                 $this->view->pesquisa = 'Usuários: ' . $users . ' | Grupos: ' . $groups;
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -86,8 +86,8 @@ class PerfilsController extends ControllerBase {
             $this->tag->setDefault('controller', $perfil->getController());
             $this->tag->setDefault('action', $perfil->getAction());
             $this->tag->setDefault('permission', $perfil->getPermission());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/perfils');
         }
     }
@@ -126,8 +126,8 @@ class PerfilsController extends ControllerBase {
             }
 
             $this->flash->success('Perfil gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/perfils');
     }
@@ -172,8 +172,8 @@ class PerfilsController extends ControllerBase {
             }
 
             $this->flash->success('Perfil atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/perfils');
     }
@@ -210,8 +210,8 @@ class PerfilsController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/perfils');
         }
     }

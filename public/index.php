@@ -25,6 +25,7 @@ try {
 
     $logger = new LoggerFile(APP_PATH . '/logs/' . date('Y-m-d') . '.log');
     $logger->error($e->getMessage());
+    Rollbar::report_exception($e);
 } catch (\PDOException $e) {
     echo '<pre>';
     echo 'Ocorreu um erro inesperado! <br />';
@@ -38,5 +39,6 @@ try {
 
     $logger = new LoggerFile(APP_PATH . '/logs/' . date('Y-m-d') . '.log');
     $logger->error($e->getMessage());
+    Rollbar::report_exception($e);
 }
 

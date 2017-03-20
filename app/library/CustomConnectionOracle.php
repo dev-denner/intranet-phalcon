@@ -8,7 +8,8 @@ define('ORA_CONNECTION_TYPE_PERSISTENT', 2);
 define('ORA_CONNECTION_TYPE_NEW', 3);
 define('ORA_MESSAGES_NOT_CONNECTED', 'Not connected to Oracle instance');
 
-class CustomConnectionOracle {
+class CustomConnectionOracle
+{
 
     private static $_instance;
     private $conn_handle;
@@ -28,7 +29,8 @@ class CustomConnectionOracle {
      *
      * @param mixed $mode
      */
-    public function setFetchMode($mode = OCI_BOTH) {
+    public function setFetchMode($mode = OCI_BOTH)
+    {
         $this->fetch_mode = $mode;
     }
 
@@ -37,7 +39,8 @@ class CustomConnectionOracle {
      *
      * @param bool $mode
      */
-    public function setAutoCommit($mode = true) {
+    public function setAutoCommit($mode = true)
+    {
         $this->autocommit = $mode;
     }
 
@@ -46,7 +49,8 @@ class CustomConnectionOracle {
      *
      * @param int $size
      */
-    public function setVarMaxSize($size) {
+    public function setVarMaxSize($size)
+    {
         $this->var_max_size = $size;
     }
 
@@ -54,7 +58,8 @@ class CustomConnectionOracle {
      * Returns the last error found.
      *
      */
-    public function getError() {
+    public function getError()
+    {
         return @oci_error($this->conn_handle);
     }
 
@@ -63,7 +68,8 @@ class CustomConnectionOracle {
      *
      * @param string $charset
      */
-    public function setNlsLang($charset = ORA_CHARSET_DEFAULT) {
+    public function setNlsLang($charset = ORA_CHARSET_DEFAULT)
+    {
         $this->charset = $charset;
     }
 
@@ -71,7 +77,8 @@ class CustomConnectionOracle {
      * Constructor
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->setNlsLang('UTF8');
         $this->setFetchMode(OCI_ASSOC);
         $this->setAutoCommit(false);
@@ -87,7 +94,8 @@ class CustomConnectionOracle {
      * @param int $type (ORA_CONNECTION_TYPE_DEFAULT, ORA_CONNECTION_TYPE_NEW, ORA_CONNECTION_TYPE_PERSISTENT)
      * @return bool
      */
-    public function connect($host = 'localhost', $user = '', $pass = '', $mode = OCI_DEFAULT, $type = ORA_CONNECTION_TYPE_DEFAULT) {
+    public function connect($host = 'localhost', $user = '', $pass = '', $mode = OCI_DEFAULT, $type = ORA_CONNECTION_TYPE_DEFAULT)
+    {
         switch ($type) {
             case ORA_CONNECTION_TYPE_PERSISTENT: {
                     $this->conn_handle = oci_pconnect($user, $pass, $host, $this->charset, $mode);
@@ -107,7 +115,8 @@ class CustomConnectionOracle {
      * Destructor
      *
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         if (is_resource($this->conn_handle)) {
             @oci_close($this->conn_handle);
         }
@@ -118,11 +127,13 @@ class CustomConnectionOracle {
      *
      * @return bool
      */
-    public function getExecuteStatus() {
+    public function getExecuteStatus()
+    {
         return $this->execute_status;
     }
 
-    private function getBindingType($var) {
+    private function getBindingType($var)
+    {
         if (is_a($var, "OCI-Collection")) {
             $bind_type = SQLT_NTY;
             $this->setVarMaxSize(-1);
@@ -142,7 +153,8 @@ class CustomConnectionOracle {
      * @param array | false $bind
      * @return resource | false
      */
-    private function execute($sql_text, &$bind = false) {
+    private function execute($sql_text, &$bind = false)
+    {
         if (!is_resource($this->conn_handle))
             return false;
         $this->last_query = $sql_text;
@@ -169,7 +181,8 @@ class CustomConnectionOracle {
      * @param array | false $bind array of pairs binding variables
      * @return resource | false
      */
-    public function select($sql, $bind = false) {
+    public function select($sql, $bind = false)
+    {
         return $this->execute($sql, $bind);
     }
 
@@ -179,7 +192,8 @@ class CustomConnectionOracle {
      * @param resource $statement valid OCI statement id
      * @return array
      */
-    public function fetchArray($statement) {
+    public function fetchArray($statement)
+    {
         return oci_fetch_array($statement, $this->fetch_mode);
     }
 
@@ -191,7 +205,8 @@ class CustomConnectionOracle {
      * @param resource $statement valid OCI statement id
      * @return array Returns a numerically indexed array. If there are no more rows in the statement then FALSE is returned.
      */
-    public function fetchRow($statement) {
+    public function fetchRow($statement)
+    {
         return oci_fetch_row($statement);
     }
 
@@ -203,7 +218,8 @@ class CustomConnectionOracle {
      * @param int $maxrows number of rows to read, starting at the skip th row (default to -1, meaning all the rows).
      * $return array
      */
-    public function fetchAll($statement, $skip = 0, $maxrows = -1) {
+    public function fetchAll($statement, $skip = 0, $maxrows = -1)
+    {
         $rows = array();
         oci_fetch_all($statement, $rows, $skip, $maxrows, OCI_FETCHSTATEMENT_BY_ROW);
         return $rows;
@@ -216,7 +232,8 @@ class CustomConnectionOracle {
      * @return object
      * @author Sergey Pimenov
      */
-    public function fetchObject($statement) {
+    public function fetchObject($statement)
+    {
         return oci_fetch_object($statement);
     }
 
@@ -226,7 +243,8 @@ class CustomConnectionOracle {
      * @param resource $statement valid OCI statement id
      * @return bool
      */
-    public function fetch($statement) {
+    public function fetch($statement)
+    {
         return oci_fetch($statement);
     }
 
@@ -237,7 +255,8 @@ class CustomConnectionOracle {
      * @param mixed $field Can be either use the column number (1-based) or the column name (in uppercase).
      * @return mixed
      */
-    public function result($statement, $field) {
+    public function result($statement, $field)
+    {
         return oci_result($statement, $field);
     }
 
@@ -250,35 +269,43 @@ class CustomConnectionOracle {
      * @param int $type The data type to be returned.
      * @return bool
      */
-    public function defineByName($statement, $column_name, &$variable, $type = SQLT_CHR) {
+    public function defineByName($statement, $column_name, &$variable, $type = SQLT_CHR)
+    {
         return oci_define_by_name($statement, $column_name, $variable, $type);
     }
 
-    public function fieldIsNull($statement, $field) {
+    public function fieldIsNull($statement, $field)
+    {
         return oci_field_is_null($statement, $field);
     }
 
-    public function fieldName($statement, int $field) {
+    public function fieldName($statement, integer $field)
+    {
         return oci_field_name($statement, $field);
     }
 
-    public function fieldPrecition($statement, int $field) {
+    public function fieldPrecition($statement, integer $field)
+    {
         return oci_field_precision($statement, $field);
     }
 
-    public function fieldScale($statement, int $field) {
+    public function fieldScale($statement, integer $field)
+    {
         return oci_field_scale($statement, $field);
     }
 
-    public function fieldSize($statement, $field) {
+    public function fieldSize($statement, $field)
+    {
         return oci_field_size($statement, $field);
     }
 
-    public function fieldTypeRaw($statement, int $field) {
+    public function fieldTypeRaw($statement, integer $field)
+    {
         return oci_field_type_raw($statement, $field);
     }
 
-    public function fieldType($statement, int $field) {
+    public function fieldType($statement, integer $field)
+    {
         return oci_field_type($statement, $field);
     }
 
@@ -292,7 +319,8 @@ class CustomConnectionOracle {
      * @return mixed if $returnig is defined function return array of fields defined in $returning
      * @author Sergey Pimenov
      */
-    public function insert($table, $arrayFieldsValues, &$bind = false, $returning = false) {
+    public function insert($table, $arrayFieldsValues, &$bind = false, $returning = false)
+    {
         if (empty($arrayFieldsValues))
             return false;
         $fields = array();
@@ -336,7 +364,8 @@ class CustomConnectionOracle {
      * @param array | false $bind
      * @return resource
      */
-    public function update($table, $arrayFieldsValues, $condition = false, &$bind = false, $returning = false) {
+    public function update($table, $arrayFieldsValues, $condition = false, &$bind = false, $returning = false)
+    {
         if (empty($arrayFieldsValues))
             return false;
         $fields = array();
@@ -372,7 +401,8 @@ class CustomConnectionOracle {
         }
     }
 
-    public function delete($table, $condition, &$bind = false, $returning = false) {
+    public function delete($table, $condition, &$bind = false, $returning = false)
+    {
         if ($condition === false) {
             $condition = "true";
         }
@@ -406,7 +436,8 @@ class CustomConnectionOracle {
      * @param resource $statement
      * @return int
      */
-    public function numRows($statement) {
+    public function numRows($statement)
+    {
         return oci_num_rows($statement);
     }
 
@@ -416,7 +447,8 @@ class CustomConnectionOracle {
      * @param resource $statement
      * @return int
      */
-    public function rowsAffected($statement) {
+    public function rowsAffected($statement)
+    {
         return $this->numRows($statement);
     }
 
@@ -426,7 +458,8 @@ class CustomConnectionOracle {
      * @param resource $statement
      * @return int
      */
-    public function numFields($statement) {
+    public function numFields($statement)
+    {
         return oci_num_fields($statement);
     }
 
@@ -436,7 +469,8 @@ class CustomConnectionOracle {
      * @param resource $statement
      * @return int
      */
-    public function fieldsCount($statement) {
+    public function fieldsCount($statement)
+    {
         return $this->numFields($statement);
     }
 
@@ -449,7 +483,8 @@ class CustomConnectionOracle {
      * @param int $type Valid values for type are: OCI_DTYPE_FILE, OCI_DTYPE_LOB and OCI_DTYPE_ROWID.
      * @return OCI-Lob
      */
-    public function newDescriptor($type = OCI_DTYPE_LOB) {
+    public function newDescriptor($type = OCI_DTYPE_LOB)
+    {
         return oci_new_descriptor($this->conn_handle, $type);
     }
 
@@ -460,7 +495,8 @@ class CustomConnectionOracle {
      * @param string $schema Should point to the scheme, where the named type was created. The name of the current user is the default value.
      * @return OCI-Collection
      */
-    public function newCollection($typename, $schema = null) {
+    public function newCollection($typename, $schema = null)
+    {
         return oci_new_collection($this->conn_handle, $typename, $schema);
     }
 
@@ -474,7 +510,8 @@ class CustomConnectionOracle {
      * @param mixed $bind
      * @return resource
      */
-    public function storedProc($name, $params = false, &$bind = false) {
+    public function storedProc($name, $params = false, &$bind = false)
+    {
         if ($params) {
             if (is_array($params))
                 $params = implode(",", $params);
@@ -493,7 +530,8 @@ class CustomConnectionOracle {
      * @param mixed $bind
      * @return mixed
      */
-    public function func($name, $params = false, $bind = false) {
+    public function func($name, $params = false, $bind = false)
+    {
         if ($params) {
             if (is_array($params))
                 $params = implode(",", $params);
@@ -514,7 +552,8 @@ class CustomConnectionOracle {
      * @return resource
      * @example Cursor("utils.get_cursor", "dataset"); //begin utils.get_cursor(:dataset); end;
      */
-    public function cursor($stored_proc, $bind) {
+    public function cursor($stored_proc, $bind)
+    {
         if (!is_resource($this->conn_handle))
             return false;
         $sql = "begin $stored_proc(:$bind); end;";
@@ -533,7 +572,8 @@ class CustomConnectionOracle {
      * @param resource $statement valid OCI statement id
      * @return bool
      */
-    public function cancel($statement) {
+    public function cancel($statement)
+    {
         return oci_cancel($statement);
     }
 
@@ -544,7 +584,8 @@ class CustomConnectionOracle {
      * @return bool
      * @author Sergey Pimenov
      */
-    public function freeStatement($stid) {
+    public function freeStatement($stid)
+    {
         unset($this->statements[$stid]);
         return oci_free_statement($stid);
     }
@@ -556,7 +597,8 @@ class CustomConnectionOracle {
      * @return bool
      * @author Sergey Pimenov
      */
-    public function freeStatements($array_stid) {
+    public function freeStatements($array_stid)
+    {
         if (is_array($array_stid))
             foreach ($array_stid as $stid) {
                 unset($this->statements[$stid]);
@@ -571,7 +613,8 @@ class CustomConnectionOracle {
      * @return bool
      * @author Sergey Pimenov
      */
-    public function commit() {
+    public function commit()
+    {
         if (is_resource($this->conn_handle))
             return @oci_commit($this->conn_handle);
         else
@@ -584,7 +627,8 @@ class CustomConnectionOracle {
      * @return bool
      * @author Sergey Pimenov
      */
-    public function rollback() {
+    public function rollback()
+    {
         if (is_resource($this->conn_handle))
             return @oci_rollback($this->conn_handle);
         else
@@ -596,11 +640,13 @@ class CustomConnectionOracle {
      *
      * @param bool $mode
      */
-    public function internalDebug($mode) {
+    public function internalDebug($mode)
+    {
         oci_internal_debug($mode);
     }
 
-    public function getStatement($stid) {
+    public function getStatement($stid)
+    {
         return $this->statements[$stid] ? $this->statements[$stid] : false;
     }
 
@@ -610,7 +656,8 @@ class CustomConnectionOracle {
      * @param resource $stid valid OCI statement id
      * @return string
      */
-    public function querySnapshot($stid = false) {
+    public function querySnapshot($stid = false)
+    {
         if ($stid)
             return $this->statements[$stid]['text'];
         else
@@ -622,26 +669,31 @@ class CustomConnectionOracle {
      *
      * @return string | false
      */
-    public function serverVer() {
+    public function serverVer()
+    {
         if (is_resource($this->conn_handle))
             return @oci_server_version($this->conn_handle);
         else
             return false;
     }
 
-    public function setAction(string $action_name) {
+    public function setAction(string $action_name)
+    {
         return @oci_set_action($this->conn_handle, $action_name);
     }
 
-    public function setClientID(string $client_id) {
+    public function setClientID(string $client_id)
+    {
         return @oci_set_client_identifier($this->conn_handle, $client_id);
     }
 
-    public function setClientInfo(string $client_info) {
+    public function setClientInfo(string $client_info)
+    {
         return @oci_set_client_info($this->conn_handle, $client_info);
     }
 
-    public function sepPrefetch(int $rows) {
+    public function sepPrefetch(integer $rows)
+    {
         return oci_set_prefetch($this->conn_handle, $rows);
     }
 
@@ -651,11 +703,13 @@ class CustomConnectionOracle {
      * @param resource $statement
      * @return string (ALTER, BEGIN, CALL, CREATE, DECLARE, DELETE, DROP, INSERT, SELECT, UPDATE, UNKNOWN) return false on error
      */
-    public function statementType($statement) {
+    public function statementType($statement)
+    {
         return oci_statement_type($statement);
     }
 
-    public function dumpQueriesStack() {
+    public function dumpQueriesStack()
+    {
         if (function_exists('dump')) {
             dump($this->statements);
         } else {
@@ -663,11 +717,13 @@ class CustomConnectionOracle {
         }
     }
 
-    public function bye() {
+    public function bye()
+    {
         $this->__destruct();
     }
 
-    public function get_handle() {
+    public function get_handle()
+    {
         return $this->conn_handle;
     }
 

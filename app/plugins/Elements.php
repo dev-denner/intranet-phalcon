@@ -105,8 +105,8 @@ class Elements extends Component {
             $return .= '</ul>';
 
             return $return;
-        } catch (\Exception $exc) {
-            return $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            return $this->flash->error($e->getMessage());
         }
     }
 

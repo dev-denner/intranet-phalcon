@@ -1,23 +1,18 @@
 <?php
 
-/**
- * @copyright   2015 - 2016 Grupo MPE
- * @license     New BSD License; see LICENSE
- * @link        http://www.grupompe.com.br
- * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
- * */
-
 namespace App\Modules\Nucleo\Controllers;
 
 use App\Modules\Nucleo\Models\Actions;
 use App\Shared\Controllers\ControllerBase;
 
-class ActionsController extends ControllerBase {
+class ActionsController extends ControllerBase
+{
 
     /**
      * initialize
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle(' Ações ');
         parent::initialize();
 
@@ -27,7 +22,8 @@ class ActionsController extends ControllerBase {
     /**
      * Index action
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
             $this->view->actions = Actions::find();
             $this->view->pesquisa = '';
@@ -47,7 +43,8 @@ class ActionsController extends ControllerBase {
     /**
      * Displays the creation form
      */
-    public function newAction() {
+    public function newAction()
+    {
 
     }
 
@@ -56,7 +53,8 @@ class ActionsController extends ControllerBase {
      *
      * @param string $id
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         try {
 
             if ($this->request->isPost()) {
@@ -74,8 +72,8 @@ class ActionsController extends ControllerBase {
             $this->tag->setDefault('title', $action->getTitle());
             $this->tag->setDefault('slug', $action->getSlug());
             $this->tag->setDefault('description', $action->getDescription());
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/actions');
         }
     }
@@ -83,7 +81,8 @@ class ActionsController extends ControllerBase {
     /**
      * Creates a new action
      */
-    public function createAction() {
+    public function createAction()
+    {
 
         try {
 
@@ -107,8 +106,8 @@ class ActionsController extends ControllerBase {
             }
 
             $this->flash->success('Ação gravada com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/actions');
     }
@@ -117,7 +116,8 @@ class ActionsController extends ControllerBase {
      * Saves a action edited
      *
      */
-    public function saveAction() {
+    public function saveAction()
+    {
 
         try {
 
@@ -147,8 +147,8 @@ class ActionsController extends ControllerBase {
             }
 
             $this->flash->success('Ação atualizada com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/actions');
     }
@@ -158,7 +158,8 @@ class ActionsController extends ControllerBase {
      *
      * @param string $id
      */
-    public function deleteAction() {
+    public function deleteAction()
+    {
 
         try {
             if (!$this->request->isPost()) {
@@ -185,8 +186,8 @@ class ActionsController extends ControllerBase {
                 throw new \Exception($msg);
             }
             echo 'ok';
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/actions');
         }
     }

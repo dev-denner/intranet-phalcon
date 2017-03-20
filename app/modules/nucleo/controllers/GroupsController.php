@@ -10,14 +10,20 @@
 namespace App\Modules\Nucleo\Controllers;
 
 use App\Modules\Nucleo\Models\Groups;
+use App\Modules\Nucleo\Models\Modules;
+use App\Modules\Nucleo\Models\Controllers;
+use App\Modules\Nucleo\Models\BasePerfils;
+use App\Modules\Nucleo\Models\Actions;
 use App\Shared\Controllers\ControllerBase;
 
-class GroupsController extends ControllerBase {
+class GroupsController extends ControllerBase
+{
 
     /**
      * initialize
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle(' Grupos ');
         parent::initialize();
 
@@ -27,14 +33,16 @@ class GroupsController extends ControllerBase {
     /**
      * Index action
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
             $this->view->groups = Groups::find();
+            $this->view->pesquisa = '';
             if ($this->request->isPost()) {
                 $this->view->groups = Groups::find("UPPER(title) LIKE UPPER('%" . $this->request->getPost('groups', 'string') . "%')");
                 $this->view->pesquisa = $this->request->getPost('groups');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -42,8 +50,11 @@ class GroupsController extends ControllerBase {
     /**
      * Displays the creation form
      */
-    public function newAction() {
+    public function newAction()
+    {
 
+        $this->assets->collection('footerJs')->addJs('app/nucleo/group/new.js');
+        $this->view->modules = Modules::find(['order' => 'title']);
     }
 
     /**
@@ -51,7 +62,8 @@ class GroupsController extends ControllerBase {
      *
      * @param string $id
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         try {
 
             if ($this->request->isPost()) {
@@ -70,8 +82,8 @@ class GroupsController extends ControllerBase {
             $this->tag->setDefault('title', $group->getTitle());
             $this->tag->setDefault('status', $group->getStatus());
             $this->tag->setDefault('type', $group->getType());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/groups');
         }
     }
@@ -79,7 +91,8 @@ class GroupsController extends ControllerBase {
     /**
      * Creates a new group
      */
-    public function createAction() {
+    public function createAction()
+    {
 
         try {
 
@@ -103,8 +116,8 @@ class GroupsController extends ControllerBase {
             }
 
             $this->flash->success('Grupo gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/groups');
     }
@@ -113,7 +126,8 @@ class GroupsController extends ControllerBase {
      * Saves a group edited
      *
      */
-    public function saveAction() {
+    public function saveAction()
+    {
 
         try {
 
@@ -144,8 +158,8 @@ class GroupsController extends ControllerBase {
             }
 
             $this->flash->success('Grupo atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/groups');
     }
@@ -155,7 +169,8 @@ class GroupsController extends ControllerBase {
      *
      * @param string $id
      */
-    public function deleteAction() {
+    public function deleteAction()
+    {
 
         try {
             if (!$this->request->isPost()) {
@@ -182,10 +197,39 @@ class GroupsController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/groups');
         }
+    }
+
+    public function ajaxAction()
+    {
+        $this->view->disable();
+        $type = $this->request->getPost('type');
+        $module = $this->request->getPost('module');
+        $controller = $this->request->getPost('controller');
+
+        $return = [];
+
+        switch ($type) {
+            case 'module':
+                $dados = BasePerfils::find("module = {$module}");
+                foreach ($dados as $dado) {
+                    $return[$dado->Controllers->id] = [$dado->Controllers->id, $dado->Controllers->title];
+                }
+                break;
+            case 'controller':
+                $dados = BasePerfils::find("module = {$module} AND controller = {$controller}");
+
+                foreach ($dados as $dado) {
+                    $return[$dado->Actions->id] = [$dado->Actions->id, $dado->Actions->title];
+                }
+                break;
+        }
+//dump($dados);
+        sort($return);
+        echo json_encode($return);
     }
 
 }

@@ -16,7 +16,8 @@ use CanGelis\PDF\PDF;
 use League\Flysystem\Adapter\Local as LeagueLocal;
 use iio\libmergepdf\Merger;
 
-class Tools extends Plugin {
+class Tools extends Plugin
+{
 
     /**
      *
@@ -25,7 +26,8 @@ class Tools extends Plugin {
      * @return type
      * @throws Exception
      */
-    public function writePdf($dados = '', $options) {
+    public function writePdf($dados = '', $options)
+    {
 
         $parameters['title'] = $options['fileName'];
 
@@ -54,7 +56,8 @@ class Tools extends Plugin {
      * @param type $options
      * @return type
      */
-    public function writePdf2($html, $download = true, $options = []) {
+    public function writePdf2($html, $download = true, $options = [])
+    {
 
         $pdf = new PDF('/usr/local/bin/wkhtmltopdf');
 
@@ -72,7 +75,8 @@ class Tools extends Plugin {
      * @param type $path
      * @return type
      */
-    public function mergePdf($files, $path) {
+    public function mergePdf($files, $path)
+    {
 
         $m = new Merger();
 
@@ -90,7 +94,8 @@ class Tools extends Plugin {
      * @return type
      * @throws Exception
      */
-    public function writeXLS($dados = NULL, $options = []) {
+    public function writeXLS($dados = NULL, $options = [])
+    {
 
         if (is_null($dados)) {
             throw new Exception('Não foi enviados dados para criar o arquivo Excel.');
@@ -189,7 +194,8 @@ class Tools extends Plugin {
      * @param type $fileTemp
      * @return type
      */
-    private function download($fileName, $fileTemp) {
+    private function download($fileName, $fileTemp)
+    {
 
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
 
@@ -209,7 +215,8 @@ class Tools extends Plugin {
      * @param type $file
      * @return type
      */
-    public function readXLS($file) {
+    public function readXLS($file)
+    {
 
         $PHPExcel = new \PHPExcel();
 
@@ -239,7 +246,8 @@ class Tools extends Plugin {
      * @param boolean $rebuild
      * @return array
      */
-    public function uploadedFiles(Request $uploadedFiles, $limit = '', $path = APP_PATH . '/public/temp/', $rebuild = false) {
+    public function uploadedFiles(Request $uploadedFiles, $limit = '', $path = APP_PATH . '/public/temp/', $rebuild = false)
+    {
 
         $return = [];
         $msg = '';
@@ -272,7 +280,8 @@ class Tools extends Plugin {
         return $return;
     }
 
-    private function pdfRecreate($pdf) {
+    private function pdfRecreate($pdf)
+    {
 
         rename($pdf, strtolower($pdf));
         rename($pdf, str_replace('.pdf', '_.pdf', $pdf));
@@ -297,7 +306,8 @@ class Tools extends Plugin {
      * @return boolean
      * @throws \Exception
      */
-    private function verifyErrorsOnUpload($attach) {
+    private function verifyErrorsOnUpload($attach)
+    {
 
         switch ($attach->getError()) {
             case 0:
@@ -323,7 +333,8 @@ class Tools extends Plugin {
      * @return boolean
      * @throws \Exception
      */
-    private function verifySizeOnUpload($attach, $limit) {
+    private function verifySizeOnUpload($attach, $limit)
+    {
         if (empty($limit)) {
             $limit = 1024 * 1024 * 15;
         }
@@ -341,7 +352,8 @@ class Tools extends Plugin {
      * @param type $template
      * @return type
      */
-    public function getTemplate($params, $folder = 'emailTemplates', $template = 'index') {
+    public function getTemplate($params, $folder = 'emailTemplates', $template = 'index')
+    {
 
         return $this->view->getRender($folder, $template, $params, function($view) use ($folder, $template) {
                       $view->setMainView('common/' . $folder . '/' . $template);

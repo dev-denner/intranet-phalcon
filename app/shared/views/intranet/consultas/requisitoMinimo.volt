@@ -27,7 +27,7 @@
         {{ end_form() }}
     </div>
 </div>
-
+{% if requisito_minimos is not empty %}
 <div class="card">
     <div class="card-header">
         Resultado para pesquisa: <span class="text-danger">{{ pesquisa }}</span>
@@ -49,8 +49,6 @@
                     <tr>
                         <th data-column-id="CODIGO_REQMIN">Código</th>
                         <th data-column-id="DESCRICAO_REQMIN">Descrição</th>
-<!--                        <th data-column-id="CODIGO_GRUPO">Cód. Grupo</th>
-                        <th data-column-id="DESCRICAO_GRUPO">grupo</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -58,8 +56,6 @@
                     <tr>
                         <td>{{ requisito_minimo.CODIGO_REQMIN }}</td>
                         <td>{{ requisito_minimo.DESCRICAO_REQMIN }}</td>
-<!--                        <td>{{ requisito_minimo.CODIGO_GRUPO }}</td>
-                        <td>{{ requisito_minimo.DESCRICAO_GRUPO }}</td>-->
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -67,3 +63,4 @@
         </div>
     </div>
 </div>
+{% endif %}

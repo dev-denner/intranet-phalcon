@@ -31,9 +31,9 @@ class RequisitoMinimo extends ModelBase {
         return [];
     }
 
-    public function getRequisitoMinimo($search) {
+    public function getRequisitoMinimo($search = '') {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         if (!empty($search)) {
             $search = "AND (SZ5.Z5_CODIGO LIKE '%{$search}%'
@@ -55,10 +55,7 @@ class RequisitoMinimo extends ModelBase {
             {$search}
             ORDER BY SZ5.Z5_CODIGO";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon(@$connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

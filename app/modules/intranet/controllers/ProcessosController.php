@@ -37,7 +37,7 @@ class ProcessosController extends ControllerBase {
                 $this->view->processos = Processos::find($search);
                 $this->view->pesquisa = $this->request->getPost('processos');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -75,8 +75,8 @@ class ProcessosController extends ControllerBase {
             $this->tag->setDefault('link', $processo->getLink());
             $this->tag->setDefault('version', $processo->getVersion());
             $this->tag->setDefault('dateUpdated', $processo->getDateUpdated());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('intranet/processos');
         }
     }
@@ -111,8 +111,8 @@ class ProcessosController extends ControllerBase {
             }
 
             $this->flash->success('Processo gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('intranet/processos');
     }
@@ -154,8 +154,8 @@ class ProcessosController extends ControllerBase {
             }
 
             $this->flash->success('Processo atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('intranet/processos');
     }
@@ -192,8 +192,8 @@ class ProcessosController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('intranet/processos');
         }
     }
@@ -201,7 +201,7 @@ class ProcessosController extends ControllerBase {
     public function processDepartmentsAction() {
         try {
             $this->view->departaments = Departments::find(['order' => 'id']);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -209,7 +209,7 @@ class ProcessosController extends ControllerBase {
     public function comercialProcessAction() {
         try {
             $this->view->departaments = Departments::findById(2);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -218,7 +218,7 @@ class ProcessosController extends ControllerBase {
     public function contabilidadeFiscalProcessAction() {
         try {
             $this->view->departaments = Departments::findById(3);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -227,7 +227,7 @@ class ProcessosController extends ControllerBase {
     public function gestaoPessoasProcessAction() {
         try {
             $this->view->departaments = Departments::findById(4);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -236,7 +236,7 @@ class ProcessosController extends ControllerBase {
     public function financeiroProcessAction() {
         try {
             $this->view->departaments = Departments::findById(5);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -245,7 +245,7 @@ class ProcessosController extends ControllerBase {
     public function juridicoProcessAction() {
         try {
             $this->view->departaments = Departments::findById(6);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -254,7 +254,7 @@ class ProcessosController extends ControllerBase {
     public function sgiProcessAction() {
         try {
             $this->view->departaments = Departments::findById(7);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -263,7 +263,7 @@ class ProcessosController extends ControllerBase {
     public function suprimentosProcessAction() {
         try {
             $this->view->departaments = Departments::findById(8);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');
@@ -272,7 +272,7 @@ class ProcessosController extends ControllerBase {
     public function ticProcessAction() {
         try {
             $this->view->departaments = Departments::findById(9);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/processos/processDepartments');

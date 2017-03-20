@@ -16,9 +16,7 @@
                 <div class="form-group fg-line">
                     <label class="fg-label">Tipo de Chamados</label>
                     <?php
-                    echo $this->tag->selectStatic(['tipo',
-                        $tipo,
-                        'class' => 'form-control fc-alt']
+                    echo $this->tag->selectStatic(['tipo', $tipo, 'class' => 'form-control fc-alt']
                     );
                     ?>
                 </div>
@@ -230,10 +228,9 @@
         <ul class="actions">
             {% if export %}
             <li>
-                {{ link_to('export?obj=atendimento&type=excel&search='~search, '<i class="fa fa-file-excel-o c-green" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para Excel', 'target': '_new') }}
-            </li>
-            <li>
-                {{ link_to('export?obj=atendimento&type=pdf&search='~search, '<i class="fa fa-file-pdf-o c-red" aria-hidden="true"></i>', 'class': 'tooltips', 'title': 'Exportar para PDF', 'target': '_new') }}
+                <a href="javascript:;" class="tooltips" title="Exportar para Arquivo" data-toggle="modal" data-target="#modal-exports">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                </a>
             </li>
             {% endif %}
         </ul>
@@ -246,11 +243,14 @@
                         <th data-column-id="Chamado" data-formatter="linkOtrs">Chamado</th>
                         <th data-column-id="assunto">Assunto</th>
                         <th data-column-id="fila">Fila</th>
+                        {% if selTipo == 'Abertos' %}
                         <th data-column-id="dataAbertura">Data Abertura</th>
+                        {% else %}
                         <th data-column-id="dataFechamento">Data Fecham.</th>
+                        {% endif %}
                         <th data-column-id="status">Status</th>
                         <th data-column-id="diasAberto" data-type="numeric">Dias Ab.</th>
-                        <th data-column-id="perDiasAberto" data-type="numeric">Per. Dias Ab.</th>
+                        <th data-column-id="depto">Depto</th>
                         <th data-column-id="cliente">Cliente</th>
                         <th data-column-id="proprietario">Prop.</th>
                         <th data-column-id="responsavel">Resp.</th>
@@ -263,11 +263,14 @@
                         <td>{{ chamado.id~'|'~chamado.chamado }}</td>
                         <td>{{ chamado.assunto }}</td>
                         <td>{{ chamado.fila }}</td>
+                        {% if selTipo == 'Abertos' %}
                         <td>{{ chamado.dataAbertura }}</td>
+                        {% else %}
                         <td>{{ chamado.dataFechamento }}</td>
+                        {% endif %}
                         <td>{{ chamado.status }}</td>
                         <td>{{ chamado.diasAberto }}</td>
-                        <td>{{ chamado.periodoDiasAberto }}</td>
+                        <td>{{ chamado.depto }}</td>
                         <td>{{ chamado.cliente }}</td>
                         <td>{{ chamado.proprietario }}</td>
                         <td>{{ chamado.responsavel }}</td>
@@ -279,3 +282,71 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-exports" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Exportar para arquivo</h4>
+            </div>
+            {{ form('otrs/atendimento/relatorio', 'role': 'form', 'method': 'post', 'autocomplete': 'off', 'target': '_blank') }}
+            <div class="modal-body">
+                {{ hidden_field("search", "value" : search) }}
+                {{ hidden_field("questions", "value" : questions) }}
+
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-1">
+                        <div class="form-group fg-line">
+                            <label class="fg-label">Campos</label>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <?php
+                                    $i = 0;
+                                    $count = count($fields['fields']) / 3;
+                                    ?>
+                                    <?php foreach ($fields['fields'] as $key => $field): ?>
+                                        <label class="checkbox checkbox-inline check-legend">
+                                            {{ check_field('fields'~i, 'value' : field, 'name': 'fields['~key~']') }}
+                                            <i class="input-helper"></i> {{ field }}
+                                        </label>
+                                        <br />
+                                        <?php $i++; ?>
+                                        <?php if ($i > $count): ?>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <?php $i = 0; ?>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="checkbox checkbox-inline check-legend">
+                                        {{ check_field('fields_all', 'value' : '') }}
+                                        <i class="input-helper"></i> Marcar / Desmarcar Todos
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group fg-line">
+                            <label class="fg-label">Exportar para</label>
+                            <?php
+                            echo $this->tag->selectStatic(['type_export',
+                                ['excel' => 'Excel', 'pdf' => 'PDF'],
+                                'class' => 'form-control fc-alt',
+                                'data-placeholder' => ' ',]
+                            );
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Exportar</button>
+            </div>
+            {{ end_form() }}
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

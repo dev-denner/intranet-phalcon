@@ -33,7 +33,7 @@ class Tes extends ModelBase {
 
     public function getTes($search) {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         if (!empty($search)) {
             $search = "AND (SF4.F4_CODIGO LIKE '%{$search}%'
@@ -63,10 +63,7 @@ class Tes extends ModelBase {
             {$search}
             ORDER BY SF4.F4_CODIGO";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

@@ -37,7 +37,7 @@ class DepartmentsController extends ControllerBase {
                 $this->view->departments = Departments::find($search);
                 $this->view->pesquisa = $this->request->getPost('departments');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -73,8 +73,8 @@ class DepartmentsController extends ControllerBase {
             $this->tag->setDefault('title', $department->getTitle());
             $this->tag->setDefault('cc', $department->getCc());
             $this->tag->setDefault('icon', $department->getIcon());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/departments');
         }
     }
@@ -106,8 +106,8 @@ class DepartmentsController extends ControllerBase {
             }
 
             $this->flash->success('Departamento gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/departments');
     }
@@ -146,8 +146,8 @@ class DepartmentsController extends ControllerBase {
             }
 
             $this->flash->success('Departamento atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/departments');
     }
@@ -184,8 +184,8 @@ class DepartmentsController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/departments');
         }
     }

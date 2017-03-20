@@ -105,7 +105,7 @@
                     {% endfor %}
                     <tr>
                         <td colspan="9"><b>Total</b></td>
-                        <td><b>R$ {{ number_format(totalLinha.VALOR, 2, ',', '.') }}</b></td>
+                        <td><b>R$ {{ number_format(totalLinha['VALOR'], 2, ',', '.') }}</b></td>
                     </tr>
                 </tfoot>
             </table>

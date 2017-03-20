@@ -1,7 +1,6 @@
 $('#tipo').bind('change', function () {
 
     overlay(true);
-
     getField('fila');
     getField('gestor');
     getField('centrocusto');
@@ -10,14 +9,10 @@ $('#tipo').bind('change', function () {
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
-
 });
-
 $('#fila, #dataDe, #dataAte').bind('change', function () {
     overlay(true);
-
     getField('gestor');
     getField('centrocusto');
     getField('departamento');
@@ -25,73 +20,70 @@ $('#fila, #dataDe, #dataAte').bind('change', function () {
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
-
 $('#gestor').bind('change', function () {
     overlay(true);
-
     getField('centrocusto');
     getField('departamento');
     getField('cliente');
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
 $('#centrocusto').bind('change', function () {
     overlay(true);
-
     getField('departamento');
     getField('cliente');
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
 $('#departamento').bind('change', function () {
     overlay(true);
-
     getField('cliente');
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
 $('#cliente').bind('change', function () {
     overlay(true);
-
     getField('responsavel');
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
 $('#responsavel').bind('change', function () {
     overlay(true);
-
     getField('proprietario');
     getField('status');
-
     overlay(false);
 });
-
 $('#proprietario').bind('change', function () {
     overlay(true);
-
     getField('status');
-
     overlay(false);
 });
+
+
+
+$("#fields_all").click(function () {
+    if ($(this).prop("checked")) {
+        marcardesmarcar(true);
+    } else {
+        marcardesmarcar(false);
+    }
+});
+
+function marcardesmarcar(bool) {
+    $('input[name*="fields"]').each(function () {
+        $(this).prop("checked", bool);
+    }
+    );
+}
 
 var fields = function (entity) {
 
@@ -112,11 +104,9 @@ var fields = function (entity) {
     }
 
 };
-
 var getField = function (entity) {
 
     var field = fields(entity);
-
     sendAjax(field, function (returned) {
 
         var opt = '<option value=""></option>';
@@ -124,9 +114,7 @@ var getField = function (entity) {
             opt += '<option value="' + index + '">' + value + '</option>';
         });
         $('#' + entity).html(opt).trigger("chosen:updated");
-
     });
-
 }
 
 var sendAjax = function (fields, callback) {
@@ -141,5 +129,4 @@ var sendAjax = function (fields, callback) {
         },
         success: callback,
     });
-
 }

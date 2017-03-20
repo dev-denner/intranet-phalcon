@@ -22,7 +22,7 @@ class DocumentsController extends ControllerBase {
     public function indexAction() {
         try {
             $this->view->departaments = Departments::find(['order' => 'id']);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -30,7 +30,7 @@ class DocumentsController extends ControllerBase {
     public function comercialDocsAction() {
         try {
             $this->view->departaments = Departments::findById(2);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -39,7 +39,7 @@ class DocumentsController extends ControllerBase {
     public function contabilidadeFiscalDocsAction() {
         try {
             $this->view->departaments = Departments::findById(3);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -48,7 +48,7 @@ class DocumentsController extends ControllerBase {
     public function gestaoPessoasDocsAction() {
         try {
             $this->view->departaments = Departments::findById(4);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -57,7 +57,7 @@ class DocumentsController extends ControllerBase {
     public function financeiroDocsAction() {
         try {
             $this->view->departaments = Departments::findById(5);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -66,7 +66,7 @@ class DocumentsController extends ControllerBase {
     public function juridicoDocsAction() {
         try {
             $this->view->departaments = Departments::findById(6);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -75,7 +75,7 @@ class DocumentsController extends ControllerBase {
     public function sgiDocsAction() {
         try {
             $this->view->departaments = Departments::findById(7);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -84,7 +84,7 @@ class DocumentsController extends ControllerBase {
     public function suprimentosDocsAction() {
         try {
             $this->view->departaments = Departments::findById(8);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -93,7 +93,7 @@ class DocumentsController extends ControllerBase {
     public function ticDocsAction() {
         try {
             $this->view->departaments = Departments::findById(9);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
         $this->view->pick('intranet/documents/index');
@@ -102,7 +102,7 @@ class DocumentsController extends ControllerBase {
     public function gestaoPessoasPortalRhAction() {
         try {
             $this->view->departaments = Departments::findById(4);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }

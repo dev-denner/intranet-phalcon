@@ -36,7 +36,7 @@ class MenusController extends ControllerBase {
                 $this->view->menus = Menus::find($search);
                 $this->view->pesquisa = $this->request->getPost('menus');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -81,8 +81,8 @@ class MenusController extends ControllerBase {
             $this->tag->setDefault('icon', $menu->getIcon());
             $this->tag->setDefault('type', $menu->getType());
             $this->tag->setDefault('position', $menu->getPosition());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/menus');
         }
     }
@@ -121,8 +121,8 @@ class MenusController extends ControllerBase {
             }
 
             $this->flash->success('Menu gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/menus');
     }
@@ -168,8 +168,8 @@ class MenusController extends ControllerBase {
             }
 
             $this->flash->success('Menu atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/menus');
     }
@@ -206,8 +206,8 @@ class MenusController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/menus');
         }
     }

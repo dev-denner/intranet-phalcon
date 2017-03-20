@@ -12,7 +12,8 @@ namespace App\Modules\Nucleo\Models\Protheus;
 use App\Shared\Models\ModelBase;
 use Phalcon\Config as ObjectPhalcon;
 
-class ProdutosDescricao extends ModelBase {
+class ProdutosDescricao extends ModelBase
+{
 
     public $sb1Cod;
     public $sb1Desc;
@@ -22,7 +23,8 @@ class ProdutosDescricao extends ModelBase {
     public $sb1Msblql;
     public $sb1Sdel;
 
-    public function initialize() {
+    public function initialize()
+    {
 
         parent::initialize();
 
@@ -34,11 +36,13 @@ class ProdutosDescricao extends ModelBase {
         $this->belongsTo('sb1Grupo', __NAMESPACE__ . '\ProdutosGrupos', 'sbmGrupo', ['alias' => 'ProdutosGrupos',]);
     }
 
-    public function getSource() {
+    public function getSource()
+    {
         return 'SB1010';
     }
 
-    public static function columnMap() {
+    public static function columnMap()
+    {
         return [
             'B1_COD' => 'sb1Cod',
             'B1_DESC' => 'sb1Desc',
@@ -55,9 +59,10 @@ class ProdutosDescricao extends ModelBase {
      * @param type $search
      * @return ObjectPhalcon
      */
-    public function getProdutos($search) {
+    public function getProdutos($search)
+    {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         if (!empty($search)) {
             $search = "AND (UPPER(SB1010.B1_DESC) LIKE UPPER('%{$search}%')
@@ -88,10 +93,7 @@ class ProdutosDescricao extends ModelBase {
                 {$search}
             ORDER BY SB1010.B1_COD";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
     /**
@@ -99,17 +101,18 @@ class ProdutosDescricao extends ModelBase {
      * @param type $type
      * @return type
      */
-    public function getQtdProdutos($type) {
+    public function getQtdProdutos($type)
+    {
 
         $produtos = $this->modelsManager->createBuilder()
-                ->columns(['COUNT(sb1Cod) qtd'])
-                ->from(__NAMESPACE__ . '\ProdutosDescricao')
-                ->innerJoin(__NAMESPACE__ . '\ProdutosAdicionais', "sb5Cod = sb1Cod AND sb5Sdel = ' '")
-                ->innerJoin(__NAMESPACE__ . '\ProdutosGrupos', "sbmGrupo = sb1Grupo AND sbmSdel = ' '")
-                ->where("sb1Sdel = ' ' AND sb1Msblql = '2' AND sb1Grupo NOT IN('3701', '4201', '4202')")
-                ->andWhere("sbmxFlag = '" . $type . "'")
-                ->getQuery()
-                ->execute();
+                  ->columns(['COUNT(sb1Cod) qtd'])
+                  ->from(__NAMESPACE__ . '\ProdutosDescricao')
+                  ->innerJoin(__NAMESPACE__ . '\ProdutosAdicionais', "sb5Cod = sb1Cod AND sb5Sdel = ' '")
+                  ->innerJoin(__NAMESPACE__ . '\ProdutosGrupos', "sbmGrupo = sb1Grupo AND sbmSdel = ' '")
+                  ->where("sb1Sdel = ' ' AND sb1Msblql = '2' AND sb1Grupo NOT IN('3701', '4201', '4202')")
+                  ->andWhere("sbmxFlag = '" . $type . "'")
+                  ->getQuery()
+                  ->execute();
         return $produtos->toArray(0)[0]['QTD'];
     }
 

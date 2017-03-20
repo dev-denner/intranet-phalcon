@@ -104,8 +104,38 @@ class ExportController extends ControllerBase
                 case 'atendimento':
                     $search = str_replace('&#39;', "'", str_replace('&#34;', '"', $search));
                     $search = json_decode($search, true);
-                    $dados = Chamados::find(['conditions' => $search, 'order' => 'id']);
-                    $dados = $dados->toArray();
+                    $dadosAux = Chamados::find(['conditions' => $search, 'order' => 'id']);
+                    $dadosAux = $dadosAux->toArray();
+                    $dados = [];
+                    $dataFechamento = '';
+
+                    foreach ($dadosAux as $key => $value) {
+                        $dataAbertura = \DateTime::createFromFormat('d-M-y', $value['dataAbertura']);
+                        if ($value['tipo'] != 'Abertos') {
+                            $dataFechamento = \DateTime::createFromFormat('d-M-y', $value['dataFechamento']);
+                            $dataFechamento = $dataFechamento->format('d/m/Y');
+                        }
+
+                        $dados[] = [
+                            'Tipo' => $value['tipo'],
+                            'Chamado' => $value['chamado'],
+                            'Assunto' => $value['assunto'],
+                            'Fila' => $value['fila'],
+                            'Data Abertura' => $dataAbertura->format('d/m/Y'),
+                            'Data Fechamento' => $dataFechamento,
+                            'Status' => $value['status'],
+                            'TOTVS' => $value['totvs'],
+                            'Cliente' => $value['cliente'],
+                            'Proprietário' => $value['proprietario'],
+                            'Responsável' => $value['responsavel'],
+                            'Empresa' => $value['empresa'],
+                            'Chapa' => $value['chapa'],
+                            'Nome' => $value['nome'],
+                            'Centro de Custo' => $value['cc'] . ' - ' . $value['descCc'],
+                            'Gestor' => $value['codGestor'] . ' - ' . $value['gestor'],
+                            'Departamento' => $value['codDepto'] . ' - ' . $value['depto'],
+                        ];
+                    }
 
                     $options['fileName'] = 'Relatório de Chamados';
                     $options['toArray'] = false;

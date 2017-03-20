@@ -52,7 +52,9 @@ class Clientes extends ModelBase {
     }
 
     public function getClientes($search) {
-        $connection = $this->customConnection();
+
+        $connection = $this->customSimpleQuery('protheusDb');
+
         if (!empty($search)) {
             $search = "AND (SA1.A1_COD LIKE '%{$search}%'
                 OR SA1.A1_NOME LIKE '%{$search}%'
@@ -74,11 +76,7 @@ class Clientes extends ModelBase {
             ORDER BY SA1.A1_COD, SA1.A1_LOJA";
 
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
     public function getQtdClientes() {

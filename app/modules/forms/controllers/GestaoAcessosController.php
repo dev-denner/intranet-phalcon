@@ -37,8 +37,8 @@ class GestaoAcessosController extends ControllerBase {
                 $this->view->gestao_acessos = GestaoAcesso::find();
                 $this->view->pesquisa = '';
             }
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
     }
 
@@ -72,8 +72,8 @@ class GestaoAcessosController extends ControllerBase {
             $this->tag->setDefault('nomeFormulario', $gestao_acesso->getNomeFormulario());
             $this->tag->setDefault('userId', $gestao_acesso->getUserId());
             $this->tag->setDefault('amarracao', $gestao_acesso->getAmarracao());
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/gestao_acessos');
         }
     }
@@ -105,8 +105,8 @@ class GestaoAcessosController extends ControllerBase {
             }
 
             $this->flash->success('Gestão de Acesso gravado com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('forms/gestao_acessos');
     }
@@ -145,8 +145,8 @@ class GestaoAcessosController extends ControllerBase {
             }
 
             $this->flash->success('Gestão de Acesso atualizado com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('forms/gestao_acessos');
     }
@@ -183,8 +183,8 @@ class GestaoAcessosController extends ControllerBase {
                 throw new \Exception($msg);
             }
             echo 'ok';
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/gestao_acessos');
         }
     }

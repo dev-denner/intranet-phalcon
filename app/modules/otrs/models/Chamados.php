@@ -1,17 +1,11 @@
 <?php
 
-/**
- * @copyright   2015 Grupo MPE
- * @license     New BSD License; see LICENSE
- * @link        http://www.grupompe.com.br
- * @author      Denner Fernandes <denner.fernandes@grupompe.com.br>
- * */
-
 namespace App\Modules\Otrs\Models;
 
 use App\Shared\Models\ModelBase;
 use App\Modules\Nucleo\Models\Protheus\Protheus;
 use Phalcon\Db\RawValue;
+use Phalcon\Http\Response;
 
 class Chamados extends ModelBase
 {
@@ -485,6 +479,65 @@ class Chamados extends ModelBase
         ];
     }
 
+    /**
+     *
+     * @return array
+     */
+    public static function exportMap()
+    {
+        return [
+            'fields' => [
+                'tipo' => 'Tipo',
+                'id' => 'ID',
+                'chamado' => 'Chamado',
+                'assunto' => 'Assunto',
+                'fila' => 'Fila',
+                'filaMaster' => 'Fila Pai',
+                'servico' => 'Serviço',
+                'dataAbertura' => 'Data de Abertura',
+                'dataFechamento' => 'Data de Fechamento',
+                'status' => 'Status',
+                'totvs' => 'Chamados TOTVS',
+                'prioridade' => 'Prioridade',
+                'diasAberto' => 'Dias Abertos',
+                'periodoDiasAberto' => 'Período de Dias Aberto',
+                'cliente' => 'Cliente',
+                'proprietario' => 'Proprietário',
+                'responsavel' => 'Responsável',
+                'empresa' => 'Empresa do Cliente',
+                'chapa' => 'Chapa do Cliente',
+                'nome' => 'Nome do Cliente',
+                'cpf' => 'CPF do Cliente',
+                'email' => 'E-mail do Cliente',
+                'cc' => 'Centro de Custo do Cliente',
+                'masterCc' => 'Centro de Custo Pai do Cliente',
+                'descCc' => 'Descrição do Centro de Custo do Cliente',
+                'codGestor' => 'Código do Gestor do Cliente',
+                'gestor' => 'Gestor do Cliente',
+                'codDepto' => 'Código do Departamento do CLiente',
+                'depto' => 'Departamento do CLiente',
+            ],
+            'questions' => [
+                'tipo' => 'Tipo de Chamados',
+                'assunto' => 'Título do Chamado',
+                'fila' => 'Fila',
+                'dataDe' => 'Data de',
+                'dataAte' => 'Data até',
+                'gestor' => 'Gestor',
+                'centrocusto' => 'Centro de Custo',
+                'departamento' => 'Departamento',
+                'cliente' => 'Cliente',
+                'responsavel' => 'Responsável',
+                'proprietario' => 'Proprietário',
+                'status' => 'Status',
+            ]
+        ];
+    }
+
+    /**
+     *
+     * @return boolean
+     */
     public function compareChamados()
     {
         $date = $this->readFileOtrs();
@@ -492,12 +545,73 @@ class Chamados extends ModelBase
 
         if (!empty($dados)) {
             $this->setChamadosOtrs($dados);
+            $merged = $this->getChamadosOtrsMerged($date);
+            if (!empty($merged)) {
+                $this->deleteChamadosOtrs($merged);
+            }
             $this->writeFileOtrs(date('Y-m-d H:i:s'));
         }
         return true;
     }
 
+    /**
+     *
+     * @param type $date
+     * @return type
+     */
     private function getChamadosOtrs($date = null)
+    {
+        $search = '';
+        if (!is_null($date)) {
+            $search = " AND (ti.change_time > '{$date}' OR ti.change_time IS NULL) ";
+        }
+
+        $connection = $this->customSimpleQuery('otrsDb');
+
+        $query = "SELECT
+                    CASE
+                        WHEN ts.type_id = 3 THEN 'Fechados'
+                        ELSE 'Abertos'
+                    END AS tipo,
+                    ti.id AS id,
+                    ti.tn AS chamado,
+                    ti.title AS assunto,
+                    qu.name AS fila,
+                    sv.name AS servico,
+                    STR_TO_DATE(DATE_FORMAT(ti.create_time, '%d/%m/%Y'), '%d/%m/%Y') AS data_abertura,
+                    IF((ti.ticket_state_id IN (2 , 3)), STR_TO_DATE(DATE_FORMAT(ti.change_time, '%d/%m/%Y'), '%d/%m/%Y'), NULL) AS data_fechamento,
+                    ts.name AS status,
+                    ti.freetext1 AS totvs,
+                    tp.name AS prioridade,
+                    TO_DAYS(CURDATE()) - TO_DAYS(ti.create_time) AS dias_aberto,
+                    TRUNCATE(TO_DAYS(CURDATE()) - TO_DAYS(ti.create_time), - 1) AS periodo_dias_aberto,
+                    ti.customer_id AS cliente,
+                    CONCAT(up.first_name, ' ', up.last_name) AS proprietario,
+                    CONCAT(ur.first_name, ' ', ur.last_name) AS responsavel,
+                    ti.create_time AS create_time,
+                    ti.change_time AS update_time
+                FROM
+                    ticket ti
+                        LEFT JOIN queue qu ON qu.id = ti.queue_id
+                        LEFT JOIN users up ON up.id = ti.user_id
+                        LEFT JOIN users ur ON ur.id = ti.responsible_user_id
+                        LEFT JOIN ticket_state ts ON ts.id = ti.ticket_state_id
+                        LEFT JOIN ticket_priority tp ON tp.id = ti.ticket_priority_id
+                        LEFT JOIN service sv ON sv.id = ti.service_id
+                WHERE
+                    ti.title IS NOT NULL
+                        AND ts.type_id NOT IN (6 , 7)
+                        $search
+                ORDER BY 1, ti.id";
+        return $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
+    }
+
+    /**
+     *
+     * @param type $date
+     * @return type
+     */
+    private function getChamadosOtrsMerged($date = null)
     {
         $search = '';
         if (!is_null($date)) {
@@ -507,48 +621,20 @@ class Chamados extends ModelBase
         $connection = $this->customSimpleQuery('otrsDb');
 
         $query = "SELECT
-                    CASE
-                      WHEN s.type_id = 3 THEN 'Fechados'
-                      ELSE 'Abertos'
-                    END AS tipo,
-                    t.id AS id,
-                    t.tn AS chamado,
-                    t.title AS assunto,
-                    q.name AS fila,
-                    sv.name AS servico,
-                    STR_TO_DATE(DATE_FORMAT(t.create_time, '%d/%m/%Y'), '%d/%m/%Y') AS data_abertura,
-                    IF((`t`.`ticket_state_id` IN (2, 3)), STR_TO_DATE(DATE_FORMAT(t.change_time, '%d/%m/%Y'), '%d/%m/%Y'), NULL) AS data_fechamento,
-                    s.name AS status,
-                    t.freetext1 AS totvs,
-                    p.name AS prioridade,
-                    TO_DAYS(CURDATE()) - TO_DAYS(t.create_time) AS dias_aberto,
-                    TRUNCATE (TO_DAYS(CURDATE()) - TO_DAYS(t.create_time), - 1) AS periodo_dias_aberto,
-                    t.customer_id AS cliente,
-                    CONCAT(up.first_name, ' ', up.last_name) AS proprietario,
-                    CONCAT(ur.first_name, ' ', ur.last_name) AS responsavel,
-                    t.create_time AS create_time,
-                    t.change_time AS update_time
+                    t.tn AS chamado
                   FROM ticket t
-                  LEFT JOIN queue q
-                    ON t.queue_id = q.id
-                  LEFT JOIN users up
-                    ON t.user_id = up.id
-                  LEFT JOIN users ur
-                    ON t.responsible_user_id = ur.id
                   LEFT JOIN ticket_state s
-                    ON t.ticket_state_id = s.id
-                  LEFT JOIN ticket_priority p
-                    ON t.ticket_priority_id = p.id
-                  LEFT JOIN service sv
-                    ON t.service_id = sv.id
-                  WHERE s.type_id NOT IN (6 , 7)
-                  AND t.title IS NOT NULL
-                  $search
-                  ORDER BY 1, t.id";
-
+                    ON s.id = t.ticket_state_id
+                  WHERE t.title IS NOT NULL
+                    AND s.type_id IN (6, 7)
+                    $search";
         return $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
     }
 
+    /**
+     *
+     * @param type $dados
+     */
     private function setChamadosOtrs($dados)
     {
         foreach ($dados as $key => $value) {
@@ -620,22 +706,241 @@ class Chamados extends ModelBase
                     echo $msg;
                 }
             } catch (\PDOException $e) {
-                dump($chamados);
-                exit;
+                dump($e);
             }
         }
     }
 
+    /**
+     *
+     * @param type $dados
+     */
+    private function deleteChamadosOtrs($dados)
+    {
+        foreach ($dados as $key => $value) {
+            $chamados = self::findFirst("chamado = '#{$value['chamado']}'");
+
+            if ($chamados !== false) {
+                try {
+                    if ($chamados->delete() === false) {
+                        $msg = '';
+                        foreach ($chamados->getMessages() as $message) {
+                            $msg .= $message . '<br />';
+                        }
+                        echo $msg;
+                    }
+                } catch (\Exception $e) {
+                    dump($e);
+                } catch (\PDOException $p) {
+                    dump($p);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @return type
+     */
     private function readFileOtrs()
     {
         $path = APP_PATH . '/files/otrs.txt';
         return file_get_contents($path);
     }
 
-    private function writeFileOtrs($date = '2000-01-01 00:00:00')
+    /**
+     *
+     * @param type $date
+     * @return type
+     */
+    private function writeFileOtrs($date = '2010-01-01 00:00:00')
     {
         $path = APP_PATH . '/files/otrs.txt';
         return file_put_contents($path, $date);
+    }
+
+    /**
+     *
+     * @param type $post
+     */
+    public function report($post)
+    {
+        $search = json_decode($post['search']);
+        $questions = $this->prepareArrayHead((array) json_decode($post['questions']));
+        $fields = $post['fields'];
+        $type = $post['type_export'];
+        $objects = Chamados::find(['conditions' => $search]);
+        $dados = $this->prepareArrayBody($objects, $fields);
+
+        if ($type == 'excel') {
+            return $this->writeFileExcel($dados, $questions);
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param array $questions
+     * @return type
+     */
+    private function prepareArrayHead(array $questions)
+    {
+        $return = [];
+        foreach ($questions as $key => $value) {
+            if (!empty($value)) {
+                $return[] = [$key . ':', $value];
+            }
+        }
+        return $return;
+    }
+
+    /**
+     *
+     * @param type $objects
+     * @param array $fields
+     * @return array
+     */
+    private function prepareArrayBody($objects, array $fields)
+    {
+        $return = [];
+        $titles = true;
+        foreach ($objects as $keyObject => $object) {
+            $array = [];
+
+            if ($titles) {
+                foreach ($fields as $keyField => $field) {
+                    array_push($array, $field);
+                }
+                $return[] = $array;
+                $titles = false;
+                $array = [];
+            }
+
+            foreach ($fields as $keyField => $field) {
+                $method = 'get' . ucfirst($keyField);
+                array_push($array, $object->$method());
+            }
+            $return[] = $array;
+        }
+        return $return;
+    }
+
+    private function writeFileExcel($dados, $questions)
+    {
+
+        $objPHPExcel = $this->prepareObjectExcel();
+        $objPHPExcel = $this->headExcel($objPHPExcel, $questions, count($dados[0]));
+        $objPHPExcel = $this->bodyExcel($objPHPExcel, $dados, count($questions) + 5);
+
+        /* $this->viewExcel($objPHPExcel); exit; */
+        return $this->download($objPHPExcel);
+    }
+
+    private function prepareObjectExcel()
+    {
+
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator('Intranet - Grupo MPE')
+                  ->setLastModifiedBy('Intranet - Grupo MPE')
+                  ->setTitle('OTRS - Relatório de Chamados')
+                  ->setCategory('Relatórios');
+        $objPHPExcel->getActiveSheet()
+                  ->setTitle('Relatório de Chamados');
+
+        $validLocale = \PHPExcel_Settings::setLocale('pt_br');
+        if (!$validLocale) {
+            echo 'Não é possível definir a localidade para pt_br - revertendo para en_us' . PHP_EOL;
+        }
+
+        return $objPHPExcel;
+    }
+
+    private function getColunns($width)
+    {
+        $colunns = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        return $colunns[$width - 1];
+    }
+
+    private function headExcel($objPHPExcel, $questions, $width)
+    {
+        $merged = 'A1:' . $this->getColunns($width) . '1';
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'OTRS - Relatório de Chamados')->mergeCells($merged);
+        $objPHPExcel = $this->titleStyle($objPHPExcel, $merged);
+        $objPHPExcel->getActiveSheet()->setCellValue('B3', 'Filtros:');
+        $objPHPExcel = $this->titleStyle($objPHPExcel, 'B3');
+        $objPHPExcel->getActiveSheet()->fromArray($questions, null, 'B4');
+
+        $count = count($questions) + 4;
+
+        for ($i = 4; $i < $count; $i++) {
+            $objPHPExcel->getActiveSheet()->mergeCells('C' . $i . ':' . $this->getColunns($width) . $i);
+        }
+
+        return $objPHPExcel;
+    }
+
+    private function bodyExcel($objPHPExcel, $dados, $width)
+    {
+        $objPHPExcel->getActiveSheet()->fromArray($dados, null, 'A' . $width);
+        $objPHPExcel = $this->titleStyle($objPHPExcel, 'A' . $width . ':' . $this->getColunns(count($dados[0])) . $width);
+
+        $count = count($dados[0]);
+
+        for ($i = 1; $i <= $count; $i++) {
+            $objPHPExcel->getActiveSheet()->getColumnDimension($this->getColunns($i))->setAutoSize(true);
+        }
+
+        return $objPHPExcel;
+    }
+
+    private function titleStyle(\PHPExcel $objPHPExcel, $position)
+    {
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getFont()->getColor(new \PHPExcel_Style_Color(\PHPExcel_Style_Color::COLOR_DARKGREEN));
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getFont()->setSize(12);
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getFont()->setItalic(true);
+        $objPHPExcel->getActiveSheet()->getStyle($position)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_MEDIUM);
+
+        return $objPHPExcel;
+    }
+
+    private function download($objPHPExcel)
+    {
+        $fileName = 'Otrs - Relatório de Chamados ' . date('Ymd His') . '.xlsx';
+
+        $fileTemp = tempnam(getcwd() . '/temp/', 'phpexcel');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save($fileTemp);
+
+        $view = $this->getDI()->get('view');
+        $view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
+
+        $response = new Response();
+        $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->setHeader('Content-Disposition', 'attachment;filename="' . $fileName . '"');
+        $response->setHeader('Cache-Control', 'max-age=0');
+        $response->setContent(file_get_contents($fileTemp));
+        unlink($fileTemp);
+        return $response->send();
+    }
+
+    private function viewExcel(\PHPExcel $objPHPExcel)
+    {
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+        echo '<table>' . PHP_EOL;
+        foreach ($objWorksheet->getRowIterator() as $row) {
+            echo '<tr>' . PHP_EOL;
+            $cellIterator = $row->getCellIterator();
+            //$cellIterator->setIterateOnlyExistingCells(FALSE);
+            foreach ($cellIterator as $cell) {
+                echo '<td>' .
+                $cell->getValue() .
+                '</td>' . PHP_EOL;
+            }
+            echo '</tr>' . PHP_EOL;
+        }
+        echo '</table>' . PHP_EOL;
     }
 
 }

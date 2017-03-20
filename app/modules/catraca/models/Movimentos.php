@@ -9,6 +9,7 @@
 
 namespace App\Modules\Catraca\Models;
 
+use App\Modules\Nucleo\Models\Protheus\Colaboradores;
 use App\Shared\Models\ModelBase;
 use Phalcon\Db\RawValue;
 use Phalcon\Config as ObjectPhalcon;
@@ -60,7 +61,7 @@ class Movimentos extends ModelBase {
 
         parent::initialize();
 
-        $this->belongsTo('TRIM(name)', '\Nucleo\Models\Protheus\Colaboradores', 'TRIM(szhNome)', ['alias' => 'Colaboradores',]);
+        $this->belongsTo('TRIM(name)', 'App\Modules\Nucleo\Models\Protheus\Colaboradores', 'TRIM(szhNome)', ['alias' => 'Colaboradores',]);
     }
 
     public function getSource() {
@@ -94,9 +95,9 @@ class Movimentos extends ModelBase {
                           OR UPPER(SECAO) LIKE UPPER('%$pesquisa%'))";
         }
 
-        $connection = $this->customConnection('db');
+        $connection = $this->customSimpleQuery('db');
 
-        $szhColaboradores = new \Nucleo\Models\Protheus\Colaboradores();
+        $szhColaboradores = new Colaboradores();
         $empresas = $szhColaboradores->getNameEmpresas();
         $empresas = str_replace('szhEmpresa', 'ZH.ZH_EMPRESA', $empresas);
 
@@ -117,21 +118,14 @@ class Movimentos extends ModelBase {
                   )
                   WHERE 1 = 1 {$busca}";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
     public function deleteByRange($dateFrom, $dateTo) {
 
         $connection = $this->customConnection('db');
-
         $result = $connection->delete('MOVIMENTO_CATRACA', "DT_MOVIMENTO BETWEEN TO_DATE('{$dateFrom}', 'YYYY-MM-DD') AND TO_DATE('{$dateTo}', 'YYYY-MM-DD')");
-
         $connection->bye();
-
         return $result;
     }
 

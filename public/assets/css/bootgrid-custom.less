@@ -63,6 +63,11 @@ and open the template in the editor.
     }
     tbody, tfoot{
         tr{
+            &:last-child{
+                > td{
+                    padding-bottom: 0;
+                }
+            }
             td{
                 padding-top: 5px;
                 padding-bottom: 5px;
@@ -70,6 +75,21 @@ and open the template in the editor.
             }
             &:nth-of-type(odd) {
                 background-color: #eaf3d4;
+            }
+            th{
+                font-size: 11px;
+                &:first-child{
+                    padding-left: 15px;
+                }
+                &:last-child{
+                    text-align: center;
+                    vertical-align: middle;
+                    display: table-cell;
+                }
+                .badge{
+                    font-size: 11px;
+                    padding: 3px 4px 3px 3px;
+                }
             }
         }
     }

@@ -179,16 +179,14 @@ class CentroCustos extends ModelBase
             {$search}
             ORDER BY CTT.CTT_CUSTO";
 
-            //echo $query, exit;
-
-          return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
+          return new ObjectPhalcon(@$connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
 
     }
 
-    public function getCentroCustoByParent($search)
+    public function getCentroCustoByParent($search = '')
     {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         if (!empty($search)) {
             $search = "AND TRIM(CTT_CUSTO) LIKE '{$search}%'";
@@ -212,10 +210,7 @@ class CentroCustos extends ModelBase
                 {$search}
             ORDER BY 1";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon(@$connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
     public function getDepartamento($cc = '')

@@ -100,7 +100,7 @@ class IndexController extends ControllerBase {
             if ($this->request->isPost()) {
                 $nameFile = implode('', array_reverse(explode('/', $this->request->getPost('mes', 'string'))));
 
-                $statement = new \Telephony\Models\Statement();
+                $statement = new Statement();
                 $this->view->linhasAlteradas = $statement->importExternalTable($nameFile);
             }
         } catch (\Exception $e) {

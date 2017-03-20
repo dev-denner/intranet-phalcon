@@ -17,11 +17,17 @@ use App\Modules\Catraca\Models\Firebird;
  * Class ReportsController
  * @package Catraca\Controllers
  */
-class ReportsController extends ControllerBase {
+class ReportsController extends ControllerBase
+{
 
-    public function indexAction() {
+    public function indexAction()
+    {
 
         try {
+
+            $this->view->movimentos = '';
+            $this->view->pesquisa = '';
+            $this->view->export = false;
 
             if ($this->request->isPost()) {
 
@@ -54,12 +60,13 @@ class ReportsController extends ControllerBase {
                 $this->view->pesquisa = $dateFrom . '|' . $dateTo . '|' . $search;
                 $this->view->export = true;
             }
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
     }
 
-    private function saveMovimentos($request) {
+    private function saveMovimentos($request)
+    {
         $movimentos = new Movimentos();
         $this->makeSetObject($request, $movimentos);
 

@@ -170,8 +170,8 @@ class SolicitacoesExternasController extends ControllerBase {
                 throw new \Exception($msg);
             }
             echo 'ok';
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/solicitacoes_externas/');
         }
     }

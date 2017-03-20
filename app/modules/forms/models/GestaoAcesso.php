@@ -14,11 +14,12 @@ use App\Shared\Models\beforeCreate;
 use App\Shared\Models\beforeUpdate;
 use Phalcon\Mvc\Model\Behavior\SoftDelete;
 
-class GestaoAcesso extends ModelBase {
+class GestaoAcesso extends ModelBase
+{
 
     use beforeCreate;
 
-use beforeUpdate;
+    use beforeUpdate;
 
     protected $id;
     protected $nomeFormulario;
@@ -30,83 +31,101 @@ use beforeUpdate;
     protected $updateBy;
     protected $updateIn;
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNomeFormulario() {
+    public function getNomeFormulario()
+    {
         return $this->nomeFormulario;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function getAmarracao() {
+    public function getAmarracao()
+    {
         return $this->amarracao;
     }
 
-    public function getSdel() {
+    public function getSdel()
+    {
         return $this->sdel;
     }
 
-    public function getCreateBy() {
+    public function getCreateBy()
+    {
         return $this->createBy;
     }
 
-    public function getCreateIn() {
+    public function getCreateIn()
+    {
         return $this->createIn;
     }
 
-    public function getUpdateBy() {
+    public function getUpdateBy()
+    {
         return $this->updateBy;
     }
 
-    public function getUpdateIn() {
+    public function getUpdateIn()
+    {
         return $this->updateIn;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function setNomeFormulario($nomeFormulario) {
+    public function setNomeFormulario($nomeFormulario)
+    {
         $this->nomeFormulario = $nomeFormulario;
         return $this;
     }
 
-    public function setUserId($userId) {
+    public function setUserId($userId)
+    {
         $this->userId = $userId;
         return $this;
     }
 
-    public function setAmarracao($amarracao) {
+    public function setAmarracao($amarracao)
+    {
         $this->amarracao = $amarracao;
         return $this;
     }
 
-    public function setSdel($sdel) {
+    public function setSdel($sdel)
+    {
         $this->sdel = $sdel;
         return $this;
     }
 
-    public function setCreateBy($createBy) {
+    public function setCreateBy($createBy)
+    {
         $this->createBy = $createBy;
         return $this;
     }
 
-    public function setCreateIn($createIn) {
+    public function setCreateIn($createIn)
+    {
         $this->createIn = $createIn;
         return $this;
     }
 
-    public function setUpdateBy($updateBy) {
+    public function setUpdateBy($updateBy)
+    {
         $this->updateBy = $updateBy;
         return $this;
     }
 
-    public function setUpdateIn($updateIn) {
+    public function setUpdateIn($updateIn)
+    {
         $this->updateIn = $updateIn;
         return $this;
     }
@@ -114,7 +133,8 @@ use beforeUpdate;
     /**
      * Initialize method for model.
      */
-    public function initialize() {
+    public function initialize()
+    {
 
         parent::initialize();
 
@@ -132,7 +152,8 @@ use beforeUpdate;
      *
      * @return string
      */
-    public function getSource() {
+    public function getSource()
+    {
         return 'FRM_GESTAO_ACESSO';
     }
 
@@ -142,7 +163,8 @@ use beforeUpdate;
      *
      * @return array
      */
-    public static function columnMap() {
+    public static function columnMap()
+    {
         return [
             'ID_FRM_GESTAO_ACESSO' => 'id',
             'DS_NOME_FORMULARIO' => 'nomeFormulario',
@@ -156,13 +178,15 @@ use beforeUpdate;
         ];
     }
 
-    public static function getDeleted() {
+    public static function getDeleted()
+    {
         return 'sdel';
     }
 
-    public function getCentroCustoByParent() {
+    public function getCentroCustoByParent()
+    {
 
-        $connection = $this->customConnection();
+        $connection = $this->customSimpleQuery('protheusDb');
 
         $query = "SELECT CTT.CODIGO,
                          CTT.DESCRICAO,
@@ -186,10 +210,7 @@ use beforeUpdate;
                               ) CTT
                   ON CTT.CODIGO = GA.CD_AMARRACAO";
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

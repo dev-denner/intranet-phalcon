@@ -39,7 +39,7 @@ class ModulesController extends ControllerBase {
                 $this->view->modules = Modules::find($search);
                 $this->view->pesquisa = $this->request->getPost('modules');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -75,8 +75,8 @@ class ModulesController extends ControllerBase {
             $this->tag->setDefault('slug', $module->getSlug());
             $this->tag->setDefault('icon', $module->getIcon());
             $this->tag->setDefault('description', $module->getDescription());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/modules');
         }
     }
@@ -109,8 +109,8 @@ class ModulesController extends ControllerBase {
             }
 
             $this->flash->success('Módulo gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/modules');
     }
@@ -150,8 +150,8 @@ class ModulesController extends ControllerBase {
             }
 
             $this->flash->success('Módulo atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/modules');
     }
@@ -188,8 +188,8 @@ class ModulesController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/modules');
         }
     }

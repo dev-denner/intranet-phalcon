@@ -71,7 +71,11 @@
                         <td>{{ menu.controllers.title }}</td>
                         <td>{{ menu.actions.title }}</td>
                         <td>{{ menu.departments.title }}</td>
-                        <td>{{ menu.categories.title }}</td>
+                        <td>
+                            <?php if (isset($menu->categories->title)): ?>
+                                {{ menu.categories.title }}
+                            <?php endif; ?>
+                        </td>
                         <td>{{ menu.type }}</td>
                         <td>{{ menu.position }}</td>
                         <td>{{ menu.icon }}</td>

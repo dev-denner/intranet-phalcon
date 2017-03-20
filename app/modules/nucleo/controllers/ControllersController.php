@@ -74,8 +74,8 @@ class ControllersController extends ControllerBase {
             $this->tag->setDefault('title', $controller->getTitle());
             $this->tag->setDefault('slug', $controller->getSlug());
             $this->tag->setDefault('description', $controller->getDescription());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/controllers');
         }
     }
@@ -107,8 +107,8 @@ class ControllersController extends ControllerBase {
             }
 
             $this->flash->success('Controlador gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/controllers');
     }
@@ -147,8 +147,8 @@ class ControllersController extends ControllerBase {
             }
 
             $this->flash->success('Controlador atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/controllers');
     }
@@ -185,8 +185,8 @@ class ControllersController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/controllers');
         }
     }

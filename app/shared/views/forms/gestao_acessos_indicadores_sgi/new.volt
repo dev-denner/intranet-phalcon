@@ -10,43 +10,35 @@
             <div class="card-body card-padding">
                 {{ form("forms/gestao_acessos_indicadores_sgi/create", "method":"post", "autocomplete" : "off", 'onsubmit': 'overlay(true)') }}
 
-                <div class="form-group fg-float">
-                    <div class="fg-line">
-                        <div class="select">
-                            <?php
-                            echo $this->tag->select(['userId',
-                                \App\Modules\Nucleo\Models\Users::find(['order' => 'name']),
-                                'using' => ['id', 'name'],
-                                'useEmpty' => true,
-                                'emptyText' => '',
-                                'emptyValue' => '',
-                                'class' => 'form-control',
-                                'required' => 'required']
-                            );
-                            ?>
-                        </div>
-                        <label class="fg-label">Usuário (Escolha uma opção)</label>
-                    </div>
+                <div class="form-group fg-line">
+                    <label class="fg-label">Usuário (Escolha uma opção)</label>
+                    <?php
+                    echo $this->tag->select(['userId',
+                        \App\Modules\Nucleo\Models\Users::find(['order' => 'name']),
+                        'using' => ['id', 'name'],
+                        'useEmpty' => true,
+                        'emptyText' => '',
+                        'emptyValue' => '',
+                        'class' => 'form-control chosen fc-alt',
+                        'data-placeholder' => ' ',
+                        'required' => 'required']
+                    );
+                    ?>
                 </div>
                 <br />
-
-                <div class="form-group fg-float">
-                    <div class="fg-line">
-                        <div class="select">
-                            <?php
-                            echo $this->tag->select([
-                                'amarracao',
-                                $centro_custos,
-                                'useEmpty' => true,
-                                'emptyText' => '',
-                                'emptyValue' => '',
-                                'class' => 'form-control',
-                                'required' => 'required']
-                            );
-                            ?>
-                        </div>
-                        <label class="fg-label">Centro de Custo</label>
-                    </div>
+                <div class="form-group fg-line">
+                    <label class="fg-label">Centro de Custo</label>
+                    <?php
+                    echo $this->tag->select([
+                        'amarracao',
+                        $centro_custos,
+                        'useEmpty' => true,
+                        'emptyText' => '',
+                        'emptyValue' => '',
+                        'class' => 'form-control chosen fc-alt',
+                        'data-placeholder' => ' ']
+                    );
+                    ?>
                 </div>
                 <br />
 

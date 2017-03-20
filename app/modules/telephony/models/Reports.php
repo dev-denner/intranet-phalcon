@@ -18,32 +18,16 @@ class Reports extends ModelBase
     public function getRateioDescFolha($comp)
     {
 
+        $connection = $this->customSimpleQuery('telefoniaDb');
+
         if (!empty($comp)) {
             $comp = " AND EX.MESREF = '{$comp}' ";
         }
 
         $query = "
-             SELECT
-                CASE ZH.ZH_EMPRESA
-                  WHEN '01' THEN 'MPE'
-                  WHEN '02' THEN 'EBE'
-                  WHEN '03' THEN 'MPE SERVIÇOS'
-                  WHEN '04' THEN 'GEMON'
-                  WHEN 'D1' THEN 'AAT'
-                  WHEN 'D2' THEN 'GEMON'
-                  WHEN 'D3' THEN 'IRLA'
-                  WHEN 'D4' THEN 'MPE PAINEIS'
-                  WHEN 'D5' THEN 'SOAHGRO'
-                  WHEN 'D6' THEN 'TEIA'
-                  WHEN 'D7' THEN 'VALENÇA'
-                  WHEN 'D8' THEN 'FW GEMON'
-                  WHEN 'D9' THEN 'CANARI'
-                  WHEN 'DA' THEN 'AGROMOM'
-                  ELSE ZH.ZH_EMPRESA END || ' - ' || ZH.ZH_EMPRESA EMPRESA,
-                TRIM(ZH.ZH_NOME) NOME, EX.MESREF,EX.NUMACS,
-                LC.CPF,
+             SELECT ZH.EMPRESA, TRIM(ZH.NOME) NOME, EX.MESREF, EX.NUMACS, LC.CPF,
                 CASE
-                  WHEN LC.CCEO IS NULL THEN ZH.ZH_CCEO
+                  WHEN LC.CCEO IS NULL THEN ZH.CCEO
                   ELSE LC.CCEO
                 END ZH_CCEO,
                 CASE LC.DESC_FOLHA
@@ -51,32 +35,25 @@ class Reports extends ModelBase
                     ELSE LC.DESC_FOLHA
                 END DESC_FOLHA,
                 REPLACE(TO_CHAR(SUM(EX.VALOR)), '.', ',') VALOR
-             FROM (SELECT MESREF, NUMACS, VALOR FROM EXTRATO
+             FROM (SELECT MESREF, NUMACS, VALOR, OPERLD FROM EXTRATO
                     WHERE NUMACS IS NOT NULL) EX
              LEFT JOIN LINHA_CELULAR LC
                 ON LC.LINHA = EX.NUMACS
-             LEFT JOIN PRODUCAO_9ZGXI5.SZH010@PROTHEUSPROD ZH
-                ON D_E_L_E_T_ = ' '
-               AND TRIM(ZH.ZH_CPF) = REPLACE(REPLACE(TRIM(LC.CPF), '.'), '-')
+             LEFT JOIN COLABORADOR_PROTHEUS ZH
+                ON ZH.CPF = REPLACE(REPLACE(TRIM(LC.CPF), '.'), '-')
              WHERE 1 = 1 {$comp}
-               AND OPERLD IS NULL
-             GROUP BY ZH.ZH_EMPRESA, ZH.ZH_NOME, EX.MESREF, EX.NUMACS,
-                       LC.CPF, ZH.ZH_CCEO, LC.DESC_FOLHA, LC.CCEO
-             ORDER BY ZH.ZH_EMPRESA, ZH.ZH_NOME";
+               AND EX.OPERLD IS NULL
+             GROUP BY ZH.EMPRESA, ZH.NOME, EX.MESREF, EX.NUMACS,
+                       LC.CPF, ZH.CCEO, LC.DESC_FOLHA, LC.CCEO
+             ORDER BY ZH.EMPRESA, ZH.NOME";
 
-        $connection = $this->customConnection('telefoniaDb');
-
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        if (empty($return)) {
-            throw new \Exception('Não dados a exibir.');
-        }
-        return new ObjectPhalcon($return);
+        return $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
     }
 
     public function getRateioNF($comp = NULL)
     {
+
+        $connection = $this->customSimpleQuery('telefoniaDb');
 
         if (!is_null($comp)) {
             $comp = " AND EX.MESREF = '$comp' ";
@@ -96,11 +73,8 @@ class Reports extends ModelBase
                   GROUP BY EX.MESREF, LC.CCEO
                     ORDER BY 2";
 
-        $connection = $this->customConnection('telefoniaDb');
+        $return = $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
         if (empty($return)) {
             throw new \Exception('Não dados a exibir.');
         }
@@ -320,6 +294,7 @@ class Reports extends ModelBase
 
     public function getRateioEmails($comp = NULL, $valor = 0)
     {
+        $connection = $this->customSimpleQuery('telefoniaDb');
 
         $query = "
       SELECT TRIM(CC) CC, QTD,
@@ -363,11 +338,8 @@ class Reports extends ModelBase
         ) A3
       ORDER BY 1";
 
-        $connection = $this->customConnection('telefoniaDb');
+        $return = $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
         if (empty($return)) {
             throw new \Exception('Não dados a exibir.');
         }
@@ -376,6 +348,8 @@ class Reports extends ModelBase
 
     public function getRateioCorporativo($comp = NULL, $valor = 0)
     {
+
+        $connection = $this->customSimpleQuery('telefoniaDb');
 
         $query = "
       SELECT TRIM(CC) CC, QTD,
@@ -405,11 +379,8 @@ class Reports extends ModelBase
         ) A3
       ORDER BY 1";
 
-        $connection = $this->customConnection('telefoniaDb');
+        $return = $connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC);
 
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
         if (empty($return)) {
             throw new \Exception('Não dados a exibir.');
         }

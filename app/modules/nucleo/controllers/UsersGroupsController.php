@@ -48,7 +48,7 @@ class UsersGroupsController extends ControllerBase {
                 $this->view->users_groups = UsersGroups::find($search);
                 $this->view->pesquisa = 'Usuários: ' . $users . ' | Grupos: ' . $groups;
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -82,8 +82,8 @@ class UsersGroupsController extends ControllerBase {
             $this->tag->setDefault('id', $users_group->getId());
             $this->tag->setDefault('userId', $users_group->getUserId());
             $this->tag->setDefault('groupId', $users_group->getGroupId());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/users_groups');
         }
     }
@@ -114,8 +114,8 @@ class UsersGroupsController extends ControllerBase {
             }
 
             $this->flash->success('Grupo x Usuário gravado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/users_groups');
     }
@@ -153,8 +153,8 @@ class UsersGroupsController extends ControllerBase {
             }
 
             $this->flash->success('Grupo x Usuário atualizado com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/users_groups');
     }
@@ -191,8 +191,8 @@ class UsersGroupsController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/users_groups');
         }
     }

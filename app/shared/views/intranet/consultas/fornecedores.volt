@@ -30,7 +30,7 @@
     </div>
 </div>
 
-{% if pesquisa is not empty %}
+{% if fornecedores is not empty %}
 <div class="card">
     <div class="card-header">
         Resultado para pesquisa: <span class="text-danger">{{ pesquisa }}</span>

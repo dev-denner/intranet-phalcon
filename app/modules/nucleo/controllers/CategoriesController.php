@@ -36,7 +36,7 @@ class CategoriesController extends ControllerBase {
                 $this->view->categories = Categories::find($search);
                 $this->view->pesquisa = $this->request->getPost('categories');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -74,8 +74,8 @@ class CategoriesController extends ControllerBase {
             $this->tag->setDefault('title', $category->getTitle());
             $this->tag->setDefault('description', $category->getDescription());
             $this->tag->setDefault('icon', $category->getIcon());
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/categories');
         }
     }
@@ -107,8 +107,8 @@ class CategoriesController extends ControllerBase {
             }
 
             $this->flash->success('Categoria gravada com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/categories');
     }
@@ -147,8 +147,8 @@ class CategoriesController extends ControllerBase {
             }
 
             $this->flash->success('Categoria atualizada com sucesso!!!');
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('nucleo/categories');
     }
@@ -185,8 +185,8 @@ class CategoriesController extends ControllerBase {
                 throw new Exception($msg);
             }
             echo 'ok';
-        } catch (Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('nucleo/categories');
         }
     }

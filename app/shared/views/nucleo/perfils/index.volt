@@ -74,7 +74,7 @@
     </div>
     <div class="card-body card-padding">
         <div class="table-responsive">
-            {% if perfils is not empt %}
+            {% if perfils is not empty %}
             <table class="table table-striped table-vmiddle datatable">
                 <thead>
                     <tr>

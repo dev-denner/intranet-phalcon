@@ -275,8 +275,8 @@ class ColetaRescisaoController extends ControllerBase {
     private function sendMergePdf(Tools $tools, $files, $pronto) {
         try {
             return $tools->mergePdf($files, $pronto);
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
     }
 

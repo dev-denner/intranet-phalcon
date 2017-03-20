@@ -20,7 +20,8 @@ use App\Modules\Nucleo\Models\Perfils;
 use App\Modules\Nucleo\Models\RM\Pfunc;
 use App\Modules\Nucleo\Models\Protheus\Colaboradores;
 
-class Auth extends Component {
+class Auth extends Component
+{
 
     /**
      * Checks the user credentials
@@ -29,7 +30,8 @@ class Auth extends Component {
      * @return boolean
      * @throws Exception
      */
-    public function check($credentials) {
+    public function check($credentials)
+    {
 
         $cpf = str_replace('-', '', $credentials['cpf']);
         $user = Users::findFirstByCpf($cpf);
@@ -63,7 +65,8 @@ class Auth extends Component {
      * @param \Nucleo\Models\Users $user
      * @throws Exception
      */
-    public function saveSuccessLogin($userName) {
+    public function saveSuccessLogin($userName)
+    {
         $this->session->set('auth', true);
         $successLogin = new SuccessLogins();
         $successLogin->usersName = $userName;
@@ -82,7 +85,8 @@ class Auth extends Component {
      *
      * @param int $userName
      */
-    public function registerUserThrottling($userName) {
+    public function registerUserThrottling($userName)
+    {
         $failedLogin = new FailedLogins();
         $failedLogin->usersName = $userName;
         $failedLogin->ipAddress = $this->request->getClientAddress();
@@ -90,11 +94,11 @@ class Auth extends Component {
         $failedLogin->save();
 
         $attempts = FailedLogins::count([
-                      'ipAddress = ?0 AND attempted >= ?1',
-                      'bind' => [
-                          $this->request->getClientAddress(),
-                          time() - 3600 * 6
-                      ]
+                    'ipAddress = ?0 AND attempted >= ?1',
+                    'bind' => [
+                        $this->request->getClientAddress(),
+                        time() - 3600 * 6
+                    ]
         ]);
 
         switch ($attempts) {
@@ -117,7 +121,8 @@ class Auth extends Component {
      *
      * @param \Nucleo\Models\Users $user
      */
-    public function createRememberEnvironment(Users $user) {
+    public function createRememberEnvironment(Users $user)
+    {
         $userAgent = $this->request->getUserAgent();
         $token = md5($user->email . $user->password . $userAgent);
 
@@ -139,7 +144,8 @@ class Auth extends Component {
      *
      * @return type
      */
-    public function hasRememberMe() {
+    public function hasRememberMe()
+    {
         return $this->cookies->has('RMU');
     }
 
@@ -148,7 +154,8 @@ class Auth extends Component {
      *
      * @return \Phalcon\Http\Response
      */
-    public function loginWithRememberMe() {
+    public function loginWithRememberMe()
+    {
         $userId = $this->cookies->get('RMU')->getValue();
         $cookieToken = $this->cookies->get('RMT')->getValue();
 
@@ -164,8 +171,8 @@ class Auth extends Component {
                 $userName = explode('@', $user->email)[0];
 
                 $remember = RememberTokens::findFirst(array(
-                              'usersName = ?0 AND token = ?1',
-                              'bind' => [$userName, $token]
+                            'usersName = ?0 AND token = ?1',
+                            'bind' => [$userName, $token]
                 ));
 
                 if ($remember) {
@@ -199,7 +206,8 @@ class Auth extends Component {
      * @param Users $user
      * @throws Exception
      */
-    public function checkUserFlags(Users $user) {
+    public function checkUserFlags(Users $user)
+    {
         if ($user->status == 'D') {
             throw new Exception('Este usuário está desativado');
         }
@@ -213,7 +221,8 @@ class Auth extends Component {
      *
      * @return type
      */
-    public function getIdentity() {
+    public function getIdentity()
+    {
         return $this->session->get('auth-identity');
     }
 
@@ -221,7 +230,8 @@ class Auth extends Component {
      *
      * @return type
      */
-    public function getName() {
+    public function getName()
+    {
         $identity = $this->session->get('auth-identity');
         return $identity['name'];
     }
@@ -229,7 +239,8 @@ class Auth extends Component {
     /**
      *
      */
-    public function remove() {
+    public function remove()
+    {
         if ($this->cookies->has('RMU')) {
             $this->cookies->get('RMU')->delete();
         }
@@ -245,7 +256,8 @@ class Auth extends Component {
      * @param type $id
      * @throws Exception
      */
-    public function authUserById($id) {
+    public function authUserById($id)
+    {
         $user = Users::findFirstById($id);
         if ($user == false) {
             throw new Exception('Este usuário não existe.');
@@ -301,7 +313,8 @@ class Auth extends Component {
      * @return boolean
      * @throws Exception
      */
-    public function getUser() {
+    public function getUser()
+    {
         $identity = $this->session->get('auth-identity');
         if (isset($identity['userInfo']['id'])) {
             $user = Users::findFirstById($identity['userInfo']['id']);

@@ -102,7 +102,7 @@
                         <div class="select">
                             <?php
                             echo $this->tag->select(['action',
-                                \App\Modules\App\Modules\Nucleo\Models\Actions::find(['order' => 'title']),
+                                \App\Modules\Nucleo\Models\Actions::find(['order' => 'title']),
                                 'using' => ['id', 'title'],
                                 'useEmpty' => true,
                                 'emptyText' => '',

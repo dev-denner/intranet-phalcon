@@ -45,6 +45,7 @@ class Psecao extends ModelBase {
 
     public function getSecao($search) {
 
+        $connection = $this->customSimpleQuery('rmDb');
 
         if (!empty($search)) {
             $search = "AND (UPPER(GC.NOMEFANTASIA) LIKE UPPER('%{$search}%')
@@ -60,20 +61,16 @@ class Psecao extends ModelBase {
                    TO_CHAR(PS.CODFILIAL, '00') || ' - ' || GF.NOMEFANTASIA FILIAL,
                    PS.CODIGO,
                    PS.DESCRICAO
-            FROM RM.PSECAO PS
-            INNER JOIN RM.GCOLIGADA GC
+            FROM {$this->schema}.PSECAO PS
+            INNER JOIN {$this->schema}.GCOLIGADA GC
               ON GC.CODCOLIGADA = PS.CODCOLIGADA
-            INNER JOIN RM.GFILIAL GF
+            INNER JOIN {$this->schema}.GFILIAL GF
               ON GF.CODCOLIGADA = PS.CODCOLIGADA
               AND GF.CODFILIAL = PS.CODFILIAL
             WHERE 1 = 1 {$search}
             ORDER BY PS.CODIGO, PS.CODCOLIGADA";
 
-        $connection = $this->customConnection('rmDb');
-        $result = $connection->select($query);
-        $return = $connection->fetchAll($result);
-        $connection->bye();
-        return new ObjectPhalcon($return);
+        return new ObjectPhalcon($connection->fetchAll($query, \Phalcon\Db::FETCH_ASSOC));
     }
 
 }

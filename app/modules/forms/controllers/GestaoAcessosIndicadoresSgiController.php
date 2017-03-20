@@ -13,12 +13,14 @@ use App\Modules\Forms\Models\GestaoAcesso;
 use App\Shared\Controllers\ControllerBase;
 use App\Modules\Nucleo\Models\Protheus\CentroCustos;
 
-class GestaoAcessosIndicadoresSgiController extends ControllerBase {
+class GestaoAcessosIndicadoresSgiController extends ControllerBase
+{
 
     /**
      * initialize
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->tag->setTitle('Gestão de Acessos');
         parent::initialize();
     }
@@ -26,7 +28,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
     /**
      * Index action
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         try {
 
             if ($this->request->isPost()) {
@@ -38,15 +41,16 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
                 $this->view->gestao_acessos = GestaoAcesso::find("nomeFormulario = 'Indicadores SGI'");
                 $this->view->pesquisa = '';
             }
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
     }
 
     /**
      * Displays the creation form
      */
-    public function newAction() {
+    public function newAction()
+    {
         $centro_custos = new CentroCustos();
         $centro_custo = [];
         foreach ($centro_custos->getCentroCustoByParent() as $value) {
@@ -61,7 +65,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
      *
      * @param string $id
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         try {
 
             if ($this->request->isPost()) {
@@ -86,8 +91,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
             $this->tag->setDefault('id', $gestao_acesso->getId());
             $this->tag->setDefault('userId', $gestao_acesso->getUserId());
             $this->tag->setDefault('amarracao', $gestao_acesso->getAmarracao());
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/gestao_acessos_indicadores_sgi');
         }
     }
@@ -95,7 +100,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
     /**
      * Creates a new gestao_acesso
      */
-    public function createAction() {
+    public function createAction()
+    {
 
         try {
 
@@ -108,7 +114,11 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
             $gestao_acesso->setId($gestao_acesso->autoincrement());
             $gestao_acesso->setNomeFormulario('Indicadores SGI');
             $gestao_acesso->setUserId($this->request->getPost('userId'));
-            $gestao_acesso->setAmarracao($this->request->getPost('amarracao'));
+            if (empty($this->request->getPost('amarracao'))) {
+                $gestao_acesso->setAmarracao('Todos');
+            } else {
+                $gestao_acesso->setAmarracao($this->request->getPost('amarracao'));
+            }
 
             if (!$gestao_acesso->create()) {
                 $msg = '';
@@ -119,8 +129,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
             }
 
             $this->flash->success('Gestão de Acesso gravado com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('forms/gestao_acessos_indicadores_sgi');
     }
@@ -129,7 +139,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
      * Saves a gestao_acesso edited
      *
      */
-    public function saveAction() {
+    public function saveAction()
+    {
 
         try {
 
@@ -147,7 +158,11 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
             $gestao_acesso->setId($this->request->getPost('id'));
             $gestao_acesso->setNomeFormulario('Indicadores SGI');
             $gestao_acesso->setUserId($this->request->getPost('userId'));
-            $gestao_acesso->setAmarracao($this->request->getPost('amarracao'));
+            if (empty($this->request->getPost('amarracao'))) {
+                $gestao_acesso->setAmarracao('Todos');
+            } else {
+                $gestao_acesso->setAmarracao($this->request->getPost('amarracao'));
+            }
 
             if (!$gestao_acesso->update()) {
 
@@ -159,8 +174,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
             }
 
             $this->flash->success('Gestão de Acesso atualizado com sucesso!!!');
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
         return $this->response->redirect('forms/gestao_acessos_indicadores_sgi');
     }
@@ -170,7 +185,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
      *
      * @param string $id
      */
-    public function deleteAction() {
+    public function deleteAction()
+    {
 
         try {
             if (!$this->request->isPost()) {
@@ -197,8 +213,8 @@ class GestaoAcessosIndicadoresSgiController extends ControllerBase {
                 throw new \Exception($msg);
             }
             echo 'ok';
-        } catch (\Exception $exc) {
-            $this->flash->error($exc->getMessage());
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/gestao_acessos_indicadores_sgi');
         }
     }
