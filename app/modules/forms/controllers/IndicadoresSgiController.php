@@ -14,6 +14,7 @@ use App\Modules\Forms\Models\GestaoAcesso;
 use App\Modules\Nucleo\Models\Protheus\CentroCustos;
 use App\Shared\Controllers\ControllerBase;
 use App\Library\ExportFile\ExportExcel;
+use App\Library\ExportFile\ExportPdf;
 
 class IndicadoresSgiController extends ControllerBase
 {
@@ -283,21 +284,23 @@ class IndicadoresSgiController extends ControllerBase
             $IndicadoresSgi = new IndicadoresSgi();
             $dados = $IndicadoresSgi->getByComp($search['ano'], $search['cc']);
 
-            $dados = $IndicadoresSgi->prepareDados($dados);
-            $questions = $IndicadoresSgi->prepareQuestions($search);
-
-            $options = [
-                'creator' => 'Intranet - Grupo MPE',
-                'title' => 'Indicadores SGI - Relatório: ' . $search['cc'] . ' - ' . $search['ano'],
-                'category' => 'Relatórios',
-            ];
-
-
             if ($type == 'excel') {
-                $export = new ExportExcel;
-                $objPhpExcel = $export->writeFileExcel($dados, $questions, $options);
+
+                $dados = $IndicadoresSgi->prepareDados($dados);
+                $questions = $IndicadoresSgi->prepareQuestions($search);
+
+                $options = [
+                    'creator' => 'Intranet - Grupo MPE',
+                    'title' => 'Indicadores SGI - Relatório: ' . $search['cc'] . ' - ' . $search['ano'],
+                    'category' => 'Relatórios',
+                ];
+
+                $options['styleSheet'] = self::styleSheet();
+                $export = new ExportExcel();
+                return $export->writeFileExcel($dados, $questions, $options);
             }
-            exit;
+            $export = new ExportPdf();
+            return $export->writeFilePdf($dados, ['header' => $search, 'template' => 'indicadores']);
         } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
             return $this->response->redirect('forms/indicadores_sgi/relatorio');
@@ -377,39 +380,79 @@ class IndicadoresSgiController extends ControllerBase
         return $result[0]['NU_TOR'];
     }
 
-    private function styleSheet()
+    private static function styleSheet()
     {
         return [
             0 => [
-                'A1:F1' => 'title',
+                'A1' => 'title',
+                'A1:F1' => 'merge',
                 'A3' => 'bold',
                 'A4:B5' => 'normal',
             ],
             1 => [
-                'A1:N1' => 'title',
+                'A1' => 'title',
+                'A1:N1' => 'merge',
                 'A2:N2' => 'header',
                 'A3:N7' => 'normal',
-                'A8:N8' => 'title',
+                'A8' => 'title',
+                'A8:N8' => 'merge',
                 'A9:N9' => 'header',
                 'A10:N22' => 'normal',
-                'A23:N23' => 'title',
+                'A23' => 'title',
+                'A23:N23' => 'merge',
                 'A24:N24' => 'header',
                 'A25:N26' => 'normal',
-                'A27:N27' => 'title',
+                'A27' => 'title',
+                'A27:N27' => 'merge',
                 'A28:N28' => 'header',
                 'A29:N30' => 'normal',
-                'A31:N31' => 'title',
+                'A31' => 'title',
+                'A31:N31' => 'merge',
                 'A32:N32' => 'header',
                 'A33:N34' => 'normal',
             ],
             2 => [
-                'A1:N1' => 'title',
+                'A1' => 'title',
+                'A1:N1' => 'merge',
                 'A2:N2' => 'header',
                 'A3:N6' => 'normal',
-                'A7:N7' => 'title',
+                'A7' => 'title',
+                'A7:N7' => 'merge',
                 'A8:N8' => 'header',
                 'A9:N11' => 'normal',
-            ]
+            ],
+            3 => [
+                'A1' => 'title',
+                'A1:N1' => 'merge',
+                'A2:N2' => 'header',
+                'A3:N6' => 'normal',
+            ],
+            4 => [
+                'A1' => 'title',
+                'A1:N1' => 'merge',
+                'A2:N2' => 'header',
+                'A3:N8' => 'normal',
+                'A9' => 'title',
+                'A9:N9' => 'merge',
+                'A10:N10' => 'header',
+                'A11:N13' => 'normal',
+                'A14' => 'title',
+                'A14:N14' => 'merge',
+                'A15:N15' => 'header',
+                'A16:N19' => 'normal',
+                'A20' => 'title',
+                'A20:N20' => 'merge',
+                'A21:N21' => 'header',
+                'A22:N25' => 'normal',
+            ],
+            5 => [
+                'A1' => 'title',
+                'A1:B1' => 'merge',
+                'A2:B2' => 'header',
+                'A3:A14' => 'bold',
+                'B3:B14' => 'normal',
+            ],
+            'autoSize' => ['A', 'O'],
         ];
     }
 

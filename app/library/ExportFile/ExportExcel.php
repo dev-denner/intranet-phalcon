@@ -9,14 +9,24 @@ class ExportExcel extends Export
 
     /**
      *
-     * @var type 
+     * @var \PHPExcel 
      */
     private $objPhpExcel;
-    private $title;
+
+    /**
+     *
+     * @var string
+     */
+    private $title = '';
+
+    /**
+     *
+     * @var array
+     */
+    private $styleSheet = [];
 
     /**
      * 
-     * @param type $options
      */
     public function __construct()
     {
@@ -54,6 +64,20 @@ class ExportExcel extends Export
         }
         $this->objPhpExcel->getProperties()->setTitle('Relatório');
         $this->title = 'Relatório';
+        return $this;
+    }
+
+    /**
+     * 
+     * @param type $styleSheet
+     * @return $this
+     */
+    protected function setStyleSheet($styleSheet)
+    {
+        if (isset($styleSheet['styleSheet'])) {
+            $this->styleSheet = $styleSheet['styleSheet'];
+            return $this;
+        }
         return $this;
     }
 
@@ -103,9 +127,8 @@ class ExportExcel extends Export
             $this->filters($questions);
         }
         $this->report($dados);
-
-        //$this->viewExcel();exit;
-        return $this->objPhpExcel;
+        
+        return $this->downloadExcel();
     }
 
     private function prepareObjectExcel($options)
@@ -114,6 +137,7 @@ class ExportExcel extends Export
         $this->setCreator($options);
         $this->setTitle($options);
         $this->setCategory($options);
+        $this->setStyleSheet($options);
     }
 
     private function filters($questions)
@@ -122,7 +146,7 @@ class ExportExcel extends Export
         $this->objPhpExcel->getActiveSheet()->setCellValue('A1', $this->title);
         $this->objPhpExcel->getActiveSheet()->setCellValue('A3', 'Filtros:');
         $this->objPhpExcel->getActiveSheet()->fromArray($questions, null, 'A4');
-        $this->objPhpExcel->getActiveSheet()->getDefaultColumnDimension()->setAutoSize(true);
+        $this->setStyleBySheet(0);
     }
 
     private function report($dados)
@@ -136,7 +160,7 @@ class ExportExcel extends Export
             $this->objPhpExcel->setActiveSheetIndex($i);
             $this->objPhpExcel->getActiveSheet()->setTitle($title);
             $this->objPhpExcel->getActiveSheet()->fromArray($value, null, 'A1');
-            //$this->objPhpExcel->getActiveSheet()->getDefaultColumnDimension('A:N')->setAutoSize(true);
+            $this->setStyleBySheet($i);
         }
         $this->objPhpExcel->setActiveSheetIndex(0);
     }
@@ -154,12 +178,17 @@ class ExportExcel extends Export
             case 'title':
                 $style = $this->styleTitle();
                 break;
-            case 'bold':
-                $style = $this->styleBold();
-                break;
             case 'header':
                 $style = $this->styleHeader();
                 break;
+            case 'bold':
+                $style = $this->styleBold();
+                break;
+            case 'normal':
+                $style = $this->styleNormal();
+                break;
+            case 'merge':
+                return $this->mergeCells($position);
 
             default:
                 $style = $this->styleNormal();
@@ -222,7 +251,7 @@ class ExportExcel extends Export
                 'type' => \PHPExcel_Style_Fill::FILL_GRADIENT_PATH,
                 'rotation' => 90,
                 'startcolor' => ['argb' => 'FF4caf50'],
-                'endcolor' => ['argb' => 'FF1f8223'],
+                'endcolor' => ['argb' => 'CC83c386'],
             ],
         ];
     }
@@ -241,11 +270,6 @@ class ExportExcel extends Export
                 'vertical' => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
                 'rotation' => 0,
                 'wrap' => false
-            ],
-            'borders' => [
-                'allborders' => [
-                    'style' => \PHPExcel_Style_Border::BORDER_NONE,
-                ],
             ],
             'fill' => [
                 'type' => \PHPExcel_Style_Fill::FILL_NONE,
@@ -279,18 +303,34 @@ class ExportExcel extends Export
         ];
     }
 
-    private function setStyleBySheet($sheet)
+    private function mergeCells($position)
     {
-        $function = 'sheet0' . $sheet;
-
-        $this->objPhpExcel->setActiveSheetIndex($sheet);
-        $this->$function();
+        $this->objPhpExcel->getActiveSheet()->mergeCells($position);
     }
 
-    private function sheet01()
+    private function setStyleBySheet($sheet)
     {
-        $merged = 'A1:N1';
-        $this->objPhpExcel->getActiveSheet()->mergeCells($merged);
+
+        if (empty($this->styleSheet)) {
+            return false;
+        }
+
+        $this->objPhpExcel->setActiveSheetIndex($sheet);
+
+        $styleSheet = $this->styleSheet[$sheet];
+
+        foreach ($styleSheet as $key => $value) {
+            $this->styleCell($key, $value);
+        }
+
+        $autoSize = $this->styleSheet['autoSize'];
+
+        if (isset($autoSize) and ! empty($autoSize) and is_array($autoSize)) {
+
+            foreach (range($autoSize[0], $autoSize[0]) as $columnID) {
+                $this->objPhpExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+            }
+        }
     }
 
     protected function downloadExcel()

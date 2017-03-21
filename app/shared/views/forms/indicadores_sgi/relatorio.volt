@@ -113,17 +113,17 @@
                                 <tr>
                                     <th><i class="badge bgm-lightgreen">1.1</i> Número de Empregados</th>
                                     {% for key, value in dados %}
-                                        {% if dados[key] == false %}
-                                        <td>0</td>
-                                        {% else %}
-                                            {% if key == 'total'  %}
-                                                {% for val in value['nEmpregados'] %}
-                                                <th>{{ val }}</th>
-                                                {% endfor %}
-                                            {% else %}
-                                                <td>{{ value.nEmpregados }}</td>
-                                            {% endif %}
-                                        {% endif %}
+                                    {% if dados[key] == false %}
+                                    <td>0</td>
+                                    {% else %}
+                                    {% if key == 'total'  %}
+                                    {% for val in value['nEmpregados'] %}
+                                    <th>{{ val }}</th>
+                                    {% endfor %}
+                                    {% else %}
+                                    <td>{{ value.nEmpregados }}</td>
+                                    {% endif %}
+                                    {% endif %}
                                     {% endfor %}
                                 </tr>
                                 <tr>
@@ -1330,7 +1330,10 @@
                         <table class="table table-striped table-vmiddle bootgrid-table">
                             <caption><span class="badge bgm-green">13.0</span> Observações</caption>
                             <thead>
-                            <th colspan="2"><i class="badge bgm-lightgreen">13.1</i> Observações</th>
+                                <tr>
+                                    <th>Meses</th>
+                                    <th><i class="badge bgm-lightgreen">13.1</i> Observações</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr>

@@ -1,7 +1,7 @@
 {
     "name": "denners777/api-phalcon",
     "description": "APP for application management in Phalcon PHP. Database: Oracle. Integrated with Whoops.",
-    "version": "2.0.1",
+    "version": "2.2.0",
     "autoload": {
         "psr-4": {
             "App\\": "app/"
@@ -11,27 +11,24 @@
         "php": ">=5.6",
         "ext-phalcon": "2.*",
         "phalcon/incubator": "2.*",
-        "aymanrb/php-unstructured-text-parser": "dev-master",
-        "ilya/belt": "~2",
-        "filp/whoops": "*",
-        "phpoffice/phpexcel": "^1.1",
+        "ilya/belt": "^2.1",
+        "filp/whoops": "^2.1",
+        "phpoffice/phpexcel": "^1.8",
         "swiftmailer/swiftmailer": "^5.4",
         "respect/validation": "^1.1",
         "phalcongelist/breadcrumbs": "^1.2",
-        "jbroadway/urlify": "*",
-        "mpdf/mpdf": "dev-master",
-        "cangelis/pdf": "2.*",
-        "iio/libmergepdf": "~3.0",
-        "kriswallsmith/assetic": "*",
-        "vlucas/phpdotenv": "*",
-        "rollbar/rollbar": "~0.18.2"
+        "jbroadway/urlify": "^1.1",
+        "cangelis/pdf": "^2.2",
+        "iio/libmergepdf": "^3.0",
+        "kriswallsmith/assetic": "^1.4",
+        "vlucas/phpdotenv": "^2.4",
+        "rollbar/rollbar": "^0.18.2",
+        "symfony/debug": "^3.2",
+        "symfony/var-dumper": "^3.2",
+        "mpdf/mpdf": "^6.1"
     },
     "require-dev": {
-        "symfony/debug": "*",
-        "symfony/var-dumper": "*",
-        "devster/ubench": "1.1.*",
-        "tracy/tracy": "*",
-        "roave/security-advisories": "dev-master"
+
     },
     "authors": [{
             "name": "Denner Fernandes",

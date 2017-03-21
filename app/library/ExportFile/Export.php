@@ -10,9 +10,6 @@ class Export extends Component
 
     protected function download($fileName, $fileTemp)
     {
-        //$view = $this->getDI()->get('view');
-        //$view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_NO_RENDER);
-
         $response = new Response();
         $response->setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->setHeader('Content-Disposition', 'attachment;filename="' . $fileName . '"');
